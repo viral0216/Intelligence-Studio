@@ -1,6 +1,10 @@
-# Intelligence Studio
+<p align="center">
+  <img src="../desktop/build/icon.svg" alt="Intelligence Studio" width="200" />
+</p>
 
-**API Explorer & Analytics Studio for Databricks**
+<h1 align="center">Intelligence Studio</h1>
+
+<p align="center"><strong>API Explorer & Analytics Studio for Databricks</strong></p>
 
 Intelligence Studio is a full-stack platform for exploring, testing, and analyzing Databricks APIs with built-in AI assistance powered by foundation models. It provides a web interface, desktop application, and CLI tool.
 
@@ -15,6 +19,7 @@ Intelligence Studio is a full-stack platform for exploring, testing, and analyzi
 - [Project Structure](#project-structure)
 - [Configuration](#configuration)
 - [Features](#features)
+- [How to Build](#how-to-build)
 - [Documentation Index](#documentation-index)
 
 ---
@@ -448,6 +453,179 @@ Browse 500+ Databricks REST API endpoints organized into categories:
 - OAuth login with Azure AD
 - Progressive workspace selection (Tenant → Subscription → Workspace)
 - Auto-populated Databricks credentials after workspace selection
+
+---
+
+## How to Build
+
+### Build Scripts
+
+All build scripts are in the `scripts/` directory with full cross-platform support:
+
+| Script | Platform | Description |
+|--------|----------|-------------|
+| `scripts/build-all.sh` | macOS / Linux | Full build with options |
+| `scripts/build-all.ps1` | Windows | Full build with options |
+| `scripts/install.sh` | macOS / Linux | Prerequisites check + install |
+| `scripts/install.ps1` | Windows | Prerequisites check + install |
+
+### First-Time Setup
+
+```bash
+# macOS / Linux — checks prerequisites, installs all dependencies, creates .env files
+./scripts/install.sh
+
+# Windows PowerShell
+.\scripts\install.ps1
+```
+
+### Build Everything
+
+```bash
+# macOS / Linux
+./scripts/build-all.sh
+
+# Windows PowerShell
+.\scripts\build-all.ps1
+
+# Or use Make shortcuts:
+make build-all                 # Build all apps
+make build-all-clean           # Clean + build all
+make build-all-skip-tests      # Build all, skip tests
+```
+
+### Build Desktop App (macOS)
+
+Produces a `.app` bundle and `.zip` for distribution (arm64).
+
+```bash
+# Full build (frontend + desktop)
+make build-mac
+
+# Or with the script directly:
+./scripts/build-all.sh --desktop-mac --skip-tests
+```
+
+**Output:**
+```
+dist/desktop/mac/
+├── Intelligence Studio.app      # Run directly
+└── Intelligence Studio-1.0.0-arm64-mac.zip   # Distributable
+```
+
+**Requirements:**
+- Must be run on macOS
+- No Apple Developer certificate needed (unsigned build)
+
+### Build Desktop App (Windows)
+
+Produces an NSIS installer (`.exe`) and portable executable.
+
+**Option A — Build on Windows natively (recommended):**
+```powershell
+.\scripts\build-all.ps1 -DesktopWin -SkipTests
+```
+
+**Option B — Cross-compile from macOS (requires Wine):**
+```bash
+# Install Wine first
+brew install --cask wine-stable
+
+# Then build
+./scripts/build-all.sh --desktop-win --skip-tests
+
+# Or use Make:
+make build-win
+```
+
+**Output:**
+```
+dist/desktop/win/
+├── Intelligence Studio Setup 1.0.0.exe    # NSIS installer
+└── Intelligence Studio 1.0.0.exe          # Portable
+```
+
+### Build Individual Components
+
+```bash
+# Desktop only (macOS)
+./scripts/build-all.sh --desktop-mac
+
+# Desktop only (Windows, requires Wine on macOS)
+./scripts/build-all.sh --desktop-win
+
+# CLI only (packaged with install script)
+./scripts/build-all.sh --cli
+
+# Windows equivalents:
+.\scripts\build-all.ps1 -DesktopWin
+.\scripts\build-all.ps1 -Cli
+```
+
+### Build Options Reference
+
+**macOS / Linux (`build-all.sh`):**
+
+| Flag | Description |
+|------|-------------|
+| `--desktop` | Build desktop for all platforms |
+| `--desktop-mac` | Build desktop for macOS only |
+| `--desktop-win` | Build desktop for Windows only (requires Wine) |
+| `--cli` | Package CLI only |
+| `--skip-tests` | Skip Vitest + pytest before building |
+| `--clean` | Remove previous build artifacts first |
+
+**Windows (`build-all.ps1`):**
+
+| Flag | Description |
+|------|-------------|
+| `-Desktop` | Build desktop for all platforms |
+| `-DesktopWin` | Build desktop for Windows only |
+| `-DesktopMac` | Build desktop for macOS only |
+| `-Cli` | Package CLI only |
+| `-SkipTests` | Skip tests before building |
+| `-Clean` | Remove previous build artifacts first |
+
+> **Note:** The frontend is automatically built and bundled into the desktop app via Electron's `extraResources`. There is no separate frontend or backend in `dist/` — the desktop app is self-contained.
+
+### Build Output Structure
+
+```
+dist/
+├── desktop/
+│   ├── mac/               # macOS artifacts
+│   │   ├── *.app          # Application bundle (run directly)
+│   │   └── *.zip          # Distributable archive
+│   └── win/               # Windows artifacts
+│       └── *.exe          # NSIS installer + Portable
+│
+└── cli/                   # CLI tool
+    ├── cli/               # Python source
+    ├── pyproject.toml     # Package config
+    ├── install.sh         # Linux/macOS install
+    └── install.bat        # Windows install
+```
+
+### Make Commands Reference
+
+| Command | Description |
+|---------|-------------|
+| `make setup` | Full setup (prerequisites check + install all) |
+| `make setup-dev` | Setup with dev/test dependencies |
+| `make dev` | Start frontend + backend dev servers |
+| `make dev-frontend` | Start Vite dev server only |
+| `make dev-backend` | Start FastAPI server only |
+| `make install` | Install all dependencies |
+| `make test` | Run all tests |
+| `make build-all` | Full build (desktop + CLI) |
+| `make build-all-clean` | Clean + full build |
+| `make build-all-skip-tests` | Full build without tests |
+| `make build-mac` | Build macOS desktop app |
+| `make build-win` | Build Windows desktop app |
+| `make build-cli` | Package CLI only |
+| `make desktop-dev` | Start Electron in dev mode |
+| `make cli-install` | Install CLI tool |
+| `make clean` | Remove all build artifacts |
 
 ---
 

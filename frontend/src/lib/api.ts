@@ -1,8 +1,11 @@
 import axios from 'axios'
 import type { HttpMethod, PlaygroundResponse, ModelCallMetadata } from '@/types/api'
 
+const isElectron = window.location.protocol === 'file:'
+const apiBaseURL = isElectron ? 'http://127.0.0.1:8000/api' : '/api'
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: apiBaseURL,
   timeout: 60000,
 })
 
