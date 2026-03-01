@@ -38,7 +38,7 @@ export default function AuthSettings() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 animate-fade-in">
       <div>
         <h3 className="text-base font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
           Databricks Authentication
@@ -49,31 +49,20 @@ export default function AuthSettings() {
       </div>
 
       {/* Connection Status Badge */}
-      <div
-        className="flex items-center gap-2 px-3 py-2 rounded-lg"
-        style={{
-          backgroundColor: isConnected ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)',
-          border: `1px solid ${isConnected ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)'}`,
-        }}
-      >
+      <div className={`badge ${isConnected ? 'badge-success' : 'badge-error'}`} style={{ padding: '8px 14px', borderRadius: '8px', gap: '8px' }}>
         {isConnected ? (
-          <ShieldCheck className="w-4 h-4" style={{ color: 'var(--accent-success)' }} />
+          <ShieldCheck className="w-4 h-4" />
         ) : (
-          <ShieldX className="w-4 h-4" style={{ color: 'var(--accent-danger)' }} />
+          <ShieldX className="w-4 h-4" />
         )}
-        <span
-          className="text-sm font-medium"
-          style={{ color: isConnected ? 'var(--accent-success)' : 'var(--accent-danger)' }}
-        >
+        <span className="text-sm font-semibold">
           {isConnected ? 'Connected' : 'Not Connected'}
         </span>
       </div>
 
       {/* Host URL */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-          Workspace Host URL
-        </label>
+        <label className="label">Workspace Host URL</label>
         <div className="relative">
           <Link className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--text-muted)' }} />
           <input
@@ -81,84 +70,55 @@ export default function AuthSettings() {
             value={localHost}
             onChange={(e) => setLocalHost(e.target.value)}
             placeholder="https://your-workspace.cloud.databricks.com"
-            className="w-full pl-10 pr-3 py-2 rounded-lg text-sm outline-none transition-colors"
-            style={{
-              backgroundColor: 'var(--bg-tertiary)',
-              color: 'var(--text-primary)',
-              border: '1px solid var(--border-primary)',
-            }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--accent-primary)')}
-            onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--border-primary)')}
+            className="input"
+            style={{ paddingLeft: '36px' }}
           />
         </div>
-        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+        <span className="text-xs" style={{ color: 'var(--text-dim)' }}>
           The full URL of your Databricks workspace, e.g. https://adb-1234567890.1.azuredatabricks.net
         </span>
       </div>
 
       {/* Token */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
-          Personal Access Token
-        </label>
+        <label className="label">Personal Access Token</label>
         <div className="relative">
           <input
             type={showToken ? 'text' : 'password'}
             value={localToken}
             onChange={(e) => setLocalToken(e.target.value)}
             placeholder="dapi..."
-            className="w-full pl-3 pr-10 py-2 rounded-lg text-sm outline-none transition-colors font-mono"
-            style={{
-              backgroundColor: 'var(--bg-tertiary)',
-              color: 'var(--text-primary)',
-              border: '1px solid var(--border-primary)',
-            }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--accent-primary)')}
-            onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--border-primary)')}
+            className="input font-mono"
+            style={{ paddingRight: '40px' }}
           />
           <button
             type="button"
             onClick={() => setShowToken(!showToken)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded"
-            style={{ color: 'var(--text-muted)' }}
+            className="toolbar-btn absolute right-1 top-1/2 -translate-y-1/2"
+            style={{ padding: '4px' }}
           >
             {showToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
-        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+        <span className="text-xs" style={{ color: 'var(--text-dim)' }}>
           Generate a token from Databricks Settings &gt; Developer &gt; Access tokens
         </span>
       </div>
 
       {/* Status message */}
       {statusMessage && (
-        <p
-          className="text-sm px-3 py-2 rounded-lg"
-          style={{
-            backgroundColor: 'var(--bg-tertiary)',
-            color: isConnected ? 'var(--accent-success)' : 'var(--text-warning, var(--accent-danger))',
-          }}
-        >
+        <div className={`${isConnected ? 'badge-success' : 'error-banner'}`} style={{ padding: '8px 12px', borderRadius: '8px', fontSize: '13px' }}>
           {statusMessage}
-        </p>
+        </div>
       )}
 
       {/* Action buttons */}
       <div className="flex items-center gap-3">
-        <button
-          onClick={handleSave}
-          className="px-4 py-2 rounded-lg text-sm font-medium transition-opacity hover:opacity-90"
-          style={{ backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-primary)', border: '1px solid var(--border-primary)' }}
-        >
+        <button onClick={handleSave} className="btn btn-secondary">
           Save Credentials
         </button>
-        <button
-          onClick={handleTestConnection}
-          disabled={testing}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-opacity hover:opacity-90 disabled:opacity-50"
-          style={{ backgroundColor: 'var(--accent-primary)', color: '#fff' }}
-        >
-          {testing && <Loader2 className="w-4 h-4 animate-spin" />}
+        <button onClick={handleTestConnection} disabled={testing} className="btn btn-primary">
+          {testing && <Loader2 className="w-4 h-4 spin" />}
           {testing ? 'Testing...' : 'Test Connection'}
         </button>
       </div>

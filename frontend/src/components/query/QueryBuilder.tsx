@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Play, Loader2, Database, ChevronDown } from 'lucide-react'
+import { Play, Loader2, Database, ChevronDown, CircleDot } from 'lucide-react'
 import { useQueryStore } from '@/stores/queryStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useSettingsStore } from '@/stores/settingsStore'
@@ -20,6 +20,7 @@ export default function QueryBuilder() {
   const [warehouses, setWarehouses] = useState<Warehouse[]>([])
   const [loadingWarehouses, setLoadingWarehouses] = useState(false)
   const [showBrowser, setShowBrowser] = useState(true)
+  const selectedWarehouse = warehouses.find((w) => w.id === warehouseId) || null
 
   const fetchWarehouses = useCallback(async () => {
     if (!host || !token) return
@@ -57,26 +58,51 @@ export default function QueryBuilder() {
     try {
       const result = await executeQuery(sql, warehouseId, host, token)
       const data = result as {
+        success?: boolean
+        state?: string
+        error?: string
         rows?: unknown[]
         columns?: string[]
         row_count?: number
+        rowCount?: number
+        queryId?: string
+        hasMore?: boolean
         manifest?: { schema?: { columns?: Array<{ name: string }> } }
         result?: { data_array?: unknown[][]; row_count?: number }
         statement_id?: string
       }
 
-      // Normalize response shape
-      let rows = data.rows || []
-      let columns = data.columns || []
-      let rowCount = data.row_count || 0
+      // Handle backend error responses (200 status but success: false)
+      if (data.success === false) {
+        setError(data.error || `Query failed with state: ${data.state || 'UNKNOWN'}`)
+        return
+      }
 
-      if (data.manifest?.schema?.columns && data.result?.data_array) {
+      let columns: string[] = data.columns || []
+      let rows: Record<string, unknown>[] = []
+      let rowCount = data.rowCount || data.row_count || 0
+
+      // Backend returns raw arrays from data_array — convert to objects
+      if (data.rows && data.rows.length > 0 && columns.length > 0) {
+        if (Array.isArray(data.rows[0])) {
+          // Rows are arrays: convert to keyed objects
+          rows = (data.rows as unknown[][]).map((arr) => {
+            const obj: Record<string, unknown> = {}
+            columns.forEach((col, i) => { obj[col] = arr[i] })
+            return obj
+          })
+        } else {
+          // Rows are already objects
+          rows = data.rows as Record<string, unknown>[]
+        }
+      }
+
+      // Fallback: raw Databricks response with manifest
+      if (rows.length === 0 && data.manifest?.schema?.columns && data.result?.data_array) {
         columns = data.manifest.schema.columns.map((c) => c.name)
         rows = data.result.data_array.map((arr) => {
           const obj: Record<string, unknown> = {}
-          columns.forEach((col, i) => {
-            obj[col] = arr[i]
-          })
+          columns.forEach((col, i) => { obj[col] = arr[i] })
           return obj
         })
         rowCount = data.result.row_count || rows.length
@@ -86,8 +112,8 @@ export default function QueryBuilder() {
         rows,
         columns,
         rowCount: rowCount || rows.length,
-        queryId: data.statement_id,
-        hasMore: false,
+        queryId: data.queryId || data.statement_id,
+        hasMore: data.hasMore || false,
       })
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Query execution failed'
@@ -111,7 +137,26 @@ export default function QueryBuilder() {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          {/* Warehouse selector */}
+          {/* Warehouse selector with status */}
+          {selectedWarehouse && (
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wide"
+              style={{
+                backgroundColor: selectedWarehouse.state === 'RUNNING'
+                  ? 'rgba(52, 211, 153, 0.12)'
+                  : selectedWarehouse.state === 'STARTING' || selectedWarehouse.state === 'STOPPING'
+                  ? 'rgba(251, 191, 36, 0.12)'
+                  : 'rgba(248, 81, 73, 0.12)',
+                color: selectedWarehouse.state === 'RUNNING'
+                  ? 'var(--accent-success)'
+                  : selectedWarehouse.state === 'STARTING' || selectedWarehouse.state === 'STOPPING'
+                  ? 'var(--accent-warning, #fbbf24)'
+                  : 'var(--accent-danger, #f85149)',
+              }}
+            >
+              <CircleDot className="w-3 h-3" />
+              {selectedWarehouse.state}
+            </div>
+          )}
           <div className="relative">
             <select
               value={warehouseId}

@@ -1,21 +1,21 @@
 import {
-  getAzureAuthStatus,
-  startAzureAuth,
-  exchangeAzureToken,
+  azureLogin,
   azureLogout,
+  azureAuthStatus,
+  azureLoginTenant,
   listAzureTenants,
   listAzureSubscriptions,
   listAzureWorkspaces,
-  selectAzureWorkspace,
+  databricksWorkspaceAccess,
 } from './api'
 
 export {
-  getAzureAuthStatus,
-  startAzureAuth,
-  exchangeAzureToken,
+  azureLogin,
   azureLogout,
+  azureAuthStatus,
+  azureLoginTenant,
   listAzureTenants,
   listAzureSubscriptions,
   listAzureWorkspaces,
-  selectAzureWorkspace,
+  databricksWorkspaceAccess,
 }

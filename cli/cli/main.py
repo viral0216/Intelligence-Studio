@@ -1,4 +1,4 @@
-"""Intelligencre Studio CLI - Databricks API from the terminal."""
+"""Intelligence Studio CLI - Databricks API from the terminal."""
 
 import json
 import os
@@ -54,7 +54,7 @@ def get_credentials():
 @click.option("--raw", is_flag=True, help="Output raw JSON")
 @click.pass_context
 def cli(ctx, method, path, body, body_file, preset, timeout, retries, show_headers, curl, raw):
-    """Intelligencre Studio CLI - Databricks API from the terminal.
+    """Intelligence Studio CLI - Databricks API from the terminal.
 
     Examples:
         dbx-cli GET /api/2.0/clusters/list
@@ -74,7 +74,7 @@ def cli(ctx, method, path, body, body_file, preset, timeout, retries, show_heade
 
     if not method or not path:
         console.print(Panel(
-            "[bold]Intelligencre Studio CLI[/bold]\n\n"
+            "[bold]Intelligence Studio CLI[/bold]\n\n"
             "Usage: dbx-cli [METHOD] [PATH] [OPTIONS]\n"
             "       dbx-cli --preset [NAME]\n\n"
             f"Presets: {', '.join(PRESETS.keys())}",

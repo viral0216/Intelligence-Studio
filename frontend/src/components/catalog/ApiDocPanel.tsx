@@ -2,11 +2,11 @@ import { BookOpen, ExternalLink, Link2, FileText, Tag } from 'lucide-react'
 import { useCatalogStore } from '@/stores/catalogStore'
 
 const METHOD_COLORS: Record<string, string> = {
-  GET: '#7ee787',
-  POST: '#58a6ff',
-  PUT: '#f0883e',
-  PATCH: '#d2a8ff',
-  DELETE: '#f85149',
+  GET: 'var(--method-get)',
+  POST: 'var(--method-post)',
+  PUT: 'var(--method-put)',
+  PATCH: 'var(--method-patch)',
+  DELETE: 'var(--method-delete)',
 }
 
 export default function ApiDocPanel() {
@@ -76,7 +76,7 @@ export default function ApiDocPanel() {
               {description}
             </p>
           )}
-          {docs?.summary && (
+          {!!docs?.summary && (
             <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
               {docs.summary}
             </p>
@@ -84,7 +84,7 @@ export default function ApiDocPanel() {
         </div>
 
         {/* Documentation link */}
-        {docs?.docUrl && (
+        {!!docs?.docUrl && (
           <a
             href={docs.docUrl}
             target="_blank"
@@ -104,7 +104,7 @@ export default function ApiDocPanel() {
         )}
 
         {/* Parameters */}
-        {docs?.parameters && docs.parameters.length > 0 && (
+        {!!docs?.parameters && docs.parameters.length > 0 && (
           <div>
             <h4
               className="flex items-center gap-1.5 text-xs font-medium mb-2"
@@ -121,7 +121,7 @@ export default function ApiDocPanel() {
             >
               {docs.parameters.map((param, i) => (
                 <div
-                  key={typeof param === 'string' ? param : param}
+                  key={param.name}
                   className="flex items-start gap-2 px-3 py-2"
                   style={{
                     borderTopWidth: i > 0 ? '1px' : '0',
@@ -134,8 +134,14 @@ export default function ApiDocPanel() {
                     className="text-xs font-mono font-medium"
                     style={{ color: 'var(--accent-primary)' }}
                   >
-                    {typeof param === 'string' ? param : param}
+                    {param.name}
                   </span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded" style={{ backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-muted)' }}>
+                    {param.type}
+                  </span>
+                  {param.required && (
+                    <span className="text-[10px]" style={{ color: 'var(--accent-error)' }}>required</span>
+                  )}
                 </div>
               ))}
             </div>
@@ -143,7 +149,7 @@ export default function ApiDocPanel() {
         )}
 
         {/* Query Parameters */}
-        {queryParams && queryParams.length > 0 && (
+        {!!queryParams && queryParams.length > 0 && (
           <div>
             <h4
               className="flex items-center gap-1.5 text-xs font-medium mb-2"
@@ -212,7 +218,7 @@ export default function ApiDocPanel() {
         )}
 
         {/* Request body */}
-        {body && (
+        {!!body && (
           <div>
             <h4
               className="flex items-center gap-1.5 text-xs font-medium mb-2"
@@ -235,7 +241,7 @@ export default function ApiDocPanel() {
         )}
 
         {/* Related endpoints */}
-        {docs?.relatedEndpoints && docs.relatedEndpoints.length > 0 && (
+        {!!docs?.relatedEndpoints && docs.relatedEndpoints.length > 0 && (
           <div>
             <h4
               className="flex items-center gap-1.5 text-xs font-medium mb-2"

@@ -7,29 +7,39 @@ interface CodeBlockProps {
 }
 
 // Simple keyword-based syntax highlighting for common languages
+// CSS variable references for theme-aware syntax colors
+const SYN = {
+  keyword: 'var(--syntax-keyword)',
+  boolean: 'var(--syntax-boolean)',
+  fn: 'var(--syntax-function)',
+  string: 'var(--syntax-string)',
+  comment: 'var(--syntax-comment)',
+  number: 'var(--syntax-number)',
+}
+
 const KEYWORD_PATTERNS: Record<string, { keywords: string[]; color: string }[]> = {
   python: [
-    { keywords: ['def', 'class', 'import', 'from', 'as', 'return', 'if', 'elif', 'else', 'for', 'while', 'in', 'not', 'and', 'or', 'with', 'try', 'except', 'finally', 'raise', 'pass', 'break', 'continue', 'yield', 'lambda', 'async', 'await'], color: '#ff7b72' },
-    { keywords: ['True', 'False', 'None', 'self'], color: '#79c0ff' },
-    { keywords: ['print', 'len', 'range', 'type', 'str', 'int', 'float', 'list', 'dict', 'set', 'tuple', 'isinstance', 'enumerate', 'zip', 'map', 'filter'], color: '#d2a8ff' },
+    { keywords: ['def', 'class', 'import', 'from', 'as', 'return', 'if', 'elif', 'else', 'for', 'while', 'in', 'not', 'and', 'or', 'with', 'try', 'except', 'finally', 'raise', 'pass', 'break', 'continue', 'yield', 'lambda', 'async', 'await'], color: SYN.keyword },
+    { keywords: ['True', 'False', 'None', 'self'], color: SYN.boolean },
+    { keywords: ['print', 'len', 'range', 'type', 'str', 'int', 'float', 'list', 'dict', 'set', 'tuple', 'isinstance', 'enumerate', 'zip', 'map', 'filter'], color: SYN.fn },
   ],
   javascript: [
-    { keywords: ['const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'while', 'do', 'switch', 'case', 'break', 'continue', 'class', 'extends', 'new', 'this', 'import', 'export', 'default', 'from', 'async', 'await', 'try', 'catch', 'finally', 'throw', 'typeof', 'instanceof', 'of', 'in'], color: '#ff7b72' },
-    { keywords: ['true', 'false', 'null', 'undefined', 'NaN', 'Infinity'], color: '#79c0ff' },
-    { keywords: ['console', 'Math', 'JSON', 'Array', 'Object', 'String', 'Number', 'Promise', 'setTimeout', 'setInterval', 'fetch', 'require'], color: '#d2a8ff' },
+    { keywords: ['const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'while', 'do', 'switch', 'case', 'break', 'continue', 'class', 'extends', 'new', 'this', 'import', 'export', 'default', 'from', 'async', 'await', 'try', 'catch', 'finally', 'throw', 'typeof', 'instanceof', 'of', 'in'], color: SYN.keyword },
+    { keywords: ['true', 'false', 'null', 'undefined', 'NaN', 'Infinity'], color: SYN.boolean },
+    { keywords: ['console', 'Math', 'JSON', 'Array', 'Object', 'String', 'Number', 'Promise', 'setTimeout', 'setInterval', 'fetch', 'require'], color: SYN.fn },
   ],
   typescript: [
-    { keywords: ['const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'while', 'do', 'switch', 'case', 'break', 'continue', 'class', 'extends', 'new', 'this', 'import', 'export', 'default', 'from', 'async', 'await', 'try', 'catch', 'finally', 'throw', 'typeof', 'instanceof', 'of', 'in', 'interface', 'type', 'enum', 'implements', 'abstract', 'as', 'keyof', 'readonly'], color: '#ff7b72' },
-    { keywords: ['true', 'false', 'null', 'undefined', 'NaN', 'Infinity'], color: '#79c0ff' },
-    { keywords: ['console', 'Math', 'JSON', 'Array', 'Object', 'String', 'Number', 'Promise', 'setTimeout', 'setInterval', 'fetch', 'require'], color: '#d2a8ff' },
+    { keywords: ['const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'while', 'do', 'switch', 'case', 'break', 'continue', 'class', 'extends', 'new', 'this', 'import', 'export', 'default', 'from', 'async', 'await', 'try', 'catch', 'finally', 'throw', 'typeof', 'instanceof', 'of', 'in', 'interface', 'type', 'enum', 'implements', 'abstract', 'as', 'keyof', 'readonly'], color: SYN.keyword },
+    { keywords: ['true', 'false', 'null', 'undefined', 'NaN', 'Infinity'], color: SYN.boolean },
+    { keywords: ['console', 'Math', 'JSON', 'Array', 'Object', 'String', 'Number', 'Promise', 'setTimeout', 'setInterval', 'fetch', 'require'], color: SYN.fn },
   ],
   sql: [
-    { keywords: ['SELECT', 'FROM', 'WHERE', 'INSERT', 'INTO', 'UPDATE', 'SET', 'DELETE', 'CREATE', 'ALTER', 'DROP', 'TABLE', 'INDEX', 'VIEW', 'JOIN', 'LEFT', 'RIGHT', 'INNER', 'OUTER', 'FULL', 'CROSS', 'ON', 'AS', 'AND', 'OR', 'NOT', 'IN', 'IS', 'NULL', 'LIKE', 'BETWEEN', 'EXISTS', 'HAVING', 'GROUP', 'BY', 'ORDER', 'ASC', 'DESC', 'LIMIT', 'OFFSET', 'UNION', 'ALL', 'DISTINCT', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'WITH', 'VALUES'], color: '#ff7b72' },
-    { keywords: ['COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'COALESCE', 'CAST', 'CONVERT', 'TRIM', 'UPPER', 'LOWER', 'CONCAT', 'SUBSTRING', 'REPLACE', 'DATE', 'NOW', 'CURRENT_TIMESTAMP'], color: '#d2a8ff' },
+    { keywords: ['SELECT', 'FROM', 'WHERE', 'INSERT', 'INTO', 'UPDATE', 'SET', 'DELETE', 'CREATE', 'ALTER', 'DROP', 'TABLE', 'INDEX', 'VIEW', 'JOIN', 'LEFT', 'RIGHT', 'INNER', 'OUTER', 'FULL', 'CROSS', 'ON', 'AS', 'AND', 'OR', 'NOT', 'IN', 'IS', 'NULL', 'LIKE', 'BETWEEN', 'EXISTS', 'HAVING', 'GROUP', 'BY', 'ORDER', 'ASC', 'DESC', 'LIMIT', 'OFFSET', 'UNION', 'ALL', 'DISTINCT', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'WITH', 'VALUES'], color: SYN.keyword },
+    { keywords: ['COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'COALESCE', 'CAST', 'CONVERT', 'TRIM', 'UPPER', 'LOWER', 'CONCAT', 'SUBSTRING', 'REPLACE', 'DATE', 'NOW', 'CURRENT_TIMESTAMP'], color: SYN.fn },
   ],
   bash: [
-    { keywords: ['if', 'then', 'else', 'elif', 'fi', 'for', 'while', 'do', 'done', 'case', 'esac', 'function', 'return', 'exit', 'export', 'source', 'alias', 'echo', 'read', 'local', 'declare', 'set', 'unset'], color: '#ff7b72' },
-    { keywords: ['curl', 'grep', 'sed', 'awk', 'cat', 'ls', 'cd', 'mkdir', 'rm', 'cp', 'mv', 'chmod', 'chown', 'find', 'xargs', 'sort', 'uniq', 'wc', 'head', 'tail', 'tee', 'pipe', 'jq'], color: '#d2a8ff' },
+    { keywords: ['if', 'then', 'else', 'elif', 'fi', 'for', 'while', 'do', 'done', 'case', 'esac', 'function', 'return', 'exit', 'export', 'source', 'alias', 'echo', 'read', 'local', 'declare', 'set', 'unset'], color: SYN.keyword },
+    { keywords: ['curl', 'grep', 'sed', 'awk', 'cat', 'ls', 'cd', 'mkdir', 'rm', 'cp', 'mv', 'chmod', 'chown', 'find', 'xargs', 'sort', 'uniq', 'wc', 'head', 'tail', 'tee', 'pipe', 'jq'], color: SYN.fn },
   ],
   json: [],
 }
@@ -89,13 +99,13 @@ function highlightLine(line: string, language: string): React.ReactNode[] {
   for (const seg of segments) {
     if (seg.type === 'string') {
       parts.push(
-        <span key={keyIdx++} style={{ color: '#a5d6ff' }}>
+        <span key={keyIdx++} style={{ color: SYN.string }}>
           {seg.text}
         </span>
       )
     } else if (seg.type === 'comment') {
       parts.push(
-        <span key={keyIdx++} style={{ color: '#8b949e', fontStyle: 'italic' }}>
+        <span key={keyIdx++} style={{ color: SYN.comment, fontStyle: 'italic' }}>
           {seg.text}
         </span>
       )
@@ -144,7 +154,7 @@ function highlightLine(line: string, language: string): React.ReactNode[] {
         numParts.forEach((part, idx) => {
           if (/^\d+\.?\d*$/.test(part)) {
             parts.push(
-              <span key={keyIdx++} style={{ color: '#79c0ff' }}>
+              <span key={keyIdx++} style={{ color: SYN.number }}>
                 {part}
               </span>
             )
@@ -160,16 +170,16 @@ function highlightLine(line: string, language: string): React.ReactNode[] {
 }
 
 function highlightJson(line: string): React.ReactNode {
-  // Simple JSON coloring
+  // Simple JSON coloring using CSS variables for theme support
   return (
     <span
       dangerouslySetInnerHTML={{
         __html: line
-          .replace(/("(?:[^"\\]|\\.)*")\s*:/g, '<span style="color:#79c0ff">$1</span>:')
-          .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span style="color:#a5d6ff">$1</span>')
-          .replace(/:\s*(true|false)/g, ': <span style="color:#ff7b72">$1</span>')
-          .replace(/:\s*(null)/g, ': <span style="color:#ff7b72">$1</span>')
-          .replace(/:\s*(\d+\.?\d*)/g, ': <span style="color:#79c0ff">$1</span>'),
+          .replace(/("(?:[^"\\]|\\.)*")\s*:/g, '<span style="color:var(--json-key)">$1</span>:')
+          .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span style="color:var(--json-string)">$1</span>')
+          .replace(/:\s*(true|false)/g, ': <span style="color:var(--json-boolean)">$1</span>')
+          .replace(/:\s*(null)/g, ': <span style="color:var(--json-null)">$1</span>')
+          .replace(/:\s*(\d+\.?\d*)/g, ': <span style="color:var(--json-number)">$1</span>'),
       }}
     />
   )

@@ -57,6 +57,7 @@ class GenerateScriptRequest(BaseModel):
     host: str | None = None
     token: str | None = None
     maxTokens: int | None = None
+    customSystemPrompt: str | None = None
 
 
 class ExecuteScriptRequest(BaseModel):
@@ -81,6 +82,7 @@ class RecommendEndpointRequest(BaseModel):
     region: str | None = None
     host: str | None = None
     token: str | None = None
+    customSystemPrompt: str | None = None
 
 
 class NaturalLanguageRequest(BaseModel):
@@ -109,6 +111,7 @@ class AnalyzeResponseRequest(BaseModel):
     region: str | None = None
     host: str | None = None
     token: str | None = None
+    customSystemPrompt: str | None = None
 
 
 class ExplainErrorRequest(BaseModel):
@@ -140,6 +143,7 @@ class GenerateWorkflowRequest(BaseModel):
     host: str | None = None
     token: str | None = None
     maxTokens: int | None = None
+    customSystemPrompt: str | None = None
 
 
 class GenerateTestsRequest(BaseModel):
@@ -149,6 +153,7 @@ class GenerateTestsRequest(BaseModel):
     model: str | None = None
     host: str | None = None
     token: str | None = None
+    customSystemPrompt: str | None = None
 
 
 class SecurityRecommendationsRequest(BaseModel):
@@ -159,6 +164,7 @@ class SecurityRecommendationsRequest(BaseModel):
     model: str | None = None
     host: str | None = None
     token: str | None = None
+    customSystemPrompt: str | None = None
 
 
 class GenerateCodeRequest(BaseModel):
@@ -168,6 +174,7 @@ class GenerateCodeRequest(BaseModel):
     model: str | None = None
     host: str | None = None
     token: str | None = None
+    customSystemPrompt: str | None = None
 
 
 class GenerateDocumentationRequest(BaseModel):
@@ -179,6 +186,7 @@ class GenerateDocumentationRequest(BaseModel):
     model: str | None = None
     host: str | None = None
     token: str | None = None
+    customSystemPrompt: str | None = None
 
 
 class ListWarehousesRequest(BaseModel):
@@ -246,7 +254,7 @@ async def api_generate_query(req: GenerateQueryRequest):
 
 @router.post("/generate-script")
 async def api_generate_script(req: GenerateScriptRequest):
-    result = await generate_script(req.prompt, req.category, req.model, req.host, req.token, req.maxTokens)
+    result = await generate_script(req.prompt, req.category, req.model, req.host, req.token, req.maxTokens, req.customSystemPrompt)
     return result
 
 
@@ -264,7 +272,7 @@ async def api_validate_execution(req: ValidateExecutionRequest):
 
 @router.post("/recommend-endpoint")
 async def api_recommend_endpoint(req: RecommendEndpointRequest):
-    result = await recommend_endpoint(req.query, req.model, req.region, req.host, req.token)
+    result = await recommend_endpoint(req.query, req.model, req.region, req.host, req.token, req.customSystemPrompt)
     return result
 
 
@@ -284,7 +292,7 @@ async def api_suggest_parameters(req: SuggestParametersRequest):
 
 @router.post("/analyze-response")
 async def api_analyze_response(req: AnalyzeResponseRequest):
-    result = await analyze_response(req.endpoint, req.method, req.response, req.model, req.region, req.host, req.token)
+    result = await analyze_response(req.endpoint, req.method, req.response, req.model, req.region, req.host, req.token, req.customSystemPrompt)
     return result
 
 
@@ -307,34 +315,34 @@ async def api_data_assistant(req: DataAssistantRequest):
 
 @router.post("/generate-workflow")
 async def api_generate_workflow(req: GenerateWorkflowRequest):
-    result = await generate_workflow(req.goal, req.model, req.host, req.token, req.maxTokens)
+    result = await generate_workflow(req.goal, req.model, req.host, req.token, req.maxTokens, req.customSystemPrompt)
     return result
 
 
 @router.post("/generate-tests")
 async def api_generate_tests(req: GenerateTestsRequest):
-    result = await generate_tests(req.endpoint, req.method, req.description, req.model, req.host, req.token)
+    result = await generate_tests(req.endpoint, req.method, req.description, req.model, req.host, req.token, req.customSystemPrompt)
     return result
 
 
 @router.post("/security-recommendations")
 async def api_security_recommendations(req: SecurityRecommendationsRequest):
     result = await generate_security_recommendations(
-        req.endpoint, req.method, req.lastError, req.lastResponse, req.model, req.host, req.token
+        req.endpoint, req.method, req.lastError, req.lastResponse, req.model, req.host, req.token, req.customSystemPrompt
     )
     return result
 
 
 @router.post("/generate-code")
 async def api_generate_code(req: GenerateCodeRequest):
-    result = await generate_code_samples(req.endpoint, req.method, req.body, req.model, req.host, req.token)
+    result = await generate_code_samples(req.endpoint, req.method, req.body, req.model, req.host, req.token, req.customSystemPrompt)
     return result
 
 
 @router.post("/generate-documentation")
 async def api_generate_documentation(req: GenerateDocumentationRequest):
     result = await generate_documentation(
-        req.endpoint, req.method, req.description, req.sampleRequest, req.sampleResponse, req.model, req.host, req.token
+        req.endpoint, req.method, req.description, req.sampleRequest, req.sampleResponse, req.model, req.host, req.token, req.customSystemPrompt
     )
     return result
 

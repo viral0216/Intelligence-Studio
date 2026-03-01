@@ -7,7 +7,7 @@ def generate_catalog_openapi() -> dict:
         "openapi": "3.1.0",
         "info": {
             "title": "Databricks REST API",
-            "description": "Auto-generated OpenAPI specification from Intelligencre Studio API catalog",
+            "description": "Auto-generated OpenAPI specification from Intelligence Studio API catalog",
             "version": "2.0",
         },
         "servers": [{"url": "https://{host}", "variables": {"host": {"default": "your-workspace.cloud.databricks.com"}}}],

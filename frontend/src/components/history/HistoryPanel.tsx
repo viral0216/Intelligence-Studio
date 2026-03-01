@@ -4,12 +4,12 @@ import { useRequestStore } from '@/stores/requestStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import type { HttpMethod, HistoryItem } from '@/types/api'
 
-const METHOD_COLORS: Record<HttpMethod, string> = {
-  GET: '#22c55e',
-  POST: '#3b82f6',
-  PUT: '#f59e0b',
-  PATCH: '#a855f7',
-  DELETE: '#ef4444',
+const METHOD_COLORS: Record<HttpMethod, { bg: string; text: string }> = {
+  GET: { bg: 'var(--method-get-bg)', text: 'var(--method-get)' },
+  POST: { bg: 'var(--method-post-bg)', text: 'var(--method-post)' },
+  PUT: { bg: 'var(--method-put-bg)', text: 'var(--method-put)' },
+  PATCH: { bg: 'var(--method-patch-bg)', text: 'var(--method-patch)' },
+  DELETE: { bg: 'var(--method-delete-bg)', text: 'var(--method-delete)' },
 }
 
 function formatTimestamp(ts: number): string {
@@ -60,74 +60,34 @@ export default function HistoryPanel() {
   }
 
   return (
-    <div
-      className="flex flex-col h-full"
-      style={{ backgroundColor: 'var(--bg-primary)' }}
-    >
+    <div className="flex flex-col h-full">
       {/* Header */}
-      <div
-        className="flex items-center justify-between px-4 py-3 border-b shrink-0"
-        style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-secondary)' }}
-      >
+      <div className="drawer-header shrink-0">
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4" style={{ color: 'var(--accent-primary)' }} />
           <h3 className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
             Request History
           </h3>
-          <span
-            className="text-xs px-1.5 py-0.5 rounded-full"
-            style={{ backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-muted)' }}
-          >
+          <span className="badge" style={{ fontSize: '10px', padding: '1px 6px' }}>
             {filteredItems.length}
           </span>
         </div>
         <div className="flex items-center gap-1">
-          {/* Favorites filter */}
           <button
             onClick={toggleFavoritesFilter}
             title={showFavoritesOnly ? 'Show all' : 'Show favorites only'}
-            className="p-1.5 rounded-md transition-colors"
-            style={{
-              color: showFavoritesOnly ? 'var(--accent-primary)' : 'var(--text-muted)',
-              backgroundColor: showFavoritesOnly ? 'var(--bg-hover)' : 'transparent',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-hover)')}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = showFavoritesOnly ? 'var(--bg-hover)' : 'transparent'
-            }}
+            className={`toolbar-btn ${showFavoritesOnly ? 'active' : ''}`}
           >
             <Filter className="w-4 h-4" />
           </button>
 
-          {/* Clear all */}
           {items.length > 0 && (
-            <button
-              onClick={clearHistory}
-              title="Clear all history"
-              className="p-1.5 rounded-md transition-colors"
-              style={{ color: 'var(--text-muted)' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--bg-hover)'
-                e.currentTarget.style.color = 'var(--accent-danger)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent'
-                e.currentTarget.style.color = 'var(--text-muted)'
-              }}
-            >
+            <button onClick={clearHistory} title="Clear all history" className="toolbar-btn" style={{ color: 'var(--accent-error)' }}>
               <Trash2 className="w-4 h-4" />
             </button>
           )}
 
-          {/* Close panel */}
-          <button
-            onClick={toggleHistory}
-            title="Close history"
-            className="p-1.5 rounded-md transition-colors"
-            style={{ color: 'var(--text-muted)' }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-hover)')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-          >
+          <button onClick={toggleHistory} title="Close history" className="toolbar-btn">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -136,12 +96,12 @@ export default function HistoryPanel() {
       {/* List */}
       <div className="flex-1 overflow-y-auto">
         {filteredItems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 px-4">
-            <Clock className="w-8 h-8 mb-3" style={{ color: 'var(--text-muted)', opacity: 0.5 }} />
-            <p className="text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
+          <div className="empty-state" style={{ padding: '48px 24px' }}>
+            <Clock className="w-10 h-10 empty-state-icon" />
+            <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
               {showFavoritesOnly ? 'No favorites yet' : 'No history yet'}
             </p>
-            <p className="text-xs text-center" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-xs mt-1" style={{ color: 'var(--text-dim)' }}>
               {showFavoritesOnly
                 ? 'Star a request to add it to favorites.'
                 : 'Send a request to start building your history.'}
@@ -150,88 +110,46 @@ export default function HistoryPanel() {
         ) : (
           <div className="flex flex-col">
             {filteredItems.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center gap-2 px-4 py-2.5 border-b transition-colors group"
-                style={{ borderColor: 'var(--border-primary)' }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-hover)')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-              >
+              <div key={item.id} className="history-item group" style={{ borderBottom: '1px solid var(--card-border)' }}>
                 {/* Method badge */}
                 <span
-                  className="text-xs font-bold px-1.5 py-0.5 rounded shrink-0 font-mono"
+                  className="method-badge shrink-0"
                   style={{
-                    backgroundColor: `${METHOD_COLORS[item.method]}20`,
-                    color: METHOD_COLORS[item.method],
-                    minWidth: 48,
+                    backgroundColor: METHOD_COLORS[item.method].bg,
+                    color: METHOD_COLORS[item.method].text,
+                    fontSize: '10px',
+                    padding: '2px 6px',
+                    minWidth: '44px',
                     textAlign: 'center',
                   }}
                 >
                   {item.method}
                 </span>
 
-                {/* Path + timestamp (clickable to replay) */}
-                <button
-                  onClick={() => handleReplay(item)}
-                  className="flex-1 min-w-0 text-left"
-                  title={`Replay: ${item.method} ${item.path}`}
-                >
-                  <div
-                    className="text-xs font-mono truncate"
-                    style={{ color: 'var(--text-primary)' }}
-                  >
+                {/* Path + timestamp */}
+                <button onClick={() => handleReplay(item)} className="flex-1 min-w-0 text-left" title={`Replay: ${item.method} ${item.path}`} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                  <div className="text-xs font-mono truncate" style={{ color: 'var(--text-primary)' }}>
                     {item.name || truncatePath(item.path)}
                   </div>
-                  <div className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--text-dim)' }}>
                     {formatTimestamp(item.timestamp)}
                   </div>
                 </button>
 
-                {/* Action buttons */}
+                {/* Actions */}
                 <div className="flex items-center gap-0.5 shrink-0">
-                  {/* Replay */}
-                  <button
-                    onClick={() => handleReplay(item)}
-                    title="Replay request"
-                    className="p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ color: 'var(--text-muted)' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-primary)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
-                  >
+                  <button onClick={() => handleReplay(item)} title="Replay" className="toolbar-btn opacity-0 group-hover:opacity-100" style={{ padding: '4px' }}>
                     <Play className="w-3.5 h-3.5" />
                   </button>
-
-                  {/* Favorite toggle */}
                   <button
                     onClick={() => toggleFavorite(item.id)}
-                    title={item.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                    className="p-1 rounded transition-colors"
-                    style={{
-                      color: item.isFavorite ? '#f59e0b' : 'var(--text-muted)',
-                      opacity: item.isFavorite ? 1 : undefined,
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!item.isFavorite) e.currentTarget.style.color = '#f59e0b'
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!item.isFavorite) e.currentTarget.style.color = 'var(--text-muted)'
-                    }}
+                    title={item.isFavorite ? 'Remove from favorites' : 'Favorite'}
+                    className="toolbar-btn"
+                    style={{ padding: '4px', color: item.isFavorite ? '#f59e0b' : undefined }}
                   >
-                    <Star
-                      className="w-3.5 h-3.5"
-                      fill={item.isFavorite ? '#f59e0b' : 'none'}
-                    />
+                    <Star className="w-3.5 h-3.5" fill={item.isFavorite ? '#f59e0b' : 'none'} />
                   </button>
-
-                  {/* Delete */}
-                  <button
-                    onClick={() => removeItem(item.id)}
-                    title="Delete from history"
-                    className="p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ color: 'var(--text-muted)' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent-danger)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
-                  >
+                  <button onClick={() => removeItem(item.id)} title="Delete" className="toolbar-btn opacity-0 group-hover:opacity-100" style={{ padding: '4px', color: 'var(--accent-error)' }}>
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -243,11 +161,8 @@ export default function HistoryPanel() {
 
       {/* Footer */}
       {items.length > 0 && (
-        <div
-          className="px-4 py-2 border-t text-center shrink-0"
-          style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-secondary)' }}
-        >
-          <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
+        <div className="px-4 py-2 shrink-0 text-center" style={{ borderTop: '1px solid var(--card-border)', background: 'rgba(0,0,0,0.08)' }}>
+          <span className="text-xs" style={{ color: 'var(--text-dim)' }}>
             {items.length} total request{items.length !== 1 ? 's' : ''}
             {items.filter((i) => i.isFavorite).length > 0 &&
               ` | ${items.filter((i) => i.isFavorite).length} favorite${items.filter((i) => i.isFavorite).length !== 1 ? 's' : ''}`}

@@ -16,9 +16,9 @@ export interface ApiEndpoint {
   queryParams?: QueryParamSpec[]
   description?: string
   docs?: {
-    summary?: string
+    summary: string
     docUrl?: string
-    parameters?: string[]
+    parameters?: Array<{ name: string; type: string; required?: boolean; description?: string }>
     relatedEndpoints?: string[]
   }
 }

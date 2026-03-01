@@ -107,8 +107,9 @@ async def call_databricks_model_with_metadata(
 async def recommend_endpoint(
     query: str, model: str | None = None, region: str | None = None,
     host: str | None = None, token: str | None = None,
+    custom_system_prompt: str | None = None,
 ) -> dict:
-    system_prompt = """You are a Databricks API expert. Given a user's question, recommend the best Databricks REST API endpoint(s) to use.
+    system_prompt = custom_system_prompt or """You are a Databricks API expert. Given a user's question, recommend the best Databricks REST API endpoint(s) to use.
 Include the HTTP method, full path, required parameters, and a brief explanation."""
     result = await call_databricks_model_with_metadata(query, model, host, token, system_prompt=system_prompt)
     return {"recommendation": result["content"], "metadata": result["metadata"]}
@@ -131,18 +132,59 @@ async def suggest_parameters(
     model: str | None = None, host: str | None = None, token: str | None = None,
     custom_system_prompt: str | None = None,
 ) -> dict:
-    system_prompt = custom_system_prompt or "You are a Databricks API expert. Suggest the best parameters for the given API endpoint based on the user's intent."
-    prompt = f"Endpoint: {method} {endpoint}\nUser intent: {user_intent}\nSuggest the optimal request parameters."
+    system_prompt = custom_system_prompt or (
+        "You are a Databricks API expert. Suggest the best parameters for the given API endpoint. "
+        "Return ONLY a valid JSON object with the suggested parameters. "
+        "Do NOT include any markdown, code fences, explanation, or commentary — just the raw JSON object."
+    )
+    prompt = f"Endpoint: {method} {endpoint}\nUser intent: {user_intent}\nReturn the optimal request parameters as a JSON object."
     result = await call_databricks_model_with_metadata(prompt, model, host, token, system_prompt=system_prompt)
-    return {"suggestion": result["content"]}
+    content = result["content"]
+    # Extract JSON from response if wrapped in markdown code fences
+    content = _extract_json(content)
+    return {"suggestion": content}
+
+
+def _extract_json(text: str) -> str:
+    """Try to extract a valid JSON object from text that may contain markdown."""
+    text = text.strip()
+    # If it's already valid JSON, return as-is
+    try:
+        json.loads(text)
+        return text
+    except (json.JSONDecodeError, ValueError):
+        pass
+    # Strip markdown code fences (```json ... ``` or ``` ... ```)
+    import re
+    match = re.search(r'```(?:json)?\s*\n?([\s\S]*?)\n?```', text)
+    if match:
+        candidate = match.group(1).strip()
+        try:
+            parsed = json.loads(candidate)
+            return json.dumps(parsed, indent=2)
+        except (json.JSONDecodeError, ValueError):
+            pass
+    # Try to find the first { ... } block
+    brace_start = text.find('{')
+    brace_end = text.rfind('}')
+    if brace_start != -1 and brace_end > brace_start:
+        candidate = text[brace_start:brace_end + 1]
+        try:
+            parsed = json.loads(candidate)
+            return json.dumps(parsed, indent=2)
+        except (json.JSONDecodeError, ValueError):
+            pass
+    # Return original text if nothing worked
+    return text
 
 
 async def analyze_response(
     endpoint: str, method: str, response: dict | list | str | None,
     model: str | None = None, region: str | None = None,
     host: str | None = None, token: str | None = None,
+    custom_system_prompt: str | None = None,
 ) -> dict:
-    system_prompt = "Analyze this Databricks API response. Provide key insights, notable patterns, potential issues, and recommendations."
+    system_prompt = custom_system_prompt or "Analyze this Databricks API response. Provide key insights, notable patterns, potential issues, and recommendations."
     prompt = f"Endpoint: {method} {endpoint}\nResponse:\n{json.dumps(response, indent=2) if isinstance(response, (dict, list)) else response}"
     result = await call_databricks_model_with_metadata(prompt, model, host, token, system_prompt=system_prompt)
     return {"analysis": result["content"], "metadata": result["metadata"]}
@@ -192,8 +234,9 @@ async def generate_workflow(
     goal: str, model: str | None = None,
     host: str | None = None, token: str | None = None,
     max_tokens: int | None = None,
+    custom_system_prompt: str | None = None,
 ) -> dict:
-    system_prompt = """Generate a Databricks workflow as a sequence of API calls. For each step include:
+    system_prompt = custom_system_prompt or """Generate a Databricks workflow as a sequence of API calls. For each step include:
 - Step number and description
 - HTTP method and endpoint
 - Request body
@@ -216,8 +259,9 @@ async def generate_prompt(
 async def generate_tests(
     endpoint: str, method: str, description: str | None = None,
     model: str | None = None, host: str | None = None, token: str | None = None,
+    custom_system_prompt: str | None = None,
 ) -> dict:
-    system_prompt = "Generate test cases for the given Databricks API endpoint. Include positive tests, negative tests, edge cases, and expected responses."
+    system_prompt = custom_system_prompt or "Generate test cases for the given Databricks API endpoint. Include positive tests, negative tests, edge cases, and expected responses."
     prompt = f"Endpoint: {method} {endpoint}" + (f"\nDescription: {description}" if description else "")
     result = await call_databricks_model_with_metadata(prompt, model, host, token, system_prompt=system_prompt)
     return {"tests": result["content"], "metadata": result["metadata"]}
@@ -227,8 +271,9 @@ async def generate_security_recommendations(
     endpoint: str, method: str,
     last_error: dict | str | None = None, last_response: dict | str | None = None,
     model: str | None = None, host: str | None = None, token: str | None = None,
+    custom_system_prompt: str | None = None,
 ) -> dict:
-    system_prompt = "Provide security recommendations for this Databricks API endpoint. Cover authentication, authorization, data protection, and best practices."
+    system_prompt = custom_system_prompt or "Provide security recommendations for this Databricks API endpoint. Cover authentication, authorization, data protection, and best practices."
     prompt = f"Endpoint: {method} {endpoint}"
     if last_error:
         prompt += f"\nRecent error: {json.dumps(last_error) if isinstance(last_error, dict) else last_error}"
@@ -241,8 +286,9 @@ async def generate_security_recommendations(
 async def generate_code_samples(
     endpoint: str, method: str, body: dict | None = None,
     model: str | None = None, host: str | None = None, token: str | None = None,
+    custom_system_prompt: str | None = None,
 ) -> dict:
-    system_prompt = "Generate code samples for calling this Databricks API endpoint in Python, JavaScript, cURL, and Go."
+    system_prompt = custom_system_prompt or "Generate code samples for calling this Databricks API endpoint in Python, JavaScript, cURL, and Go."
     prompt = f"Endpoint: {method} {endpoint}"
     if body:
         prompt += f"\nRequest body: {json.dumps(body, indent=2)}"
@@ -254,8 +300,9 @@ async def generate_documentation(
     endpoint: str, method: str, description: str,
     sample_request: dict | None = None, sample_response: dict | None = None,
     model: str | None = None, host: str | None = None, token: str | None = None,
+    custom_system_prompt: str | None = None,
 ) -> dict:
-    system_prompt = "Generate comprehensive API documentation for this Databricks endpoint in Markdown format."
+    system_prompt = custom_system_prompt or "Generate comprehensive API documentation for this Databricks endpoint in Markdown format."
     prompt = f"Endpoint: {method} {endpoint}\nDescription: {description}"
     if sample_request:
         prompt += f"\nSample request: {json.dumps(sample_request, indent=2)}"
@@ -269,8 +316,9 @@ async def generate_script(
     prompt: str, category: str | None = None,
     model: str | None = None, host: str | None = None, token: str | None = None,
     max_tokens: int | None = None,
+    custom_system_prompt: str | None = None,
 ) -> dict:
-    system_prompt = f"""Generate a Python script for Databricks automation{f' (category: {category})' if category else ''}.
+    system_prompt = custom_system_prompt or f"""Generate a Python script for Databricks automation{f' (category: {category})' if category else ''}.
 The script should use the databricks-sdk or REST API calls.
 Include error handling and logging. Return ONLY the Python code."""
     result = await call_databricks_model_with_metadata(prompt, model, host, token, max_tokens, system_prompt)

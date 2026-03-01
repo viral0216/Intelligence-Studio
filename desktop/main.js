@@ -11,7 +11,7 @@ function createWindow() {
     height: 900,
     minWidth: 1024,
     minHeight: 700,
-    title: 'Intelligencre Studio',
+    title: 'Intelligence Studio',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,

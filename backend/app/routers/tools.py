@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Query
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from app.services.ai_helper import call_databricks_model_with_metadata
 
 router = APIRouter()
@@ -8,7 +8,7 @@ router = APIRouter()
 class GenerateTestDataRequest(BaseModel):
     method: str
     path: str
-    schema: dict | None = None
+    data_schema: dict | None = Field(None, alias="schema")
     example: dict | None = None
     count: int = 1
     model: str | None = None
@@ -29,7 +29,7 @@ async def generate_test_data(req: GenerateTestDataRequest):
     prompt = f"""Generate {req.count} sample test data payload(s) for:
 - Method: {req.method}
 - Endpoint: {req.path}
-- Schema: {req.schema or 'infer from endpoint'}
+- Schema: {req.data_schema or 'infer from endpoint'}
 - Example: {req.example or 'none'}
 
 Return valid JSON that can be used as a request body."""

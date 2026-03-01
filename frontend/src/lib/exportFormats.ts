@@ -24,7 +24,7 @@ export function toCSV(data: unknown): string {
 
   if (rows.length === 0) return ''
 
-  const flatRows = rows.map(deepFlatten)
+  const flatRows = rows.map((row) => deepFlatten(row))
   const columns = [...new Set(flatRows.flatMap(Object.keys))]
 
   const header = columns.map(escapeCSV).join(',')
@@ -53,7 +53,7 @@ export function toMarkdown(data: unknown): string {
 
   if (rows.length === 0) return `\`\`\`json\n${JSON.stringify(data, null, 2)}\n\`\`\``
 
-  const flatRows = rows.map(deepFlatten)
+  const flatRows = rows.map((row) => deepFlatten(row))
   const columns = [...new Set(flatRows.flatMap(Object.keys))]
 
   const header = `| ${columns.join(' | ')} |`

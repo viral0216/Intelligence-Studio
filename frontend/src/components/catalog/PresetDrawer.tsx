@@ -3,16 +3,9 @@ import { X, Search, ChevronDown, ChevronRight } from 'lucide-react'
 import { useCatalogStore } from '@/stores/catalogStore'
 import { useRequestStore } from '@/stores/requestStore'
 import { API_CATALOG } from '@/lib/apiCatalog'
+import { CategoryIcon } from '@/lib/categoryIcons'
 import type { ApiEndpoint } from '@/types/catalog'
 import type { HttpMethod } from '@/types/api'
-
-const METHOD_COLORS: Record<string, string> = {
-  GET: '#7ee787',
-  POST: '#58a6ff',
-  PUT: '#f0883e',
-  PATCH: '#d2a8ff',
-  DELETE: '#f85149',
-}
 
 export default function PresetDrawer() {
   const {
@@ -31,7 +24,6 @@ export default function PresetDrawer() {
 
     const query = searchQuery.toLowerCase()
     return API_CATALOG.map((category) => {
-      // Check subcategories
       if (category.subcategories) {
         const filteredSubs = category.subcategories
           .map((sub) => ({
@@ -50,7 +42,6 @@ export default function PresetDrawer() {
         }
       }
 
-      // Check direct endpoints
       if (category.endpoints) {
         const filteredEndpoints = category.endpoints.filter(
           (ep) =>
@@ -85,56 +76,32 @@ export default function PresetDrawer() {
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-40"
-        style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
+        className="fixed inset-0 z-40 animate-fade-in"
+        style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)', backdropFilter: 'blur(4px)' }}
         onClick={() => setShowPresetDrawer(false)}
       />
 
       {/* Drawer */}
-      <div
-        className="fixed top-0 right-0 bottom-0 z-50 w-96 flex flex-col shadow-2xl"
-        style={{
-          backgroundColor: 'var(--bg-primary)',
-          borderLeft: '1px solid var(--border-primary)',
-        }}
-      >
+      <div className="drawer" style={{ width: '400px' }}>
         {/* Header */}
-        <div
-          className="flex items-center justify-between px-4 py-3 border-b flex-shrink-0"
-          style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-secondary)' }}
-        >
-          <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
-            API Catalog
-          </span>
-          <button
-            onClick={() => setShowPresetDrawer(false)}
-            className="p-1 rounded transition-colors"
-            style={{ color: 'var(--text-muted)' }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-hover)')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-          >
+        <div className="drawer-header">
+          <span className="text-sm font-semibold gradient-text-teal">API Catalog</span>
+          <button onClick={() => setShowPresetDrawer(false)} className="toolbar-btn">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Search */}
-        <div className="px-4 py-2 border-b flex-shrink-0" style={{ borderColor: 'var(--border-primary)' }}>
+        <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--card-border)' }}>
           <div className="relative">
-            <Search
-              className="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2"
-              style={{ color: 'var(--text-muted)' }}
-            />
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--text-muted)' }} />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search endpoints..."
-              className="w-full pl-8 pr-3 py-2 rounded-lg text-sm outline-none"
-              style={{
-                backgroundColor: 'var(--bg-input)',
-                color: 'var(--text-primary)',
-                border: '1px solid var(--border-primary)',
-              }}
+              placeholder="Search 300+ endpoints..."
+              className="input"
+              style={{ paddingLeft: '36px', fontSize: '13px' }}
             />
           </div>
         </div>
@@ -142,10 +109,9 @@ export default function PresetDrawer() {
         {/* Catalog list */}
         <div className="flex-1 overflow-y-auto">
           {filteredCatalog.length === 0 ? (
-            <div className="p-4 text-center">
-              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-                No endpoints match your search
-              </p>
+            <div className="empty-state" style={{ padding: '48px 24px' }}>
+              <Search className="w-10 h-10 empty-state-icon" />
+              <p className="text-sm">No endpoints match your search</p>
             </div>
           ) : (
             filteredCatalog.map((category) => {
@@ -156,34 +122,20 @@ export default function PresetDrawer() {
                   {/* Category header */}
                   <button
                     onClick={() => toggleCategory(category.name)}
-                    className="flex items-center gap-2 w-full px-4 py-2.5 text-left border-b transition-colors"
-                    style={{
-                      borderColor: 'var(--border-secondary)',
-                      backgroundColor: 'var(--bg-secondary)',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-hover)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-secondary)')}
+                    className="flex items-center gap-2 w-full px-4 py-2.5 text-left hoverable"
+                    style={{ borderBottom: '1px solid var(--card-border)', background: 'rgba(0,0,0,0.05)' }}
                   >
                     {isExpanded ? (
-                      <ChevronDown className="w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} />
+                      <ChevronDown className="w-3.5 h-3.5" style={{ color: 'var(--accent-primary)' }} />
                     ) : (
                       <ChevronRight className="w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} />
                     )}
-                    <span className="text-sm mr-1">{category.icon}</span>
-                    <span
-                      className="text-xs font-semibold flex-1"
-                      style={{ color: 'var(--text-primary)' }}
-                    >
+                    <CategoryIcon name={category.icon} className="w-3.5 h-3.5 shrink-0 mr-1" />
+                    <span className="text-xs font-semibold flex-1" style={{ color: 'var(--text-primary)' }}>
                       {category.name}
                     </span>
                     {category.audience && (
-                      <span
-                        className="text-[9px] px-1.5 py-0.5 rounded-full"
-                        style={{
-                          backgroundColor: 'var(--bg-tertiary)',
-                          color: 'var(--text-muted)',
-                        }}
-                      >
+                      <span className="badge" style={{ fontSize: '9px', padding: '1px 6px' }}>
                         {category.audience}
                       </span>
                     )}
@@ -192,19 +144,10 @@ export default function PresetDrawer() {
                   {/* Endpoints */}
                   {isExpanded && (
                     <div>
-                      {/* Subcategories */}
                       {category.subcategories?.map((sub) => (
                         <div key={sub.name}>
-                          <div
-                            className="px-4 py-1.5"
-                            style={{ backgroundColor: 'var(--bg-tertiary)' }}
-                          >
-                            <span
-                              className="text-[10px] font-medium uppercase tracking-wider"
-                              style={{ color: 'var(--text-muted)' }}
-                            >
-                              {sub.name}
-                            </span>
+                          <div className="section-header" style={{ background: 'var(--code-bg)' }}>
+                            {sub.name}
                           </div>
                           {sub.endpoints.map((endpoint) => (
                             <EndpointItem
@@ -216,7 +159,6 @@ export default function PresetDrawer() {
                         </div>
                       ))}
 
-                      {/* Direct endpoints */}
                       {category.endpoints?.map((endpoint) => (
                         <EndpointItem
                           key={`${endpoint.method}-${endpoint.path}`}
@@ -244,30 +186,15 @@ function EndpointItem({
   onClick: () => void
 }) {
   return (
-    <button
-      onClick={onClick}
-      className="flex items-center gap-2 w-full px-4 py-2 text-left transition-colors border-b"
-      style={{ borderColor: 'var(--border-secondary)' }}
-      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--bg-hover)')}
-      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-    >
-      <span
-        className="text-[10px] font-bold px-1.5 py-0.5 rounded w-12 text-center flex-shrink-0"
-        style={{
-          backgroundColor: `${METHOD_COLORS[endpoint.method] || '#8b949e'}20`,
-          color: METHOD_COLORS[endpoint.method] || '#8b949e',
-        }}
-      >
+    <button onClick={onClick} className="endpoint-item w-full" style={{ borderBottom: '1px solid var(--card-border)', borderRadius: 0 }}>
+      <span className={`method-badge ${endpoint.method.toLowerCase()}`} style={{ fontSize: '9px', padding: '2px 6px', minWidth: '44px', textAlign: 'center' }}>
         {endpoint.method}
       </span>
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 text-left">
         <p className="text-xs font-medium truncate" style={{ color: 'var(--text-primary)' }}>
           {endpoint.label}
         </p>
-        <p
-          className="text-[10px] font-mono truncate"
-          style={{ color: 'var(--text-muted)' }}
-        >
+        <p className="text-[10px] font-mono truncate" style={{ color: 'var(--text-dim)' }}>
           {endpoint.path}
         </p>
       </div>

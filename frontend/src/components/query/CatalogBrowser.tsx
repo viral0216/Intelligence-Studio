@@ -14,19 +14,19 @@ import { useAuthStore } from '@/stores/authStore'
 import { sendRequest } from '@/lib/api'
 
 const TYPE_COLORS: Record<string, string> = {
-  STRING: '#58a6ff',
-  INT: '#7ee787',
-  LONG: '#7ee787',
-  DOUBLE: '#f0883e',
-  FLOAT: '#f0883e',
-  DECIMAL: '#f0883e',
-  BOOLEAN: '#d2a8ff',
-  TIMESTAMP: '#f778ba',
-  DATE: '#f778ba',
-  ARRAY: '#79c0ff',
-  STRUCT: '#ffa657',
-  MAP: '#ffa657',
-  BINARY: '#8b949e',
+  STRING: 'var(--type-string)',
+  INT: 'var(--type-int)',
+  LONG: 'var(--type-int)',
+  DOUBLE: 'var(--type-double)',
+  FLOAT: 'var(--type-double)',
+  DECIMAL: 'var(--type-double)',
+  BOOLEAN: 'var(--type-boolean)',
+  TIMESTAMP: 'var(--type-timestamp)',
+  DATE: 'var(--type-timestamp)',
+  ARRAY: 'var(--type-array)',
+  STRUCT: 'var(--type-struct)',
+  MAP: 'var(--type-struct)',
+  BINARY: 'var(--type-default)',
 }
 
 function getTypeColor(type: string): string {
@@ -34,7 +34,7 @@ function getTypeColor(type: string): string {
   for (const [key, color] of Object.entries(TYPE_COLORS)) {
     if (upperType.includes(key)) return color
   }
-  return '#8b949e'
+  return 'var(--type-default)'
 }
 
 export default function CatalogBrowser() {
@@ -289,7 +289,7 @@ export default function CatalogBrowser() {
                       ) : (
                         <ChevronRight className="w-3 h-3 flex-shrink-0" />
                       )}
-                      <FolderOpen className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#f0883e' }} />
+                      <FolderOpen className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--icon-folder)' }} />
                       <span className="truncate">{schema}</span>
                       {loadingItem === `tables-${catalog}-${schema}` && (
                         <Loader2 className="w-3 h-3 animate-spin ml-auto" style={{ color: 'var(--accent-primary)' }} />
@@ -321,7 +321,7 @@ export default function CatalogBrowser() {
                             ) : (
                               <ChevronRight className="w-3 h-3 flex-shrink-0" />
                             )}
-                            <Table2 className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#58a6ff' }} />
+                            <Table2 className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--icon-table)' }} />
                             <span className="truncate">{table.name}</span>
                             <span
                               className="text-[9px] ml-auto px-1 py-0.5 rounded"

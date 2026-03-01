@@ -4,8 +4,8 @@ import { useCatalogStore } from '@/stores/catalogStore'
 import { useRequestStore } from '@/stores/requestStore'
 import type { ApiEndpoint } from '@/types/catalog'
 
-// Import the catalog data - the same data used by the sidebar
-import catalogData from '@/data/catalog'
+// Import the catalog data
+import { API_CATALOG } from '@/lib/apiCatalog'
 
 interface CatalogCategory {
   name: string
@@ -23,11 +23,11 @@ export default function ApiDocsTab() {
 
   // Access catalog data - handle both array and object-with-categories shapes
   const categories: CatalogCategory[] = useMemo(() => {
-    if (Array.isArray(catalogData)) {
-      return catalogData as CatalogCategory[]
+    if (Array.isArray(API_CATALOG)) {
+      return API_CATALOG as CatalogCategory[]
     }
-    if (catalogData && typeof catalogData === 'object' && 'categories' in catalogData) {
-      return (catalogData as { categories: CatalogCategory[] }).categories
+    if (API_CATALOG && typeof API_CATALOG === 'object' && 'categories' in API_CATALOG) {
+      return (API_CATALOG as { categories: CatalogCategory[] }).categories
     }
     return []
   }, [])
@@ -288,7 +288,7 @@ export default function ApiDocsTab() {
               </div>
 
               {/* Documentation details */}
-              {selectedDoc.docs && (
+              {!!selectedDoc.docs && (
                 <div
                   className="rounded-lg p-4"
                   style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-primary)' }}
@@ -303,7 +303,7 @@ export default function ApiDocsTab() {
                     </p>
                   )}
 
-                  {selectedDoc.docs.parameters && selectedDoc.docs.parameters.length > 0 && (
+                  {!!selectedDoc.docs.parameters && selectedDoc.docs.parameters.length > 0 && (
                     <div className="mb-3">
                       <p className="text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Parameters</p>
                       <ul className="space-y-1">
@@ -313,15 +313,18 @@ export default function ApiDocsTab() {
                               className="px-1 py-0.5 rounded"
                               style={{ backgroundColor: 'var(--bg-tertiary)', color: 'var(--accent-primary)' }}
                             >
-                              {param}
+                              {param.name}
                             </code>
+                            <span className="ml-1" style={{ color: 'var(--text-muted)' }}>({param.type})</span>
+                            {param.required && <span className="ml-1" style={{ color: 'var(--accent-error)' }}>*</span>}
+                            {param.description && <span className="ml-1">{param.description}</span>}
                           </li>
                         ))}
                       </ul>
                     </div>
                   )}
 
-                  {selectedDoc.docs.relatedEndpoints && selectedDoc.docs.relatedEndpoints.length > 0 && (
+                  {!!selectedDoc.docs.relatedEndpoints && selectedDoc.docs.relatedEndpoints.length > 0 && (
                     <div className="mb-3">
                       <p className="text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Related Endpoints</p>
                       <ul className="space-y-0.5">
@@ -350,7 +353,7 @@ export default function ApiDocsTab() {
               )}
 
               {/* Query parameters */}
-              {selectedDoc.queryParams && selectedDoc.queryParams.length > 0 && (
+              {!!selectedDoc.queryParams && selectedDoc.queryParams.length > 0 && (
                 <div
                   className="rounded-lg p-4"
                   style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-primary)' }}
@@ -388,7 +391,7 @@ export default function ApiDocsTab() {
               )}
 
               {/* Request body schema */}
-              {selectedDoc.body && (
+              {!!selectedDoc.body && (
                 <div
                   className="rounded-lg p-4"
                   style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-primary)' }}

@@ -13,7 +13,7 @@ export default function App() {
   }, [theme])
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+    <div className="app-shell">
       <HeaderBar />
       <MainLayout />
       {settingsOpen && <SettingsModal />}

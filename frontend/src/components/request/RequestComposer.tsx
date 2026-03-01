@@ -1,28 +1,20 @@
-import { useState, useCallback } from 'react'
+import { useCallback } from 'react'
 import { Send, Loader2, Sparkles } from 'lucide-react'
 import { useRequestStore } from '@/stores/requestStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useHistoryStore } from '@/stores/historyStore'
-import { useCatalogStore } from '@/stores/catalogStore'
-import { sendRequest } from '@/lib/api'
+import { useSettingsStore } from '@/stores/settingsStore'
+import { sendRequest, aiSuggestParameters } from '@/lib/api'
 import type { HttpMethod } from '@/types/api'
+import JsonEditor from '@/components/common/JsonEditor'
 
 const METHODS: HttpMethod[] = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
-
-const METHOD_COLORS: Record<HttpMethod, string> = {
-  GET: 'var(--method-get)',
-  POST: 'var(--method-post)',
-  PUT: 'var(--method-put)',
-  PATCH: 'var(--method-patch)',
-  DELETE: 'var(--method-delete)',
-}
 
 export default function RequestComposer() {
   const { method, path, bodyInput, isLoading, setMethod, setPath, setBodyInput, setLoading, setResponse, setError } = useRequestStore()
   const { host, token } = useAuthStore()
   const { addItem } = useHistoryStore()
-  const { setShowPresetDrawer } = useCatalogStore()
-  const [showBody, setShowBody] = useState(false)
+  const { defaultModel } = useSettingsStore()
 
   const handleSend = useCallback(async () => {
     if (!host || !token) {
@@ -60,96 +52,96 @@ export default function RequestComposer() {
     }
   }, [method, path, bodyInput, host, token, setLoading, setResponse, setError, addItem])
 
-  return (
-    <div
-      className="p-4 border-b"
-      style={{ backgroundColor: 'var(--bg-secondary)', borderColor: 'var(--border-primary)' }}
-    >
-      {/* Method + Path + Send */}
-      <div className="flex items-center gap-2">
-        {/* Method selector */}
-        <select
-          value={method}
-          onChange={(e) => setMethod(e.target.value as HttpMethod)}
-          className="px-3 py-2 rounded-lg text-sm font-bold border-0 outline-none cursor-pointer"
-          style={{
-            backgroundColor: 'var(--bg-input)',
-            color: METHOD_COLORS[method],
-            minWidth: '100px',
-          }}
-        >
-          {METHODS.map((m) => (
-            <option key={m} value={m} style={{ color: METHOD_COLORS[m] }}>
-              {m}
-            </option>
-          ))}
-        </select>
+  const handleAiSuggest = async () => {
+    if (!host || !token || !path) return
+    try {
+      const result = await aiSuggestParameters(path, method, '', host, token, defaultModel)
+      if (result.suggestion) {
+        let suggestion = result.suggestion.trim()
+        // Try to parse as JSON first; if invalid, try to extract JSON from markdown
+        try {
+          const parsed = JSON.parse(suggestion)
+          suggestion = JSON.stringify(parsed, null, 2)
+        } catch {
+          // Try extracting JSON from markdown code fences
+          const fenceMatch = suggestion.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/)
+          if (fenceMatch) {
+            try {
+              const parsed = JSON.parse(fenceMatch[1].trim())
+              suggestion = JSON.stringify(parsed, null, 2)
+            } catch { /* ignore */ }
+          } else {
+            // Try extracting first { ... } block
+            const braceStart = suggestion.indexOf('{')
+            const braceEnd = suggestion.lastIndexOf('}')
+            if (braceStart !== -1 && braceEnd > braceStart) {
+              try {
+                const parsed = JSON.parse(suggestion.slice(braceStart, braceEnd + 1))
+                suggestion = JSON.stringify(parsed, null, 2)
+              } catch { /* ignore */ }
+            }
+          }
+        }
+        setBodyInput(suggestion)
+      }
+    } catch {
+      // silently fail
+    }
+  }
 
-        {/* Path input */}
-        <div className="flex-1 relative">
+  return (
+    <div className="card">
+      <h2 className="card-title">Request composer</h2>
+
+      {/* METHOD + PATH row */}
+      <div className="grid grid-cols-[200px_1fr] gap-4 mb-4">
+        <div>
+          <label className="label">METHOD</label>
+          <select
+            value={method}
+            onChange={(e) => setMethod(e.target.value as HttpMethod)}
+            className="select-input"
+          >
+            {METHODS.map((m) => (
+              <option key={m} value={m}>{m}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="label">PATH</label>
           <input
             type="text"
             value={path}
             onChange={(e) => setPath(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder="/api/2.0/clusters/list"
-            className="w-full px-3 py-2 rounded-lg text-sm outline-none"
-            style={{
-              backgroundColor: 'var(--bg-input)',
-              color: 'var(--text-primary)',
-              border: '1px solid var(--border-primary)',
-            }}
+            className="input"
           />
         </div>
-
-        {/* Preset button */}
-        <button
-          onClick={() => setShowPresetDrawer(true)}
-          className="p-2 rounded-lg transition-colors"
-          style={{ backgroundColor: 'var(--bg-input)', color: 'var(--accent-secondary)' }}
-          title="Browse API Catalog"
-        >
-          <Sparkles className="w-4 h-4" />
-        </button>
-
-        {/* Send button */}
-        <button
-          onClick={handleSend}
-          disabled={isLoading}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors disabled:opacity-50"
-          style={{ backgroundColor: 'var(--accent-primary)' }}
-        >
-          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-          Send
-        </button>
       </div>
 
-      {/* Body toggle */}
-      {(method === 'POST' || method === 'PUT' || method === 'PATCH') && (
-        <div className="mt-2">
-          <button
-            onClick={() => setShowBody(!showBody)}
-            className="text-xs font-medium"
-            style={{ color: 'var(--accent-primary)' }}
-          >
-            {showBody ? 'Hide' : 'Show'} Request Body
+      {/* Query Parameters / Body */}
+      <div className="mb-4">
+        <div className="flex items-center justify-between mb-2">
+          <label className="label" style={{ margin: 0 }}>QUERY PARAMETERS (JSON)</label>
+          <button onClick={handleAiSuggest} className="btn btn-ghost btn-sm" style={{ color: 'var(--accent-secondary)' }}>
+            <Sparkles className="w-3.5 h-3.5" />
+            AI Suggest
           </button>
-          {showBody && (
-            <textarea
-              value={bodyInput}
-              onChange={(e) => setBodyInput(e.target.value)}
-              placeholder='{"key": "value"}'
-              rows={6}
-              className="w-full mt-2 px-3 py-2 rounded-lg text-sm font-mono outline-none resize-y"
-              style={{
-                backgroundColor: 'var(--bg-input)',
-                color: 'var(--text-primary)',
-                border: '1px solid var(--border-primary)',
-              }}
-            />
-          )}
         </div>
-      )}
+        <JsonEditor
+          value={bodyInput}
+          onChange={setBodyInput}
+          placeholder='{"limit": 10}'
+          rows={4}
+        />
+      </div>
+
+      {/* Send button */}
+      <button onClick={handleSend} disabled={isLoading} className="btn btn-primary">
+        {isLoading ? <Loader2 className="w-4 h-4 spin" /> : <Send className="w-4 h-4" />}
+        Send
+      </button>
     </div>
   )
 }

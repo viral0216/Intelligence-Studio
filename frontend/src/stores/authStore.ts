@@ -42,6 +42,6 @@ export const useAuthStore = create<AuthState>()(
           azureUsername: null,
         }),
     }),
-    { name: 'intelligencre-auth' }
+    { name: 'intelligence-auth' }
   )
 )

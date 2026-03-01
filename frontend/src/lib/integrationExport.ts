@@ -29,7 +29,7 @@ export function exportToPostman(request: RequestInfo, history?: RequestInfo[]) {
 
   const collection = {
     info: {
-      name: 'Intelligencre Studio - Databricks API',
+      name: 'Intelligence Studio - Databricks API',
       schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json',
     },
     item: items,
@@ -50,7 +50,7 @@ export function exportToInsomnia(request: RequestInfo) {
       {
         _id: 'wrk_1',
         _type: 'workspace',
-        name: 'Intelligencre Studio - Databricks',
+        name: 'Intelligence Studio - Databricks',
       },
       {
         _id: 'req_1',

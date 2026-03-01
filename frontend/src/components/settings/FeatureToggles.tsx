@@ -1,4 +1,4 @@
-import { useSettingsStore } from '@/stores/settingsStore'
+import { useSettingsStore, type FeatureKey } from '@/stores/settingsStore'
 import {
   MessageSquare,
   Search,
@@ -10,7 +10,7 @@ import {
 } from 'lucide-react'
 
 interface FeatureDefinition {
-  key: keyof ReturnType<typeof useSettingsStore>['features']
+  key: FeatureKey
   label: string
   description: string
   icon: React.ReactNode

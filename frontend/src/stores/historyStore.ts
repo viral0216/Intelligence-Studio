@@ -55,6 +55,6 @@ export const useHistoryStore = create<HistoryState>()(
       toggleFavoritesFilter: () =>
         set((state) => ({ showFavoritesOnly: !state.showFavoritesOnly })),
     }),
-    { name: 'intelligencre-history' }
+    { name: 'intelligence-history' }
   )
 )

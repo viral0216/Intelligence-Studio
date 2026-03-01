@@ -1,7 +1,7 @@
 {
-  "name": "intelligencre-studio-desktop",
+  "name": "intelligence-studio-desktop",
   "version": "1.0.0",
-  "description": "Intelligencre Studio Desktop App",
+  "description": "Intelligence Studio Desktop App",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -14,8 +14,8 @@
     "electron-builder": "^24.9.0"
   },
   "build": {
-    "appId": "com.intelligencre.studio",
-    "productName": "Intelligencre Studio",
+    "appId": "com.intelligence.studio",
+    "productName": "Intelligence Studio",
     "directories": {
       "output": "dist"
     },

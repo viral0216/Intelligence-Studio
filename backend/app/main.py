@@ -8,7 +8,7 @@ from app.routers import health, proxy, azure_auth, azure_resources, ai, agent, c
 
 def create_app() -> FastAPI:
     app = FastAPI(
-        title="Intelligencre Studio",
+        title="Intelligence Studio",
         description="Databricks Intelligence Platform API",
         version="1.0.0",
     )

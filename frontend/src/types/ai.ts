@@ -7,6 +7,11 @@ export type AiTab =
   | 'code-generation'
   | 'test-data'
   | 'api-docs'
+  | 'agent-chat'
+  | 'query-builder'
+  | 'visualization'
+  | 'scripting'
+  | 'prompts'
 
 export interface AiMessage {
   role: 'user' | 'assistant' | 'system'

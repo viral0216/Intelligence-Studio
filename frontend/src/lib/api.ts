@@ -22,14 +22,14 @@ export async function sendRequest(
 // ===== Health =====
 
 export async function checkHealth(host: string, token: string): Promise<{ ok: boolean; message: string; durationMs: number }> {
-  const { data } = await api.get('/health', { params: { host, token } })
+  const { data } = await api.post('/health/check', { host, token })
   return data
 }
 
 // ===== AI =====
 
-export async function aiRecommendEndpoint(query: string, host: string, token: string, model?: string) {
-  const { data } = await api.post('/ai/recommend-endpoint', { query, host, token, model })
+export async function aiRecommendEndpoint(query: string, host: string, token: string, model?: string, customSystemPrompt?: string) {
+  const { data } = await api.post('/ai/recommend-endpoint', { query, host, token, model, customSystemPrompt })
   return data as { recommendation: string; metadata: ModelCallMetadata }
 }
 
@@ -38,18 +38,18 @@ export async function aiNaturalLanguageToApi(query: string, host: string, token:
   return data as { apiCall: string; metadata: ModelCallMetadata }
 }
 
-export async function aiSuggestParameters(endpoint: string, method: string, userIntent: string, host: string, token: string, model?: string) {
-  const { data } = await api.post('/ai/suggest-parameters', { endpoint, method, userIntent, host, token, model })
+export async function aiSuggestParameters(endpoint: string, method: string, userIntent: string, host: string, token: string, model?: string, customSystemPrompt?: string) {
+  const { data } = await api.post('/ai/suggest-parameters', { endpoint, method, userIntent, host, token, model, customSystemPrompt })
   return data as { suggestion: string }
 }
 
-export async function aiAnalyzeResponse(endpoint: string, method: string, response: unknown, host: string, token: string, model?: string) {
-  const { data } = await api.post('/ai/analyze-response', { endpoint, method, response, host, token, model })
+export async function aiAnalyzeResponse(endpoint: string, method: string, response: unknown, host: string, token: string, model?: string, customSystemPrompt?: string) {
+  const { data } = await api.post('/ai/analyze-response', { endpoint, method, response, host, token, model, customSystemPrompt })
   return data as { analysis: string; metadata: ModelCallMetadata }
 }
 
-export async function aiExplainError(endpoint: string, method: string, errorResponse: unknown, host: string, token: string, model?: string, requestBody?: unknown) {
-  const { data } = await api.post('/ai/explain-error', { endpoint, method, errorResponse, host, token, model, requestBody })
+export async function aiExplainError(endpoint: string, method: string, errorResponse: unknown, host: string, token: string, model?: string, requestBody?: unknown, customSystemPrompt?: string) {
+  const { data } = await api.post('/ai/explain-error', { endpoint, method, errorResponse, host, token, model, requestBody, customSystemPrompt })
   return data as { explanation: string }
 }
 
@@ -58,13 +58,13 @@ export async function aiDataAssistant(question: string, host: string, token: str
   return data as { answer: string; metadata: ModelCallMetadata }
 }
 
-export async function aiGenerateWorkflow(goal: string, host: string, token: string, model?: string) {
-  const { data } = await api.post('/ai/generate-workflow', { goal, host, token, model })
+export async function aiGenerateWorkflow(goal: string, host: string, token: string, model?: string, customSystemPrompt?: string) {
+  const { data } = await api.post('/ai/generate-workflow', { goal, host, token, model, customSystemPrompt })
   return data as { workflow: string; metadata: ModelCallMetadata }
 }
 
-export async function aiGenerateScript(prompt: string, host: string, token: string, model?: string, category?: string) {
-  const { data } = await api.post('/ai/generate-script', { prompt, host, token, model, category })
+export async function aiGenerateScript(prompt: string, host: string, token: string, model?: string, category?: string, customSystemPrompt?: string) {
+  const { data } = await api.post('/ai/generate-script', { prompt, host, token, model, category, customSystemPrompt })
   return data as { script: string; language: string; metadata: ModelCallMetadata }
 }
 
@@ -73,18 +73,18 @@ export async function aiExecuteScript(script: string, host: string, token: strin
   return data as { success: boolean; logs: string[]; output: string; error?: string; durationMs: number }
 }
 
-export async function aiGenerateTests(endpoint: string, method: string, host: string, token: string, model?: string) {
-  const { data } = await api.post('/ai/generate-tests', { endpoint, method, host, token, model })
+export async function aiGenerateTests(endpoint: string, method: string, host: string, token: string, model?: string, customSystemPrompt?: string) {
+  const { data } = await api.post('/ai/generate-tests', { endpoint, method, host, token, model, customSystemPrompt })
   return data as { tests: string; metadata: ModelCallMetadata }
 }
 
-export async function aiGenerateCode(endpoint: string, method: string, host: string, token: string, body?: unknown, model?: string) {
-  const { data } = await api.post('/ai/generate-code', { endpoint, method, host, token, body, model })
+export async function aiGenerateCode(endpoint: string, method: string, host: string, token: string, body?: unknown, model?: string, customSystemPrompt?: string) {
+  const { data } = await api.post('/ai/generate-code', { endpoint, method, host, token, body, model, customSystemPrompt })
   return data as { code: string; metadata: ModelCallMetadata }
 }
 
-export async function aiGenerateDocumentation(endpoint: string, method: string, description: string, host: string, token: string, model?: string) {
-  const { data } = await api.post('/ai/generate-documentation', { endpoint, method, description, host, token, model })
+export async function aiGenerateDocumentation(endpoint: string, method: string, description: string, host: string, token: string, model?: string, customSystemPrompt?: string) {
+  const { data } = await api.post('/ai/generate-documentation', { endpoint, method, description, host, token, model, customSystemPrompt })
   return data as { documentation: string }
 }
 
@@ -93,8 +93,8 @@ export async function aiPromptExecutor(prompt: string, host: string, token: stri
   return data as { result: string; content: string; metadata: ModelCallMetadata }
 }
 
-export async function aiGeneratePrompt(goal: string, host: string, token: string, model?: string) {
-  const { data } = await api.post('/ai/generate-prompt', { goal, host, token, model })
+export async function aiGeneratePrompt(goal: string, host: string, token: string, model?: string, systemPrompt?: string) {
+  const { data } = await api.post('/ai/generate-prompt', { goal, host, token, model, systemPrompt })
   return data as { prompt: string; metadata: ModelCallMetadata }
 }
 
@@ -103,8 +103,8 @@ export async function aiGenerateQuery(systemPrompt: string, userPrompt: string, 
   return data
 }
 
-export async function aiSecurityRecommendations(endpoint: string, method: string, host: string, token: string, model?: string) {
-  const { data } = await api.post('/ai/security-recommendations', { endpoint, method, host, token, model })
+export async function aiSecurityRecommendations(endpoint: string, method: string, host: string, token: string, model?: string, customSystemPrompt?: string) {
+  const { data } = await api.post('/ai/security-recommendations', { endpoint, method, host, token, model, customSystemPrompt })
   return data as { recommendations: string; metadata: ModelCallMetadata }
 }
 
@@ -178,44 +178,44 @@ export async function deleteCustomAgent(id: string) {
 
 // ===== Azure =====
 
-export async function getAzureAuthStatus(sessionId?: string) {
-  const { data } = await api.get('/azure/auth/status', { headers: sessionId ? { 'x-azure-session': sessionId } : {} })
+export async function azureLogin() {
+  const { data } = await api.post('/azure/auth/login', {}, { timeout: 120000 })
+  return data as { access_token: string; user_name: string; user_email: string; method: string; expires_on: string }
+}
+
+export async function azureLogout() {
+  const { data } = await api.post('/azure/auth/logout')
   return data
 }
 
-export async function startAzureAuth() {
-  const { data } = await api.post('/azure/auth/start')
-  return data as { authUrl: string; state: string; sessionId: string }
+export async function azureAuthStatus() {
+  const { data } = await api.get('/azure/auth/status')
+  return data as { authenticated: boolean; user_name: string }
 }
 
-export async function exchangeAzureToken(code: string, state: string, sessionId: string) {
-  const { data } = await api.post('/azure/auth/token', { code, state, sessionId })
+export async function azureLoginTenant(tenantId: string) {
+  const { data } = await api.post(`/azure/login-tenant?tenant_id=${encodeURIComponent(tenantId)}`)
   return data
 }
 
-export async function azureLogout(sessionId: string) {
-  const { data } = await api.post('/azure/auth/logout', { sessionId })
+export async function listAzureTenants() {
+  const { data } = await api.get('/azure/tenants')
   return data
 }
 
-export async function listAzureTenants(sessionId: string) {
-  const { data } = await api.get('/azure/tenants', { params: { sessionId } })
+export async function listAzureSubscriptions() {
+  const { data } = await api.get('/azure/subscriptions')
   return data
 }
 
-export async function listAzureSubscriptions(sessionId: string) {
-  const { data } = await api.get('/azure/subscriptions', { params: { sessionId } })
+export async function listAzureWorkspaces(subscriptionId: string) {
+  const { data } = await api.get('/azure/workspaces', { params: { subscriptionId } })
   return data
 }
 
-export async function listAzureWorkspaces(sessionId: string, subscriptionId: string) {
-  const { data } = await api.get('/azure/workspaces', { params: { sessionId, subscriptionId } })
-  return data
-}
-
-export async function selectAzureWorkspace(sessionId: string, workspaceUrl: string) {
-  const { data } = await api.post('/azure/select-workspace', { sessionId, workspaceUrl })
-  return data
+export async function databricksWorkspaceAccess(resourceId: string) {
+  const { data } = await api.post('/azure/databricks-workspace-access', { resource_id: resourceId })
+  return data as { workspace_url: string; token: string; name: string }
 }
 
 // ===== Notebooks =====

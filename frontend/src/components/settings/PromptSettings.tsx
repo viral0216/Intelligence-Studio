@@ -1,8 +1,8 @@
 import { RotateCcw } from 'lucide-react'
-import { useSettingsStore } from '@/stores/settingsStore'
+import { useSettingsStore, type PromptKey } from '@/stores/settingsStore'
 
 interface PromptDefinition {
-  key: keyof ReturnType<typeof useSettingsStore>['prompts']
+  key: PromptKey
   label: string
   description: string
   placeholder: string

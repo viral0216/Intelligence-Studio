@@ -181,13 +181,17 @@ export default function DataVisualization() {
                 stroke="var(--border-primary)"
               />
               <Tooltip
+                wrapperStyle={{ zIndex: 1000 }}
                 contentStyle={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-primary)',
+                  backgroundColor: 'var(--tooltip-bg)',
+                  border: '1px solid var(--tooltip-border)',
                   borderRadius: '8px',
-                  color: 'var(--text-primary)',
+                  color: 'var(--tooltip-text)',
                   fontSize: 12,
+                  boxShadow: '0 4px 12px var(--tooltip-shadow)',
                 }}
+                itemStyle={{ color: 'var(--tooltip-text)' }}
+                labelStyle={{ color: 'var(--tooltip-label)', fontWeight: 600 }}
               />
               <Legend wrapperStyle={{ fontSize: 11 }} />
               {numericKeys.slice(0, 5).map((key, i) => (
@@ -207,13 +211,17 @@ export default function DataVisualization() {
                 stroke="var(--border-primary)"
               />
               <Tooltip
+                wrapperStyle={{ zIndex: 1000 }}
                 contentStyle={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-primary)',
+                  backgroundColor: 'var(--tooltip-bg)',
+                  border: '1px solid var(--tooltip-border)',
                   borderRadius: '8px',
-                  color: 'var(--text-primary)',
+                  color: 'var(--tooltip-text)',
                   fontSize: 12,
+                  boxShadow: '0 4px 12px var(--tooltip-shadow)',
                 }}
+                itemStyle={{ color: 'var(--tooltip-text)' }}
+                labelStyle={{ color: 'var(--tooltip-label)', fontWeight: 600 }}
               />
               <Legend wrapperStyle={{ fontSize: 11 }} />
               {numericKeys.slice(0, 5).map((key, i) => (
@@ -246,13 +254,17 @@ export default function DataVisualization() {
                 ))}
               </Pie>
               <Tooltip
+                wrapperStyle={{ zIndex: 1000 }}
                 contentStyle={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-primary)',
+                  backgroundColor: 'var(--tooltip-bg)',
+                  border: '1px solid var(--tooltip-border)',
                   borderRadius: '8px',
-                  color: 'var(--text-primary)',
+                  color: 'var(--tooltip-text)',
                   fontSize: 12,
+                  boxShadow: '0 4px 12px var(--tooltip-shadow)',
                 }}
+                itemStyle={{ color: 'var(--tooltip-text)' }}
+                labelStyle={{ color: 'var(--tooltip-label)', fontWeight: 600 }}
               />
               <Legend wrapperStyle={{ fontSize: 11 }} />
             </PieChart>
@@ -272,13 +284,17 @@ export default function DataVisualization() {
                 stroke="var(--border-primary)"
               />
               <Tooltip
+                wrapperStyle={{ zIndex: 1000 }}
                 contentStyle={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-primary)',
+                  backgroundColor: 'var(--tooltip-bg)',
+                  border: '1px solid var(--tooltip-border)',
                   borderRadius: '8px',
-                  color: 'var(--text-primary)',
+                  color: 'var(--tooltip-text)',
                   fontSize: 12,
+                  boxShadow: '0 4px 12px var(--tooltip-shadow)',
                 }}
+                itemStyle={{ color: 'var(--tooltip-text)' }}
+                labelStyle={{ color: 'var(--tooltip-label)', fontWeight: 600 }}
               />
               <Scatter data={chartData} fill={DARK_COLORS[0]} />
             </ScatterChart>
@@ -295,13 +311,17 @@ export default function DataVisualization() {
                 stroke="var(--border-primary)"
               />
               <Tooltip
+                wrapperStyle={{ zIndex: 1000 }}
                 contentStyle={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-primary)',
+                  backgroundColor: 'var(--tooltip-bg)',
+                  border: '1px solid var(--tooltip-border)',
                   borderRadius: '8px',
-                  color: 'var(--text-primary)',
+                  color: 'var(--tooltip-text)',
                   fontSize: 12,
+                  boxShadow: '0 4px 12px var(--tooltip-shadow)',
                 }}
+                itemStyle={{ color: 'var(--tooltip-text)' }}
+                labelStyle={{ color: 'var(--tooltip-label)', fontWeight: 600 }}
               />
               <Legend wrapperStyle={{ fontSize: 11 }} />
               {numericKeys.slice(0, 5).map((key, i) => (
@@ -335,13 +355,17 @@ export default function DataVisualization() {
               ))}
               <Legend wrapperStyle={{ fontSize: 11 }} />
               <Tooltip
+                wrapperStyle={{ zIndex: 1000 }}
                 contentStyle={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-primary)',
+                  backgroundColor: 'var(--tooltip-bg)',
+                  border: '1px solid var(--tooltip-border)',
                   borderRadius: '8px',
-                  color: 'var(--text-primary)',
+                  color: 'var(--tooltip-text)',
                   fontSize: 12,
+                  boxShadow: '0 4px 12px var(--tooltip-shadow)',
                 }}
+                itemStyle={{ color: 'var(--tooltip-text)' }}
+                labelStyle={{ color: 'var(--tooltip-label)', fontWeight: 600 }}
               />
             </RadarChart>
           )}

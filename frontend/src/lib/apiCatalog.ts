@@ -45,7 +45,7 @@ export interface ApiCategory {
 export const API_CATALOG: ApiCategory[] = [
   {
     name: "Databricks Workspace",
-    icon: "🏢",
+    icon: "Building2",
     subcategories: [
       {
         name: "Workspace",
@@ -184,14 +184,18 @@ export const API_CATALOG: ApiCategory[] = [
           { label: "List secrets (paginated)", method: "GET", path: "/api/2.0/secrets/list?scope=SCOPE_NAME&page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of secrets", docs: { summary: "List secrets in scope with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/secrets/list" } },
           { label: "Put secret", method: "POST", path: "/api/2.0/secrets/put", description: "Store secret", body: { scope: "my-scope", key: "my-key", string_value: "secret-value" }, docs: { summary: "Store secret", docUrl: "https://docs.databricks.com/api/azure/workspace/secrets/putsecret" } },
           { label: "Delete secret", method: "POST", path: "/api/2.0/secrets/delete", description: "Delete secret", body: { scope: "my-scope", key: "my-key" }, docs: { summary: "Delete secret", docUrl: "https://docs.databricks.com/api/azure/workspace/secrets/deletesecret" } },
-          { label: "Get secret metadata", method: "GET", path: "/api/2.0/secrets/get-secret-metadata?scope=SCOPE_NAME&key=KEY_NAME", description: "Get secret metadata", docs: { summary: "Get metadata for a secret", docUrl: "https://docs.databricks.com/api/azure/workspace/secrets/getsecretmetadata" } }
+          { label: "Get secret metadata", method: "GET", path: "/api/2.0/secrets/get-secret-metadata?scope=SCOPE_NAME&key=KEY_NAME", description: "Get secret metadata", docs: { summary: "Get metadata for a secret", docUrl: "https://docs.databricks.com/api/azure/workspace/secrets/getsecretmetadata" } },
+          { label: "Put secret ACL", method: "POST", path: "/api/2.0/secrets/acls/put", description: "Set secret ACL", body: { scope: "my-scope", principal: "user@example.com", permission: "READ" }, docs: { summary: "Set secret ACL for a principal", docUrl: "https://docs.databricks.com/api/azure/workspace/secrets/putacl" } },
+          { label: "Get secret ACL", method: "GET", path: "/api/2.0/secrets/acls/get?scope=SCOPE_NAME&principal=PRINCIPAL", description: "Get secret ACL for principal", docs: { summary: "Get secret ACL", docUrl: "https://docs.databricks.com/api/azure/workspace/secrets/getacl" } },
+          { label: "List secret ACLs", method: "GET", path: "/api/2.0/secrets/acls/list?scope=SCOPE_NAME", description: "List secret ACLs", docs: { summary: "List secret ACLs for scope", docUrl: "https://docs.databricks.com/api/azure/workspace/secrets/listacls" } },
+          { label: "Delete secret ACL", method: "POST", path: "/api/2.0/secrets/acls/delete", description: "Delete secret ACL", body: { scope: "my-scope", principal: "user@example.com" }, docs: { summary: "Delete secret ACL for a principal", docUrl: "https://docs.databricks.com/api/azure/workspace/secrets/deleteacl" } }
         ]
       }
     ]
   },
   {
     name: "Apps",
-    icon: "📱",
+    icon: "AppWindow",
     endpoints: [
       { 
         label: "List apps", 
@@ -295,7 +299,7 @@ export const API_CATALOG: ApiCategory[] = [
   },
   {
     name: "Compute",
-    icon: "⚡",
+    icon: "Zap",
     subcategories: [
       {
         name: "Clusters",
@@ -303,17 +307,17 @@ export const API_CATALOG: ApiCategory[] = [
           { label: "List clusters", method: "GET", path: "/api/2.0/clusters/list", description: "All clusters", docs: { summary: "List clusters", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/list" } },
           { label: "List clusters (paginated)", method: "GET", path: "/api/2.0/clusters/list?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of clusters", docs: { summary: "List clusters with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/list" } },
           { label: "Get cluster info", method: "GET", path: "/api/2.0/clusters/get?cluster_id=CLUSTER_ID", description: "Cluster details", docs: { summary: "Get cluster", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/get" } },
-          { label: "Get cluster permissions", method: "GET", path: "/api/2.0/permissions/clusters/CLUSTER_ID", description: "View ACLs for a cluster", docs: { summary: "Get cluster permissions", docUrl: "https://docs.databricks.com/api/azure/azure/workspace/clusterpermissions/get" } },
-          { label: "Set cluster permissions", method: "PUT", path: "/api/2.0/permissions/clusters/CLUSTER_ID", description: "Replace cluster ACLs", body: { access_control_list: [] }, docs: { summary: "Set cluster permissions", docUrl: "https://docs.databricks.com/api/azure/azure/workspace/clusterpermissions/set" } },
-          { label: "Update cluster permissions", method: "PATCH", path: "/api/2.0/permissions/clusters/CLUSTER_ID", description: "Update cluster ACLs", body: { access_control_list: [] }, docs: { summary: "Update cluster permissions", docUrl: "https://docs.databricks.com/api/azure/azure/workspace/clusterpermissions/update" } },
-          { label: "Get cluster permission levels", method: "GET", path: "/api/2.0/permissions/clusters/levels", description: "Supported permission levels", docs: { summary: "Get cluster permission levels", docUrl: "https://docs.databricks.com/api/azure/azure/workspace/clusterpermissions/getpermissionlevels" } },
+          { label: "Get cluster permissions", method: "GET", path: "/api/2.0/permissions/clusters/CLUSTER_ID", description: "View ACLs for a cluster", docs: { summary: "Get cluster permissions", docUrl: "https://docs.databricks.com/api/azure/workspace/clusterpermissions/get" } },
+          { label: "Set cluster permissions", method: "PUT", path: "/api/2.0/permissions/clusters/CLUSTER_ID", description: "Replace cluster ACLs", body: { access_control_list: [] }, docs: { summary: "Set cluster permissions", docUrl: "https://docs.databricks.com/api/azure/workspace/clusterpermissions/set" } },
+          { label: "Update cluster permissions", method: "PATCH", path: "/api/2.0/permissions/clusters/CLUSTER_ID", description: "Update cluster ACLs", body: { access_control_list: [] }, docs: { summary: "Update cluster permissions", docUrl: "https://docs.databricks.com/api/azure/workspace/clusterpermissions/update" } },
+          { label: "Get cluster permission levels", method: "GET", path: "/api/2.0/permissions/clusters/levels", description: "Supported permission levels", docs: { summary: "Get cluster permission levels", docUrl: "https://docs.databricks.com/api/azure/workspace/clusterpermissions/getpermissionlevels" } },
           { label: "Create new cluster", method: "POST", path: "/api/2.0/clusters/create", description: "Create cluster", body: { cluster_name: "my-cluster", spark_version: "13.3.x-scala2.12", node_type_id: "Standard_DS3_v2", num_workers: 2 }, docs: { summary: "Create cluster", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/create" } },
           { label: "Update cluster configuration", method: "POST", path: "/api/2.0/clusters/edit", description: "Edit cluster config", body: { cluster_id: "CLUSTER_ID", cluster_name: "updated-cluster", spark_version: "13.3.x-scala2.12", node_type_id: "Standard_DS3_v2", num_workers: 4 }, docs: { summary: "Edit cluster", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/edit" } },
-          { label: "Update cluster", method: "PATCH", path: "/api/2.0/clusters/update", description: "Partial cluster update", body: { cluster_id: "CLUSTER_ID", num_workers: 3 }, docs: { summary: "Update cluster configuration", docUrl: "https://docs.databricks.com/api/azure/azure/workspace/clusters/update" } },
-          { label: "Change cluster owner", method: "POST", path: "/api/2.0/clusters/change-owner", description: "Transfer cluster ownership", body: { cluster_id: "CLUSTER_ID", owner_username: "user@example.com" }, docs: { summary: "Change cluster owner", docUrl: "https://docs.databricks.com/api/azure/azure/workspace/clusters/changeowner" } },
-          { label: "Start terminated cluster", method: "POST", path: "/api/2.0/clusters/start", description: "Start a terminated cluster", body: { cluster_id: "CLUSTER_ID" }, docs: { summary: "Start terminated cluster", docUrl: "https://docs.databricks.com/api/azure/azure/workspace/clusters/start" } },
+          { label: "Update cluster", method: "PATCH", path: "/api/2.0/clusters/update", description: "Partial cluster update", body: { cluster_id: "CLUSTER_ID", num_workers: 3 }, docs: { summary: "Update cluster configuration", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/update" } },
+          { label: "Change cluster owner", method: "POST", path: "/api/2.0/clusters/change-owner", description: "Transfer cluster ownership", body: { cluster_id: "CLUSTER_ID", owner_username: "user@example.com" }, docs: { summary: "Change cluster owner", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/changeowner" } },
+          { label: "Start terminated cluster", method: "POST", path: "/api/2.0/clusters/start", description: "Start a terminated cluster", body: { cluster_id: "CLUSTER_ID" }, docs: { summary: "Start terminated cluster", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/start" } },
           { label: "Restart cluster", method: "POST", path: "/api/2.0/clusters/restart", description: "Restart cluster", body: { cluster_id: "CLUSTER_ID" }, docs: { summary: "Restart cluster", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/restart" } },
-          { label: "Repair cluster", method: "POST", path: "/api/2.0/clusters/repair", description: "Repair cluster", body: { cluster_id: "CLUSTER_ID" }, docs: { summary: "Repair cluster", docUrl: "https://docs.databricks.com/api/azure/azure/workspace/clusters/repair" } },
+          { label: "Repair cluster", method: "POST", path: "/api/2.0/clusters/repair", description: "Repair cluster", body: { cluster_id: "CLUSTER_ID" }, docs: { summary: "Repair cluster", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/repair" } },
           { label: "Terminate cluster", method: "POST", path: "/api/2.0/clusters/delete", description: "Terminate cluster", body: { cluster_id: "CLUSTER_ID" }, docs: { summary: "Terminate cluster", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/delete" } },
           { label: "Permanent delete cluster", method: "POST", path: "/api/2.0/clusters/permanent-delete", description: "Permanently delete", body: { cluster_id: "CLUSTER_ID" }, docs: { summary: "Permanent delete cluster", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/permanentdelete" } },
           { label: "Resize cluster", method: "POST", path: "/api/2.0/clusters/resize", description: "Resize cluster", body: { cluster_id: "CLUSTER_ID", num_workers: 10 }, docs: { summary: "Resize cluster", docUrl: "https://docs.databricks.com/api/azure/workspace/clusters/resize" } },
@@ -383,7 +387,7 @@ export const API_CATALOG: ApiCategory[] = [
   },
   {
     name: "Lakeflow",
-    icon: "🌊",
+    icon: "Waves",
     subcategories: [
       {
         name: "Jobs",
@@ -427,22 +431,42 @@ export const API_CATALOG: ApiCategory[] = [
   },
   {
     name: "File Management",
-    icon: "📁",
-    endpoints: [
-      { label: "List DBFS", method: "GET", path: "/api/2.0/dbfs/list?path=/", description: "List files", docs: { summary: "List DBFS path", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/list" } },
-      { label: "List DBFS (paginated)", method: "GET", path: "/api/2.0/dbfs/list?path=/&page_token=NEXT_PAGE_TOKEN", description: "Get next page of files for path", docs: { summary: "List DBFS path with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/list" } },
-      { label: "Get file status", method: "GET", path: "/api/2.0/dbfs/get-status?path=/path/to/file", description: "File metadata", docs: { summary: "Get DBFS file status", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/getstatus" } },
-      { label: "Create directory", method: "POST", path: "/api/2.0/dbfs/mkdirs", description: "Create directory", body: { path: "/my-folder" }, docs: { summary: "Create DBFS directory", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/mkdirs" } },
-      { label: "Delete file", method: "POST", path: "/api/2.0/dbfs/delete", description: "Delete file/directory", body: { path: "/path/to/delete", recursive: false }, docs: { summary: "Delete DBFS path", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/delete" } },
-      { label: "Create file", method: "POST", path: "/api/2.0/dbfs/create", description: "Create file and get handle", body: { path: "/path/to/file", overwrite: false }, docs: { summary: "Create file and get handle", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/create" } },
-      { label: "Add file block", method: "POST", path: "/api/2.0/dbfs/add-block", description: "Add data block to file", body: { handle: "FILE_HANDLE", data: "BASE64_ENCODED_DATA" }, docs: { summary: "Add block to file", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/addblock" } },
-      { label: "Get file content", method: "GET", path: "/api/2.0/dbfs/get?path=/path/to/file", description: "Get file content", docs: { summary: "Get DBFS file content", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/get" } },
-      { label: "Move file", method: "POST", path: "/api/2.0/dbfs/move", description: "Move/rename file", body: { source_path: "/old", destination_path: "/new" }, docs: { summary: "Move DBFS file", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/move" } }
+    icon: "FolderOpen",
+    subcategories: [
+      {
+        name: "Files API",
+        endpoints: [
+          { label: "Download file", method: "GET", path: "/api/2.0/fs/files/Volumes/CATALOG/SCHEMA/VOLUME/path/to/file", description: "Download file content", docs: { summary: "Download file from Volumes or workspace", docUrl: "https://docs.databricks.com/api/azure/workspace/files/download" } },
+          { label: "Upload file", method: "PUT", path: "/api/2.0/fs/files/Volumes/CATALOG/SCHEMA/VOLUME/path/to/file", description: "Upload file content", body: {}, docs: { summary: "Upload file to Volumes or workspace", docUrl: "https://docs.databricks.com/api/azure/workspace/files/upload" } },
+          { label: "Delete file", method: "DELETE", path: "/api/2.0/fs/files/Volumes/CATALOG/SCHEMA/VOLUME/path/to/file", description: "Delete a file", body: {}, docs: { summary: "Delete file from Volumes or workspace", docUrl: "https://docs.databricks.com/api/azure/workspace/files/delete" } },
+          { label: "Get file metadata (HEAD)", method: "GET", path: "/api/2.0/fs/files-metadata/Volumes/CATALOG/SCHEMA/VOLUME/path/to/file", description: "Get file metadata (actual API uses HEAD on /api/2.0/fs/files/{path})", docs: { summary: "Get file metadata via HEAD request", docUrl: "https://docs.databricks.com/api/azure/workspace/files/getmetadata" } },
+          { label: "List directory", method: "GET", path: "/api/2.0/fs/directories/Volumes/CATALOG/SCHEMA/VOLUME/path/", description: "List directory contents", docs: { summary: "List directory contents", docUrl: "https://docs.databricks.com/api/azure/workspace/files/listdirectorycontents" } },
+          { label: "List directory (paginated)", method: "GET", path: "/api/2.0/fs/directories/Volumes/CATALOG/SCHEMA/VOLUME/path/?page_token=NEXT_PAGE_TOKEN", description: "Get next page of directory listing", docs: { summary: "List directory contents with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/files/listdirectorycontents" } },
+          { label: "Create directory", method: "PUT", path: "/api/2.0/fs/directories/Volumes/CATALOG/SCHEMA/VOLUME/path/new-dir/", description: "Create a directory", body: {}, docs: { summary: "Create a directory", docUrl: "https://docs.databricks.com/api/azure/workspace/files/createdirectory" } },
+          { label: "Delete directory", method: "DELETE", path: "/api/2.0/fs/directories/Volumes/CATALOG/SCHEMA/VOLUME/path/dir/", description: "Delete a directory", body: {}, docs: { summary: "Delete a directory", docUrl: "https://docs.databricks.com/api/azure/workspace/files/deletedirectory" } }
+        ]
+      },
+      {
+        name: "DBFS",
+        endpoints: [
+          { label: "List DBFS", method: "GET", path: "/api/2.0/dbfs/list?path=/", description: "List files", docs: { summary: "List DBFS path", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/list" } },
+          { label: "List DBFS (paginated)", method: "GET", path: "/api/2.0/dbfs/list?path=/&page_token=NEXT_PAGE_TOKEN", description: "Get next page of files for path", docs: { summary: "List DBFS path with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/list" } },
+          { label: "Get file status", method: "GET", path: "/api/2.0/dbfs/get-status?path=/path/to/file", description: "File metadata", docs: { summary: "Get DBFS file status", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/getstatus" } },
+          { label: "Create directory", method: "POST", path: "/api/2.0/dbfs/mkdirs", description: "Create directory", body: { path: "/my-folder" }, docs: { summary: "Create DBFS directory", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/mkdirs" } },
+          { label: "Delete file", method: "POST", path: "/api/2.0/dbfs/delete", description: "Delete file/directory", body: { path: "/path/to/delete", recursive: false }, docs: { summary: "Delete DBFS path", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/delete" } },
+          { label: "Create file", method: "POST", path: "/api/2.0/dbfs/create", description: "Create file and get handle", body: { path: "/path/to/file", overwrite: false }, docs: { summary: "Create file and get handle", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/create" } },
+          { label: "Add file block", method: "POST", path: "/api/2.0/dbfs/add-block", description: "Add data block to file", body: { handle: "FILE_HANDLE", data: "BASE64_ENCODED_DATA" }, docs: { summary: "Add block to file", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/addblock" } },
+          { label: "Close file", method: "POST", path: "/api/2.0/dbfs/close", description: "Close file handle after writing", body: { handle: "FILE_HANDLE" }, docs: { summary: "Close DBFS file handle", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/close" } },
+          { label: "Get file content", method: "GET", path: "/api/2.0/dbfs/get?path=/path/to/file", description: "Get file content", docs: { summary: "Get DBFS file content", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/get" } },
+          { label: "Move file", method: "POST", path: "/api/2.0/dbfs/move", description: "Move/rename file", body: { source_path: "/old", destination_path: "/new" }, docs: { summary: "Move DBFS file", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/move" } },
+          { label: "Put file (small)", method: "POST", path: "/api/2.0/dbfs/put", description: "Upload small file directly", body: { path: "/path/to/file", contents: "BASE64_CONTENT", overwrite: true }, docs: { summary: "Upload small file to DBFS", docUrl: "https://docs.databricks.com/api/azure/workspace/dbfs/put" } }
+        ]
+      }
     ]
   },
   {
     name: "Unity Catalog",
-    icon: "🗂️",
+    icon: "Library",
     subcategories: [
       {
         name: "Catalogs",
@@ -571,11 +595,59 @@ export const API_CATALOG: ApiCategory[] = [
           { label: "Get registered model version", method: "GET", path: "/api/2.1/unity-catalog/models/CATALOG.SCHEMA.MODEL/versions/VERSION", description: "Get UC model version details", docs: { summary: "Get UC model version", docUrl: "https://docs.databricks.com/api/azure/workspace/registeredmodels/getversion" } }
         ]
       },
+      {
+        name: "System Schemas",
+        endpoints: [
+          { label: "List system schemas", method: "GET", path: "/api/2.1/unity-catalog/metastores/METASTORE_ID/systemschemas", description: "List system schemas", docs: { summary: "List system schemas for a metastore", docUrl: "https://docs.databricks.com/api/azure/workspace/systemschemas/list" } },
+          { label: "Enable system schema", method: "PUT", path: "/api/2.1/unity-catalog/metastores/METASTORE_ID/systemschemas/SCHEMA_NAME", description: "Enable a system schema", body: {}, docs: { summary: "Enable system schema", docUrl: "https://docs.databricks.com/api/azure/workspace/systemschemas/enable" } },
+          { label: "Disable system schema", method: "DELETE", path: "/api/2.1/unity-catalog/metastores/METASTORE_ID/systemschemas/SCHEMA_NAME", description: "Disable a system schema", body: {}, docs: { summary: "Disable system schema", docUrl: "https://docs.databricks.com/api/azure/workspace/systemschemas/disable" } }
+        ]
+      },
+      {
+        name: "Table Constraints",
+        endpoints: [
+          { label: "Create table constraint", method: "POST", path: "/api/2.1/unity-catalog/constraints", description: "Create a table constraint", body: { full_name_arg: "CATALOG.SCHEMA.TABLE", constraint: { primary_key_constraint: { name: "pk_id", child_columns: ["id"] } } }, docs: { summary: "Create table constraint", docUrl: "https://docs.databricks.com/api/azure/workspace/tableconstraints/create" } },
+          { label: "Delete table constraint", method: "DELETE", path: "/api/2.1/unity-catalog/constraints/CATALOG.SCHEMA.TABLE?constraint_name=CONSTRAINT_NAME&constraint_type=PRIMARY_KEY", description: "Delete a table constraint", body: {}, docs: { summary: "Delete table constraint", docUrl: "https://docs.databricks.com/api/azure/workspace/tableconstraints/delete" } }
+        ]
+      },
+      {
+        name: "Workspace Bindings",
+        endpoints: [
+          { label: "Get catalog bindings", method: "GET", path: "/api/2.1/unity-catalog/bindings/catalog/CATALOG_NAME", description: "Get workspace bindings for catalog", docs: { summary: "Get catalog workspace bindings", docUrl: "https://docs.databricks.com/api/azure/workspace/workspacebindings/get" } },
+          { label: "Update catalog bindings", method: "PATCH", path: "/api/2.1/unity-catalog/bindings/catalog/CATALOG_NAME", description: "Update workspace bindings for catalog", body: { assign_workspaces: [123456], unassign_workspaces: [] }, docs: { summary: "Update catalog workspace bindings", docUrl: "https://docs.databricks.com/api/azure/workspace/workspacebindings/update" } }
+        ]
+      },
+      {
+        name: "Service Credentials",
+        endpoints: [
+          { label: "List service credentials", method: "GET", path: "/api/2.1/unity-catalog/credentials?purpose=SERVICE", description: "List service credentials", docs: { summary: "List service credentials", docUrl: "https://docs.databricks.com/api/azure/workspace/credentials/list" } },
+          { label: "Create service credential", method: "POST", path: "/api/2.1/unity-catalog/credentials", description: "Create service credential", body: { name: "my-credential", purpose: "SERVICE", azure_managed_identity: { access_connector_id: "/subscriptions/.../accessConnectors/..." } }, docs: { summary: "Create service credential", docUrl: "https://docs.databricks.com/api/azure/workspace/credentials/create" } },
+          { label: "Get service credential", method: "GET", path: "/api/2.1/unity-catalog/credentials/CREDENTIAL_NAME", description: "Get service credential details", docs: { summary: "Get service credential", docUrl: "https://docs.databricks.com/api/azure/workspace/credentials/get" } },
+          { label: "Update service credential", method: "PATCH", path: "/api/2.1/unity-catalog/credentials/CREDENTIAL_NAME", description: "Update service credential", body: { comment: "Updated credential" }, docs: { summary: "Update service credential", docUrl: "https://docs.databricks.com/api/azure/workspace/credentials/update" } },
+          { label: "Delete service credential", method: "DELETE", path: "/api/2.1/unity-catalog/credentials/CREDENTIAL_NAME", description: "Delete service credential", body: {}, docs: { summary: "Delete service credential", docUrl: "https://docs.databricks.com/api/azure/workspace/credentials/delete" } },
+          { label: "Validate service credential", method: "POST", path: "/api/2.1/unity-catalog/credentials/CREDENTIAL_NAME/validate", description: "Validate service credential", body: { url: "abfss://container@storage.dfs.core.windows.net/path" }, docs: { summary: "Validate service credential", docUrl: "https://docs.databricks.com/api/azure/workspace/credentials/validate" } }
+        ]
+      },
+      {
+        name: "Artifact Allowlists",
+        endpoints: [
+          { label: "Get artifact allowlist", method: "GET", path: "/api/2.1/unity-catalog/artifact-allowlists/INIT_SCRIPT", description: "Get artifact allowlist", docs: { summary: "Get artifact allowlist for a type", docUrl: "https://docs.databricks.com/api/azure/workspace/artifactallowlists/get" } },
+          { label: "Set artifact allowlist", method: "PUT", path: "/api/2.1/unity-catalog/artifact-allowlists/INIT_SCRIPT", description: "Set artifact allowlist", body: { artifact_matchers: [{ artifact: "/Volumes/catalog/schema/volume/", match_type: "PREFIX_MATCH" }] }, docs: { summary: "Set artifact allowlist", docUrl: "https://docs.databricks.com/api/azure/workspace/artifactallowlists/update" } }
+        ]
+      },
+      {
+        name: "Online Tables",
+        endpoints: [
+          { label: "Create online table", method: "POST", path: "/api/2.0/online-tables", description: "Create an online table", body: { name: "CATALOG.SCHEMA.TABLE_online", spec: { source_table_full_name: "CATALOG.SCHEMA.TABLE", primary_key_columns: ["id"], run_triggered: {} } }, docs: { summary: "Create online table for low-latency reads", docUrl: "https://docs.databricks.com/api/azure/workspace/onlinetables/create" } },
+          { label: "Get online table", method: "GET", path: "/api/2.0/online-tables/CATALOG.SCHEMA.TABLE_online", description: "Get online table details", docs: { summary: "Get online table", docUrl: "https://docs.databricks.com/api/azure/workspace/onlinetables/get" } },
+          { label: "Delete online table", method: "DELETE", path: "/api/2.0/online-tables/CATALOG.SCHEMA.TABLE_online", description: "Delete an online table", body: {}, docs: { summary: "Delete online table", docUrl: "https://docs.databricks.com/api/azure/workspace/onlinetables/delete" } }
+        ]
+      },
     ]
   },
   {
     name: "Databricks SQL",
-    icon: "📊",
+    icon: "BarChart3",
     subcategories: [
       {
         name: "Warehouses",
@@ -625,16 +697,24 @@ export const API_CATALOG: ApiCategory[] = [
       {
         name: "Statement Execution",
         endpoints: [
-          { label: "Execute statement", method: "POST", path: "/api/2.0/sql/statements", description: "Execute SQL", body: { warehouse_id: "WAREHOUSE_ID", statement: "SELECT 1" }, docs: { summary: "Execute statement", docUrl: "https://docs.databricks.com/api/azure/workspace/statementexecution/executestatement" } },
+          { label: "Execute statement", method: "POST", path: "/api/2.0/sql/statements", description: "Execute SQL", body: { warehouse_id: "WAREHOUSE_ID", statement: "SELECT 1", wait_timeout: "50s" }, docs: { summary: "Execute statement", docUrl: "https://docs.databricks.com/api/azure/workspace/statementexecution/executestatement" } },
           { label: "Get statement", method: "GET", path: "/api/2.0/sql/statements/STATEMENT_ID", description: "Statement result", docs: { summary: "Get statement", docUrl: "https://docs.databricks.com/api/azure/workspace/statementexecution/getstatement" } },
+          { label: "Get result chunk", method: "GET", path: "/api/2.0/sql/statements/STATEMENT_ID/result/chunks/CHUNK_INDEX", description: "Get result chunk for large results", docs: { summary: "Get statement result chunk", docUrl: "https://docs.databricks.com/api/azure/workspace/statementexecution/getstatementresultchunkn" } },
           { label: "Cancel statement", method: "POST", path: "/api/2.0/sql/statements/STATEMENT_ID/cancel", description: "Cancel SQL statement", body: {}, docs: { summary: "Cancel statement", docUrl: "https://docs.databricks.com/api/azure/workspace/statementexecution/cancelstatement" } }
+        ]
+      },
+      {
+        name: "Query History",
+        endpoints: [
+          { label: "List query history", method: "GET", path: "/api/2.0/sql/history/queries?max_results=50", description: "Query execution history", docs: { summary: "List query history", docUrl: "https://docs.databricks.com/api/azure/workspace/queryhistory/list" } },
+          { label: "List query history (paginated)", method: "GET", path: "/api/2.0/sql/history/queries?max_results=50&page_token=NEXT_PAGE_TOKEN", description: "Get next page of query history", docs: { summary: "List query history with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/queryhistory/list" } }
         ]
       }
     ]
   },
   {
     name: "Machine Learning",
-    icon: "🤖",
+    icon: "Brain",
     subcategories: [
       {
         name: "Experiments",
@@ -700,7 +780,7 @@ export const API_CATALOG: ApiCategory[] = [
   },
   {
     name: "Real-time Serving",
-    icon: "⚡",
+    icon: "Radio",
     endpoints: [
       { label: "List serving endpoints", method: "GET", path: "/api/2.0/serving-endpoints", description: "List serving endpoints", docs: { summary: "List serving endpoints", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/list" } },
       { label: "List serving endpoints (paginated)", method: "GET", path: "/api/2.0/serving-endpoints?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of serving endpoints", docs: { summary: "List serving endpoints with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/list" } },
@@ -709,13 +789,17 @@ export const API_CATALOG: ApiCategory[] = [
       { label: "Update serving endpoint", method: "PUT", path: "/api/2.0/serving-endpoints/ENDPOINT_NAME/config", description: "Update endpoint config", body: { served_models: [] }, docs: { summary: "Update serving endpoint", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/updateconfig" } },
       { label: "Delete serving endpoint", method: "DELETE", path: "/api/2.0/serving-endpoints/ENDPOINT_NAME", description: "Delete endpoint", body: {}, docs: { summary: "Delete serving endpoint", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/delete" } },
       { label: "Query endpoint", method: "POST", path: "/api/2.0/serving-endpoints/ENDPOINT_NAME/invocations", description: "Query serving endpoint", body: { inputs: [] }, docs: { summary: "Query endpoint for predictions", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/query" } },
-      { label: "Get build logs", method: "GET", path: "/api/2.0/serving-endpoints/ENDPOINT_NAME/build-logs", description: "Get endpoint build logs", docs: { summary: "Get build logs", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/buildlogs" } },
-      { label: "Get serve logs", method: "GET", path: "/api/2.0/serving-endpoints/ENDPOINT_NAME/served-models/SERVED_MODEL_NAME/logs", description: "Get serve logs for model", docs: { summary: "Get serve logs", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/servelogs" } }
+      { label: "Get build logs", method: "GET", path: "/api/2.0/serving-endpoints/ENDPOINT_NAME/served-models/SERVED_MODEL_NAME/build-logs", description: "Get endpoint build logs", docs: { summary: "Get build logs for a served model", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/buildlogs" } },
+      { label: "Get serve logs", method: "GET", path: "/api/2.0/serving-endpoints/ENDPOINT_NAME/served-models/SERVED_MODEL_NAME/logs", description: "Get serve logs for model", docs: { summary: "Get serve logs", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/logs" } },
+      { label: "Export metrics", method: "GET", path: "/api/2.0/serving-endpoints/ENDPOINT_NAME/metrics", description: "Export Prometheus metrics", docs: { summary: "Export serving endpoint metrics in Prometheus format", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/exportmetrics" } },
+      { label: "Get endpoint permissions", method: "GET", path: "/api/2.0/permissions/serving-endpoints/ENDPOINT_ID", description: "Get serving endpoint permissions", docs: { summary: "Get serving endpoint permissions", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/getpermissions" } },
+      { label: "Set endpoint permissions", method: "PUT", path: "/api/2.0/permissions/serving-endpoints/ENDPOINT_ID", description: "Set serving endpoint permissions", body: { access_control_list: [{ user_name: "user@example.com", permission_level: "CAN_QUERY" }] }, docs: { summary: "Set serving endpoint permissions", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/setpermissions" } },
+      { label: "Put AI gateway", method: "PUT", path: "/api/2.0/serving-endpoints/ENDPOINT_NAME/ai-gateway", description: "Configure AI gateway for endpoint", body: { usage_tracking_config: { enabled: true }, inference_table_config: { catalog_name: "catalog", schema_name: "schema", table_name_prefix: "prefix", enabled: true } }, docs: { summary: "Configure AI gateway settings", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/putaigateway" } }
     ]
   },
   {
     name: "Identity and Access Management",
-    icon: "🔒",
+    icon: "ShieldCheck",
     subcategories: [
       {
         name: "Tokens",
@@ -778,7 +862,7 @@ export const API_CATALOG: ApiCategory[] = [
   },
   {
     name: "Settings",
-    icon: "⚙️",
+    icon: "Settings",
     subcategories: [
       {
         name: "Workspace Configuration",
@@ -802,49 +886,102 @@ export const API_CATALOG: ApiCategory[] = [
         name: "Token Management",
         endpoints: [
           { label: "Get token permissions", method: "GET", path: "/api/2.0/permissions/authorization/tokens", description: "Get token permissions", docs: { summary: "Get token permissions", docUrl: "https://docs.databricks.com/api/azure/workspace/tokenpermissions/get" } },
-          { label: "Set token permissions", method: "PUT", path: "/api/2.0/permissions/authorization/tokens", description: "Set token permissions", body: { access_control_list: [{ group_name: "admins", permission_level: "CAN_USE" }] }, docs: { summary: "Set token permissions", docUrl: "https://docs.databricks.com/api/azure/workspace/tokenpermissions/set" } }
+          { label: "Set token permissions", method: "PUT", path: "/api/2.0/permissions/authorization/tokens", description: "Set token permissions", body: { access_control_list: [{ group_name: "admins", permission_level: "CAN_USE" }] }, docs: { summary: "Set token permissions", docUrl: "https://docs.databricks.com/api/azure/workspace/tokenpermissions/set" } },
+          { label: "List all tokens (admin)", method: "GET", path: "/api/2.0/token-management/tokens", description: "List all tokens in workspace (admin)", docs: { summary: "List all workspace tokens", docUrl: "https://docs.databricks.com/api/azure/workspace/tokenmanagement/list" } },
+          { label: "Get token (admin)", method: "GET", path: "/api/2.0/token-management/tokens/TOKEN_ID", description: "Get specific token info (admin)", docs: { summary: "Get token by ID", docUrl: "https://docs.databricks.com/api/azure/workspace/tokenmanagement/get" } },
+          { label: "Delete token (admin)", method: "DELETE", path: "/api/2.0/token-management/tokens/TOKEN_ID", description: "Delete any token (admin)", body: {}, docs: { summary: "Delete token by ID", docUrl: "https://docs.databricks.com/api/azure/workspace/tokenmanagement/delete" } },
+          { label: "Create token on behalf of", method: "POST", path: "/api/2.0/token-management/on-behalf-of/tokens", description: "Create token for another user (admin)", body: { application_id: "APP_ID", lifetime_seconds: 7776000, comment: "Service token" }, docs: { summary: "Create token on behalf of service principal", docUrl: "https://docs.databricks.com/api/azure/workspace/tokenmanagement/createobotoken" } }
         ]
-      }
-    ]
-  },
-  {
-    name: "Monitoring & Observability",
-    icon: "📈",
-    subcategories: [
+      },
       {
-        name: "Query History",
+        name: "Notification Destinations",
         endpoints: [
-          { label: "List query history", method: "GET", path: "/api/2.0/sql/history?max_results=50", description: "Query execution history", docs: { summary: "List query history", docUrl: "https://docs.databricks.com/api/azure/workspace/queryhistory/list" } },
-          { label: "List query history (paginated)", method: "GET", path: "/api/2.0/sql/history?max_results=50&page_token=NEXT_PAGE_TOKEN", description: "Get next page of query history", docs: { summary: "List query history with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/queryhistory/list" } }
+          { label: "List notification destinations", method: "GET", path: "/api/2.0/notification-destinations", description: "List notification destinations", docs: { summary: "List notification destinations", docUrl: "https://docs.databricks.com/api/azure/workspace/notificationdestinations/list" } },
+          { label: "List notification destinations (paginated)", method: "GET", path: "/api/2.0/notification-destinations?page_token=NEXT_PAGE_TOKEN", description: "Get next page of notification destinations", docs: { summary: "List notification destinations with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/notificationdestinations/list" } },
+          { label: "Create notification destination", method: "POST", path: "/api/2.0/notification-destinations", description: "Create notification destination", body: { display_name: "My Webhook", config: { generic_webhook: { url: "https://hooks.example.com/webhook" } } }, docs: { summary: "Create notification destination", docUrl: "https://docs.databricks.com/api/azure/workspace/notificationdestinations/create" } },
+          { label: "Get notification destination", method: "GET", path: "/api/2.0/notification-destinations/DESTINATION_ID", description: "Get notification destination details", docs: { summary: "Get notification destination", docUrl: "https://docs.databricks.com/api/azure/workspace/notificationdestinations/get" } },
+          { label: "Update notification destination", method: "PATCH", path: "/api/2.0/notification-destinations/DESTINATION_ID", description: "Update notification destination", body: { display_name: "Updated Webhook" }, docs: { summary: "Update notification destination", docUrl: "https://docs.databricks.com/api/azure/workspace/notificationdestinations/update" } },
+          { label: "Delete notification destination", method: "DELETE", path: "/api/2.0/notification-destinations/DESTINATION_ID", description: "Delete notification destination", body: {}, docs: { summary: "Delete notification destination", docUrl: "https://docs.databricks.com/api/azure/workspace/notificationdestinations/delete" } }
         ]
       }
     ]
   },
   {
-    name: "Account Management",
-    icon: "👥",
+    name: "Account Identity & Access",
+    icon: "Users",
     audience: "account",
+    rateLimitNote: "Account-level APIs use the account console URL (e.g., https://accounts.azuredatabricks.net).",
     subcategories: [
       {
         name: "Account Users",
         endpoints: [
-          { label: "List account users", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/users", description: "List account users", docs: { summary: "List account users", docUrl: "https://docs.databricks.com/api/azure/account/users/list" } },
-          { label: "List account users (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/users?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of account users", docs: { summary: "List account users with pagination", docUrl: "https://docs.databricks.com/api/azure/account/users/list" } },
-          { label: "Get account user", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/users/USER_ID", description: "Get account user", docs: { summary: "Get account user", docUrl: "https://docs.databricks.com/api/azure/account/users/get" } },
-          { label: "Add account user", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/users", description: "Add account user", body: { emails: ["user@example.com"] }, docs: { summary: "Add account user", docUrl: "https://docs.databricks.com/api/azure/account/users/create" } },
-          { label: "Delete account user", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/users/USER_ID", description: "Delete account user", body: {}, docs: { summary: "Delete account user", docUrl: "https://docs.databricks.com/api/azure/account/users/delete" } }
+          { label: "List account users", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/users", description: "List account users", docs: { summary: "List account users", docUrl: "https://docs.databricks.com/api/azure/account/accountusers/list" } },
+          { label: "List account users (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/users?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of account users", docs: { summary: "List account users with pagination", docUrl: "https://docs.databricks.com/api/azure/account/accountusers/list" } },
+          { label: "Get account user", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/users/USER_ID", description: "Get account user", docs: { summary: "Get account user", docUrl: "https://docs.databricks.com/api/azure/account/accountusers/get" } },
+          { label: "Add account user", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/users", description: "Add account user", body: { emails: ["user@example.com"] }, docs: { summary: "Add account user", docUrl: "https://docs.databricks.com/api/azure/account/accountusers/create" } },
+          { label: "Delete account user", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/users/USER_ID", description: "Delete account user", body: {}, docs: { summary: "Delete account user", docUrl: "https://docs.databricks.com/api/azure/account/accountusers/delete" } }
         ]
       },
       {
         name: "Account Groups",
         endpoints: [
-          { label: "List account groups", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/groups", description: "List account groups", docs: { summary: "List account groups", docUrl: "https://docs.databricks.com/api/azure/account/groups/list" } },
-          { label: "List account groups (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/groups?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of account groups", docs: { summary: "List account groups with pagination", docUrl: "https://docs.databricks.com/api/azure/account/groups/list" } },
-          { label: "Get account group", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/groups/GROUP_ID", description: "Get account group", docs: { summary: "Get account group", docUrl: "https://docs.databricks.com/api/azure/account/groups/get" } },
-          { label: "Create account group", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/groups", description: "Create account group", body: { display_name: "my-group" }, docs: { summary: "Create account group", docUrl: "https://docs.databricks.com/api/azure/account/groups/create" } },
-          { label: "Delete account group", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/groups/GROUP_ID", description: "Delete account group", body: {}, docs: { summary: "Delete account group", docUrl: "https://docs.databricks.com/api/azure/account/groups/delete" } }
+          { label: "List account groups", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/groups", description: "List account groups", docs: { summary: "List account groups", docUrl: "https://docs.databricks.com/api/azure/account/accountgroups/list" } },
+          { label: "List account groups (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/groups?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of account groups", docs: { summary: "List account groups with pagination", docUrl: "https://docs.databricks.com/api/azure/account/accountgroups/list" } },
+          { label: "Get account group", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/groups/GROUP_ID", description: "Get account group", docs: { summary: "Get account group", docUrl: "https://docs.databricks.com/api/azure/account/accountgroups/get" } },
+          { label: "Create account group", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/groups", description: "Create account group", body: { display_name: "my-group" }, docs: { summary: "Create account group", docUrl: "https://docs.databricks.com/api/azure/account/accountgroups/create" } },
+          { label: "Delete account group", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/groups/GROUP_ID", description: "Delete account group", body: {}, docs: { summary: "Delete account group", docUrl: "https://docs.databricks.com/api/azure/account/accountgroups/delete" } }
         ]
       },
+      {
+        name: "SCIM Users",
+        endpoints: [
+          { label: "List account SCIM users", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users?startIndex=1&count=100", description: "List account SCIM users", docs: { summary: "List SCIM users", docUrl: "https://docs.databricks.com/api/azure/account/accountusers/list" } },
+          { label: "List account SCIM users (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users?startIndex=NEXT_INDEX&count=100", description: "Get next page of account SCIM users", docs: { summary: "List SCIM users with pagination", docUrl: "https://docs.databricks.com/api/azure/account/accountusers/list" } },
+          { label: "Get account SCIM user", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users/USER_ID", description: "Get SCIM user", docs: { summary: "Get SCIM user", docUrl: "https://docs.databricks.com/api/azure/account/accountusers/get" } },
+          { label: "Create account SCIM user", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users", description: "Create SCIM user", body: { userName: "user@example.com", displayName: "User Name" }, docs: { summary: "Create SCIM user", docUrl: "https://docs.databricks.com/api/azure/account/accountusers/create" } },
+          { label: "Update account SCIM user", method: "PUT", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users/USER_ID", description: "Update SCIM user", body: { displayName: "Updated" }, docs: { summary: "Update SCIM user", docUrl: "https://docs.databricks.com/api/azure/account/accountusers/update" } },
+          { label: "Patch account SCIM user", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users/USER_ID", description: "Patch SCIM user", body: { Operations: [{ op: "replace", path: "active", value: false }] }, docs: { summary: "Patch SCIM user", docUrl: "https://docs.databricks.com/api/azure/account/accountusers/patch" } },
+          { label: "Delete account SCIM user", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users/USER_ID", description: "Delete SCIM user", body: {}, docs: { summary: "Delete SCIM user", docUrl: "https://docs.databricks.com/api/azure/account/accountusers/delete" } }
+        ]
+      },
+      {
+        name: "SCIM Groups",
+        endpoints: [
+          { label: "List account SCIM groups", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Groups?startIndex=1&count=100", description: "List SCIM groups", docs: { summary: "List SCIM groups", docUrl: "https://docs.databricks.com/api/azure/account/accountgroups/list" } },
+          { label: "List account SCIM groups (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Groups?startIndex=NEXT_INDEX&count=100", description: "Get next page of account SCIM groups", docs: { summary: "List SCIM groups with pagination", docUrl: "https://docs.databricks.com/api/azure/account/accountgroups/list" } },
+          { label: "Get account SCIM group", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Groups/GROUP_ID", description: "Get SCIM group", docs: { summary: "Get SCIM group", docUrl: "https://docs.databricks.com/api/azure/account/accountgroups/get" } },
+          { label: "Create account SCIM group", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Groups", description: "Create SCIM group", body: { displayName: "account-group" }, docs: { summary: "Create SCIM group", docUrl: "https://docs.databricks.com/api/azure/account/accountgroups/create" } },
+          { label: "Patch account SCIM group", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Groups/GROUP_ID", description: "Patch SCIM group", body: { Operations: [{ op: "add", path: "members", value: [{ value: "USER_ID" }] }] }, docs: { summary: "Patch SCIM group", docUrl: "https://docs.databricks.com/api/azure/account/accountgroups/patch" } },
+          { label: "Delete account SCIM group", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Groups/GROUP_ID", description: "Delete SCIM group", body: {}, docs: { summary: "Delete SCIM group", docUrl: "https://docs.databricks.com/api/azure/account/accountgroups/delete" } }
+        ]
+      },
+      {
+        name: "Service Principals",
+        endpoints: [
+          { label: "List account SCIM service principals", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/ServicePrincipals?startIndex=1&count=100", description: "List SCIM service principals", docs: { summary: "List SCIM service principals", docUrl: "https://docs.databricks.com/api/azure/account/accountserviceprincipals/list" } },
+          { label: "List account SCIM service principals (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/ServicePrincipals?startIndex=NEXT_INDEX&count=100", description: "Get next page of account SCIM service principals", docs: { summary: "List SCIM service principals with pagination", docUrl: "https://docs.databricks.com/api/azure/account/accountserviceprincipals/list" } },
+          { label: "Get account SCIM service principal", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/ServicePrincipals/SP_ID", description: "Get SCIM service principal", docs: { summary: "Get SCIM service principal", docUrl: "https://docs.databricks.com/api/azure/account/accountserviceprincipals/get" } },
+          { label: "Create account SCIM service principal", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/ServicePrincipals", description: "Create SCIM service principal", body: { displayName: "account-sp" }, docs: { summary: "Create SCIM service principal", docUrl: "https://docs.databricks.com/api/azure/account/accountserviceprincipals/create" } },
+          { label: "Patch account SCIM service principal", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/ServicePrincipals/SP_ID", description: "Patch SCIM service principal", body: { Operations: [{ op: "replace", path: "active", value: true }] }, docs: { summary: "Patch SCIM service principal", docUrl: "https://docs.databricks.com/api/azure/account/accountserviceprincipals/patch" } },
+          { label: "Delete account SCIM service principal", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/ServicePrincipals/SP_ID", description: "Delete SCIM service principal", body: {}, docs: { summary: "Delete SCIM service principal", docUrl: "https://docs.databricks.com/api/azure/account/accountserviceprincipals/delete" } }
+        ]
+      },
+      {
+        name: "Service Principal Secrets",
+        endpoints: [
+          { label: "List SP secrets", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/servicePrincipals/SP_ID/credentials/secrets", description: "List service principal secrets", docs: { summary: "List service principal OAuth secrets", docUrl: "https://docs.databricks.com/api/azure/account/serviceprincipalsecrets/list" } },
+          { label: "Create SP secret", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/servicePrincipals/SP_ID/credentials/secrets", description: "Create a new service principal secret", body: {}, docs: { summary: "Create service principal OAuth secret", docUrl: "https://docs.databricks.com/api/azure/account/serviceprincipalsecrets/create" } },
+          { label: "Delete SP secret", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/servicePrincipals/SP_ID/credentials/secrets/SECRET_ID", description: "Delete a service principal secret", body: {}, docs: { summary: "Delete service principal OAuth secret", docUrl: "https://docs.databricks.com/api/azure/account/serviceprincipalsecrets/delete" } }
+        ]
+      }
+    ]
+  },
+  {
+    name: "Account Workspaces",
+    icon: "Landmark",
+    audience: "account",
+    rateLimitNote: "Account-level APIs use the account console URL (e.g., https://accounts.azuredatabricks.net).",
+    subcategories: [
       {
         name: "Workspaces",
         endpoints: [
@@ -857,139 +994,200 @@ export const API_CATALOG: ApiCategory[] = [
         ]
       },
       {
-        name: "Credentials",
+        name: "Usage Dashboards",
         endpoints: [
-          { label: "List credentials", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/credentials", description: "List account credentials", docs: { summary: "List credentials", docUrl: "https://docs.databricks.com/api/azure/account/credentials/list" } },
-          { label: "List credentials (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/credentials?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of credentials", docs: { summary: "List credentials with pagination", docUrl: "https://docs.databricks.com/api/azure/account/credentials/list" } },
-          { label: "Get credential", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/credentials/CREDENTIAL_ID", description: "Get credential", docs: { summary: "Get credential", docUrl: "https://docs.databricks.com/api/azure/account/credentials/get" } },
-          { label: "Create credential", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/credentials", description: "Create credential", body: { name: "my-credential", aws_credentials: { sts_role: { role_arn: "arn:aws:iam::123456789:role/example" } } }, docs: { summary: "Create credential", docUrl: "https://docs.databricks.com/api/azure/account/credentials/create" } },
-          { label: "Update credential", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/credentials/CREDENTIAL_ID", description: "Update credential", body: { name: "updated-credential" }, docs: { summary: "Update credential", docUrl: "https://docs.databricks.com/api/azure/account/credentials/update" } },
-          { label: "Delete credential", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/credentials/CREDENTIAL_ID", description: "Delete credential", body: {}, docs: { summary: "Delete credential", docUrl: "https://docs.databricks.com/api/azure/account/credentials/delete" } }
+          { label: "Get usage dashboard", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/dashboard", description: "Get the account usage dashboard", docs: { summary: "Get account usage dashboard", docUrl: "https://docs.databricks.com/api/azure/account/usagedashboards/getdashboard" } },
+          { label: "Create usage dashboard", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/dashboard", description: "Create account usage dashboard", body: { dashboard_type: "USAGE_DASHBOARD", warehouse_id: "WAREHOUSE_ID" }, docs: { summary: "Create account usage dashboard", docUrl: "https://docs.databricks.com/api/azure/account/usagedashboards/create" } }
+        ]
+      }
+    ]
+  },
+  {
+    name: "Account Unity Catalog",
+    icon: "Database",
+    audience: "account",
+    rateLimitNote: "Account-level APIs use the account console URL (e.g., https://accounts.azuredatabricks.net).",
+    subcategories: [
+      {
+        name: "Account Metastores",
+        endpoints: [
+          { label: "List metastores", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/metastores", description: "List Unity Catalog metastores", docs: { summary: "List all metastores for the account", docUrl: "https://docs.databricks.com/api/azure/account/accountmetastores/list" } },
+          { label: "Get metastore", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/metastores/METASTORE_ID", description: "Get metastore details", docs: { summary: "Get metastore by ID", docUrl: "https://docs.databricks.com/api/azure/account/accountmetastores/get" } },
+          { label: "Create metastore", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/metastores", description: "Create a Unity Catalog metastore", body: { name: "my-metastore", storage_root: "abfss://container@storage.dfs.core.windows.net/metastore", region: "eastus" }, docs: { summary: "Create Unity Catalog metastore", docUrl: "https://docs.databricks.com/api/azure/account/accountmetastores/create" } },
+          { label: "Update metastore", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/metastores/METASTORE_ID", description: "Update metastore", body: { name: "updated-metastore" }, docs: { summary: "Update metastore configuration", docUrl: "https://docs.databricks.com/api/azure/account/accountmetastores/update" } },
+          { label: "Delete metastore", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/metastores/METASTORE_ID", description: "Delete metastore", body: {}, docs: { summary: "Delete metastore", docUrl: "https://docs.databricks.com/api/azure/account/accountmetastores/delete" } }
         ]
       },
       {
-        name: "Storage Configurations",
+        name: "Metastore Assignments",
         endpoints: [
-          { label: "List storage configs", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/storage-configurations", description: "List storage configs", docs: { summary: "List storage configurations", docUrl: "https://docs.databricks.com/api/azure/account/storage/list" } },
-          { label: "List storage configs (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/storage-configurations?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of storage configs", docs: { summary: "List storage configurations with pagination", docUrl: "https://docs.databricks.com/api/azure/account/storage/list" } },
-          { label: "Get storage config", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/storage-configurations/STORAGE_CONFIG_ID", description: "Get storage config", docs: { summary: "Get storage configuration", docUrl: "https://docs.databricks.com/api/azure/account/storage/get" } },
-          { label: "Create storage config", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/storage-configurations", description: "Create storage config", body: { name: "my-storage", bucket_name: "my-bucket" }, docs: { summary: "Create storage configuration", docUrl: "https://docs.databricks.com/api/azure/account/storage/create" } },
-          { label: "Update storage config", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/storage-configurations/STORAGE_CONFIG_ID", description: "Update storage config", body: { name: "updated-storage" }, docs: { summary: "Update storage configuration", docUrl: "https://docs.databricks.com/api/azure/account/storage/update" } },
-          { label: "Delete storage config", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/storage-configurations/STORAGE_CONFIG_ID", description: "Delete storage config", body: {}, docs: { summary: "Delete storage configuration", docUrl: "https://docs.databricks.com/api/azure/account/storage/delete" } }
+          { label: "List metastore assignments", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/workspaces/WORKSPACE_ID/metastores", description: "List metastore assignments for workspace", docs: { summary: "List metastore assignments for a workspace", docUrl: "https://docs.databricks.com/api/azure/account/accountmetastoreassignments/list" } },
+          { label: "Assign metastore to workspace", method: "PUT", path: "/api/2.0/accounts/ACCOUNT_ID/workspaces/WORKSPACE_ID/metastores/METASTORE_ID", description: "Assign a metastore to a workspace", body: { default_catalog_name: "main" }, docs: { summary: "Create metastore assignment", docUrl: "https://docs.databricks.com/api/azure/account/accountmetastoreassignments/create" } },
+          { label: "Update metastore assignment", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/workspaces/WORKSPACE_ID/metastores/METASTORE_ID", description: "Update metastore assignment", body: { default_catalog_name: "hive_metastore" }, docs: { summary: "Update metastore assignment", docUrl: "https://docs.databricks.com/api/azure/account/accountmetastoreassignments/update" } },
+          { label: "Remove metastore assignment", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/workspaces/WORKSPACE_ID/metastores/METASTORE_ID", description: "Remove metastore from workspace", body: {}, docs: { summary: "Delete metastore assignment", docUrl: "https://docs.databricks.com/api/azure/account/accountmetastoreassignments/delete" } }
         ]
-      },
+      }
+    ]
+  },
+  {
+    name: "Account Networking",
+    icon: "Network",
+    audience: "account",
+    rateLimitNote: "Account-level APIs use the account console URL (e.g., https://accounts.azuredatabricks.net).",
+    subcategories: [
       {
         name: "Networks",
         endpoints: [
-          { label: "List networks", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/networks", description: "List networks", docs: { summary: "List networks", docUrl: "https://docs.databricks.com/api/azure/account/networks/list" } },
-          { label: "List networks (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/networks?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of networks", docs: { summary: "List networks with pagination", docUrl: "https://docs.databricks.com/api/azure/account/networks/list" } },
-          { label: "Get network", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/networks/NETWORK_ID", description: "Get network", docs: { summary: "Get network", docUrl: "https://docs.databricks.com/api/azure/account/networks/get" } },
-          { label: "Create network", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/networks", description: "Create network", body: { network_name: "my-network", vpc_id: "vpc-123" }, docs: { summary: "Create network", docUrl: "https://docs.databricks.com/api/azure/account/networks/create" } },
-          { label: "Update network", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/networks/NETWORK_ID", description: "Update network", body: { network_name: "updated-network" }, docs: { summary: "Update network", docUrl: "https://docs.databricks.com/api/azure/account/networks/update" } },
-          { label: "Delete network", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/networks/NETWORK_ID", description: "Delete network", body: {}, docs: { summary: "Delete network", docUrl: "https://docs.databricks.com/api/azure/account/networks/delete" } }
+          { label: "List networks", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/networks", description: "List networks", docs: { summary: "List networks", docUrl: "https://docs.databricks.com/api/azure/account/accountnetworks/list" } },
+          { label: "List networks (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/networks?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of networks", docs: { summary: "List networks with pagination", docUrl: "https://docs.databricks.com/api/azure/account/accountnetworks/list" } },
+          { label: "Get network", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/networks/NETWORK_ID", description: "Get network", docs: { summary: "Get network", docUrl: "https://docs.databricks.com/api/azure/account/accountnetworks/get" } },
+          { label: "Create network", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/networks", description: "Create network", body: { network_name: "my-network", vpc_id: "vpc-123" }, docs: { summary: "Create network", docUrl: "https://docs.databricks.com/api/azure/account/accountnetworks/create" } },
+          { label: "Update network", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/networks/NETWORK_ID", description: "Update network", body: { network_name: "updated-network" }, docs: { summary: "Update network", docUrl: "https://docs.databricks.com/api/azure/account/accountnetworks/update" } },
+          { label: "Delete network", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/networks/NETWORK_ID", description: "Delete network", body: {}, docs: { summary: "Delete network", docUrl: "https://docs.databricks.com/api/azure/account/accountnetworks/delete" } }
         ]
       },
       {
         name: "VPC Endpoints",
         endpoints: [
-          { label: "List VPC endpoints", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/vpc-endpoints", description: "List VPC endpoints", docs: { summary: "List VPC endpoints", docUrl: "https://docs.databricks.com/api/azure/account/vpc-endpoints/list" } },
-          { label: "List VPC endpoints (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/vpc-endpoints?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of VPC endpoints", docs: { summary: "List VPC endpoints with pagination", docUrl: "https://docs.databricks.com/api/azure/account/vpc-endpoints/list" } },
-          { label: "Get VPC endpoint", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/vpc-endpoints/ENDPOINT_ID", description: "Get VPC endpoint", docs: { summary: "Get VPC endpoint", docUrl: "https://docs.databricks.com/api/azure/account/vpc-endpoints/get" } },
-          { label: "Create VPC endpoint", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/vpc-endpoints", description: "Create VPC endpoint", body: { vpc_endpoint_name: "my-endpoint" }, docs: { summary: "Create VPC endpoint", docUrl: "https://docs.databricks.com/api/azure/account/vpc-endpoints/create" } },
-          { label: "Delete VPC endpoint", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/vpc-endpoints/ENDPOINT_ID", description: "Delete VPC endpoint", body: {}, docs: { summary: "Delete VPC endpoint", docUrl: "https://docs.databricks.com/api/azure/account/vpc-endpoints/delete" } }
+          { label: "List VPC endpoints", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/vpc-endpoints", description: "List VPC endpoints", docs: { summary: "List VPC endpoints", docUrl: "https://docs.databricks.com/api/azure/account/accountvpcendpoints/list" } },
+          { label: "List VPC endpoints (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/vpc-endpoints?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of VPC endpoints", docs: { summary: "List VPC endpoints with pagination", docUrl: "https://docs.databricks.com/api/azure/account/accountvpcendpoints/list" } },
+          { label: "Get VPC endpoint", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/vpc-endpoints/ENDPOINT_ID", description: "Get VPC endpoint", docs: { summary: "Get VPC endpoint", docUrl: "https://docs.databricks.com/api/azure/account/accountvpcendpoints/get" } },
+          { label: "Create VPC endpoint", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/vpc-endpoints", description: "Create VPC endpoint", body: { vpc_endpoint_name: "my-endpoint" }, docs: { summary: "Create VPC endpoint", docUrl: "https://docs.databricks.com/api/azure/account/accountvpcendpoints/create" } },
+          { label: "Delete VPC endpoint", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/vpc-endpoints/ENDPOINT_ID", description: "Delete VPC endpoint", body: {}, docs: { summary: "Delete VPC endpoint", docUrl: "https://docs.databricks.com/api/azure/account/accountvpcendpoints/delete" } }
         ]
       },
       {
         name: "Private Access",
         endpoints: [
-          { label: "List private access settings", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings", description: "List private access settings", docs: { summary: "List private access settings", docUrl: "https://docs.databricks.com/api/azure/account/private-access-settings/list" } },
-          { label: "List private access settings (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of private access settings", docs: { summary: "List private access settings with pagination", docUrl: "https://docs.databricks.com/api/azure/account/private-access-settings/list" } },
-          { label: "Get private access setting", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings/PAS_ID", description: "Get private access setting", docs: { summary: "Get private access setting", docUrl: "https://docs.databricks.com/api/azure/account/private-access-settings/get" } },
-          { label: "Create private access setting", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings", description: "Create private access setting", body: { private_access_settings_name: "my-pas" }, docs: { summary: "Create private access setting", docUrl: "https://docs.databricks.com/api/azure/account/private-access-settings/create" } },
-          { label: "Replace private access setting", method: "PUT", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings/PAS_ID", description: "Replace private access setting", body: { private_access_settings_name: "updated-pas" }, docs: { summary: "Replace private access setting", docUrl: "https://docs.databricks.com/api/azure/account/private-access-settings/replace" } },
-          { label: "Update private access setting", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings/PAS_ID", description: "Update private access setting", body: { private_access_settings_name: "patched-pas" }, docs: { summary: "Update private access setting", docUrl: "https://docs.databricks.com/api/azure/account/private-access-settings/update" } },
-          { label: "Delete private access setting", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings/PAS_ID", description: "Delete private access setting", body: {}, docs: { summary: "Delete private access setting", docUrl: "https://docs.databricks.com/api/azure/account/private-access-settings/delete" } }
+          { label: "List private access settings", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings", description: "List private access settings", docs: { summary: "List private access settings", docUrl: "https://docs.databricks.com/api/azure/account/accountprivateaccesssettings/list" } },
+          { label: "List private access settings (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of private access settings", docs: { summary: "List private access settings with pagination", docUrl: "https://docs.databricks.com/api/azure/account/accountprivateaccesssettings/list" } },
+          { label: "Get private access setting", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings/PAS_ID", description: "Get private access setting", docs: { summary: "Get private access setting", docUrl: "https://docs.databricks.com/api/azure/account/accountprivateaccesssettings/get" } },
+          { label: "Create private access setting", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings", description: "Create private access setting", body: { private_access_settings_name: "my-pas" }, docs: { summary: "Create private access setting", docUrl: "https://docs.databricks.com/api/azure/account/accountprivateaccesssettings/create" } },
+          { label: "Replace private access setting", method: "PUT", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings/PAS_ID", description: "Replace private access setting", body: { private_access_settings_name: "updated-pas" }, docs: { summary: "Replace private access setting", docUrl: "https://docs.databricks.com/api/azure/account/accountprivateaccesssettings/replace" } },
+          { label: "Update private access setting", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings/PAS_ID", description: "Update private access setting", body: { private_access_settings_name: "patched-pas" }, docs: { summary: "Update private access setting", docUrl: "https://docs.databricks.com/api/azure/account/accountprivateaccesssettings/update" } },
+          { label: "Delete private access setting", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/private-access-settings/PAS_ID", description: "Delete private access setting", body: {}, docs: { summary: "Delete private access setting", docUrl: "https://docs.databricks.com/api/azure/account/accountprivateaccesssettings/delete" } }
+        ]
+      },
+      {
+        name: "Network Connectivity",
+        endpoints: [
+          { label: "List network connectivity configs", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/network-connectivity-configs", description: "List network connectivity configurations", docs: { summary: "List NCC configs for serverless compute", docUrl: "https://docs.databricks.com/api/azure/account/networkconnectivity/listnetworkconnectivityconfigurations" } },
+          { label: "List network connectivity configs (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/network-connectivity-configs?page_token=NEXT_PAGE_TOKEN", description: "Get next page of NCC configs", docs: { summary: "List NCC configs with pagination", docUrl: "https://docs.databricks.com/api/azure/account/networkconnectivity/listnetworkconnectivityconfigurations" } },
+          { label: "Get network connectivity config", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/network-connectivity-configs/CONFIG_ID", description: "Get NCC config details", docs: { summary: "Get NCC config", docUrl: "https://docs.databricks.com/api/azure/account/networkconnectivity/getnetworkconnectivityconfiguration" } },
+          { label: "Create network connectivity config", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/network-connectivity-configs", description: "Create NCC config", body: { name: "my-ncc", region: "eastus" }, docs: { summary: "Create NCC config", docUrl: "https://docs.databricks.com/api/azure/account/networkconnectivity/createnetworkconnectivityconfiguration" } },
+          { label: "Delete network connectivity config", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/network-connectivity-configs/CONFIG_ID", description: "Delete NCC config", body: {}, docs: { summary: "Delete NCC config", docUrl: "https://docs.databricks.com/api/azure/account/networkconnectivity/deletenetworkconnectivityconfiguration" } }
+        ]
+      }
+    ]
+  },
+  {
+    name: "Account Security",
+    icon: "Server",
+    audience: "account",
+    rateLimitNote: "Account-level APIs use the account console URL (e.g., https://accounts.azuredatabricks.net).",
+    subcategories: [
+      {
+        name: "Credentials",
+        endpoints: [
+          { label: "List credentials", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/credentials", description: "List account credentials", docs: { summary: "List credentials", docUrl: "https://docs.databricks.com/api/azure/account/accountcredentials/list" } },
+          { label: "List credentials (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/credentials?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of credentials", docs: { summary: "List credentials with pagination", docUrl: "https://docs.databricks.com/api/azure/account/accountcredentials/list" } },
+          { label: "Get credential", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/credentials/CREDENTIAL_ID", description: "Get credential", docs: { summary: "Get credential", docUrl: "https://docs.databricks.com/api/azure/account/accountcredentials/get" } },
+          { label: "Create credential", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/credentials", description: "Create credential", body: { name: "my-credential", aws_credentials: { sts_role: { role_arn: "arn:aws:iam::123456789:role/example" } } }, docs: { summary: "Create credential", docUrl: "https://docs.databricks.com/api/azure/account/accountcredentials/create" } },
+          { label: "Update credential", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/credentials/CREDENTIAL_ID", description: "Update credential", body: { name: "updated-credential" }, docs: { summary: "Update credential", docUrl: "https://docs.databricks.com/api/azure/account/accountcredentials/update" } },
+          { label: "Delete credential", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/credentials/CREDENTIAL_ID", description: "Delete credential", body: {}, docs: { summary: "Delete credential", docUrl: "https://docs.databricks.com/api/azure/account/accountcredentials/delete" } }
+        ]
+      },
+      {
+        name: "Storage Configurations",
+        endpoints: [
+          { label: "List storage configs", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/storage-configurations", description: "List storage configs", docs: { summary: "List storage configurations", docUrl: "https://docs.databricks.com/api/azure/account/accountstorageconfigurations/list" } },
+          { label: "List storage configs (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/storage-configurations?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of storage configs", docs: { summary: "List storage configurations with pagination", docUrl: "https://docs.databricks.com/api/azure/account/accountstorageconfigurations/list" } },
+          { label: "Get storage config", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/storage-configurations/STORAGE_CONFIG_ID", description: "Get storage config", docs: { summary: "Get storage configuration", docUrl: "https://docs.databricks.com/api/azure/account/accountstorageconfigurations/get" } },
+          { label: "Create storage config", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/storage-configurations", description: "Create storage config", body: { name: "my-storage", bucket_name: "my-bucket" }, docs: { summary: "Create storage configuration", docUrl: "https://docs.databricks.com/api/azure/account/accountstorageconfigurations/create" } },
+          { label: "Update storage config", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/storage-configurations/STORAGE_CONFIG_ID", description: "Update storage config", body: { name: "updated-storage" }, docs: { summary: "Update storage configuration", docUrl: "https://docs.databricks.com/api/azure/account/accountstorageconfigurations/update" } },
+          { label: "Delete storage config", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/storage-configurations/STORAGE_CONFIG_ID", description: "Delete storage config", body: {}, docs: { summary: "Delete storage configuration", docUrl: "https://docs.databricks.com/api/azure/account/accountstorageconfigurations/delete" } }
         ]
       },
       {
         name: "Customer Managed Keys",
         endpoints: [
-          { label: "List customer-managed keys", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/customer-managed-keys", description: "List CMKs", docs: { summary: "List customer-managed keys", docUrl: "https://docs.databricks.com/api/azure/account/customer-managed-keys/list" } },
-          { label: "List customer-managed keys (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/customer-managed-keys?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of CMKs", docs: { summary: "List customer-managed keys with pagination", docUrl: "https://docs.databricks.com/api/azure/account/customer-managed-keys/list" } },
-          { label: "Get customer-managed key", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/customer-managed-keys/KEY_ID", description: "Get CMK", docs: { summary: "Get customer-managed key", docUrl: "https://docs.databricks.com/api/azure/account/customer-managed-keys/get" } },
-          { label: "Create customer-managed key", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/customer-managed-keys", description: "Create CMK", body: { use_cases: ["MANAGED_SERVICES"], aws_key_info: { key_arn: "arn:aws:kms:region:acct:key/id" } }, docs: { summary: "Create customer-managed key", docUrl: "https://docs.databricks.com/api/azure/account/customer-managed-keys/create" } },
-          { label: "Delete customer-managed key", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/customer-managed-keys/KEY_ID", description: "Delete CMK", body: {}, docs: { summary: "Delete customer-managed key", docUrl: "https://docs.databricks.com/api/azure/account/customer-managed-keys/delete" } }
+          { label: "List customer-managed keys", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/customer-managed-keys", description: "List CMKs", docs: { summary: "List customer-managed keys", docUrl: "https://docs.databricks.com/api/azure/account/encryptionkeys/list" } },
+          { label: "List customer-managed keys (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/customer-managed-keys?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of CMKs", docs: { summary: "List customer-managed keys with pagination", docUrl: "https://docs.databricks.com/api/azure/account/encryptionkeys/list" } },
+          { label: "Get customer-managed key", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/customer-managed-keys/KEY_ID", description: "Get CMK", docs: { summary: "Get customer-managed key", docUrl: "https://docs.databricks.com/api/azure/account/encryptionkeys/get" } },
+          { label: "Create customer-managed key", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/customer-managed-keys", description: "Create CMK", body: { use_cases: ["MANAGED_SERVICES"], aws_key_info: { key_arn: "arn:aws:kms:region:acct:key/id" } }, docs: { summary: "Create customer-managed key", docUrl: "https://docs.databricks.com/api/azure/account/encryptionkeys/create" } },
+          { label: "Delete customer-managed key", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/customer-managed-keys/KEY_ID", description: "Delete CMK", body: {}, docs: { summary: "Delete customer-managed key", docUrl: "https://docs.databricks.com/api/azure/account/encryptionkeys/delete" } }
+        ]
+      },
+      {
+        name: "Account IP Access Lists",
+        endpoints: [
+          { label: "List account IP access lists", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/ip-access-lists", description: "List account-level IP access lists", docs: { summary: "List account IP access lists", docUrl: "https://docs.databricks.com/api/azure/account/accountipaccesslists/list" } },
+          { label: "Get account IP access list", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/ip-access-lists/LIST_ID", description: "Get account IP access list details", docs: { summary: "Get account IP access list", docUrl: "https://docs.databricks.com/api/azure/account/accountipaccesslists/get" } },
+          { label: "Create account IP access list", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/ip-access-lists", description: "Create account-level IP access list", body: { label: "office-ips", list_type: "ALLOW", ip_addresses: ["1.2.3.4/32"] }, docs: { summary: "Create account IP access list", docUrl: "https://docs.databricks.com/api/azure/account/accountipaccesslists/create" } },
+          { label: "Update account IP access list", method: "PUT", path: "/api/2.0/accounts/ACCOUNT_ID/ip-access-lists/LIST_ID", description: "Update account IP access list", body: { label: "updated-ips", ip_addresses: ["1.2.3.0/24"] }, docs: { summary: "Update account IP access list", docUrl: "https://docs.databricks.com/api/azure/account/accountipaccesslists/replace" } },
+          { label: "Delete account IP access list", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/ip-access-lists/LIST_ID", description: "Delete account IP access list", body: {}, docs: { summary: "Delete account IP access list", docUrl: "https://docs.databricks.com/api/azure/account/accountipaccesslists/delete" } }
+        ]
+      }
+    ]
+  },
+  {
+    name: "Account Billing",
+    icon: "Receipt",
+    audience: "account",
+    rateLimitNote: "Account-level APIs use the account console URL (e.g., https://accounts.azuredatabricks.net).",
+    subcategories: [
+      {
+        name: "Billable Usage",
+        endpoints: [
+          { label: "Download billable usage", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/usage/download?start_time=START&end_time=END", description: "Download billable usage", docs: { summary: "Download billable usage", docUrl: "https://docs.databricks.com/api/azure/account/billableusage/download" } }
         ]
       },
       {
         name: "Log Delivery",
         endpoints: [
-          { label: "List log delivery configs", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery", description: "List log delivery configs", docs: { summary: "List log delivery", docUrl: "https://docs.databricks.com/api/azure/account/log-delivery/list" } },
-          { label: "List log delivery configs (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of log delivery configs", docs: { summary: "List log delivery with pagination", docUrl: "https://docs.databricks.com/api/azure/account/log-delivery/list" } },
-          { label: "Get log delivery config", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery/LOG_DELIVERY_ID", description: "Get log delivery config", docs: { summary: "Get log delivery", docUrl: "https://docs.databricks.com/api/azure/account/log-delivery/get" } },
-          { label: "Create log delivery config", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery", description: "Create log delivery config", body: { config_name: "my-logs", output_format: "json", credentials_id: "CREDENTIAL_ID", storage_configuration_id: "STORAGE_CONFIG_ID" }, docs: { summary: "Create log delivery", docUrl: "https://docs.databricks.com/api/azure/account/log-delivery/create" } },
-          { label: "Update log delivery config", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery/LOG_DELIVERY_ID", description: "Update log delivery config", body: { config_name: "updated-logs" }, docs: { summary: "Update log delivery", docUrl: "https://docs.databricks.com/api/azure/account/log-delivery/update" } },
-          { label: "Delete log delivery config", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery/LOG_DELIVERY_ID", description: "Delete log delivery config", body: {}, docs: { summary: "Delete log delivery", docUrl: "https://docs.databricks.com/api/azure/account/log-delivery/delete" } }
-        ]
-      },
-      {
-        name: "Billable Usage",
-        endpoints: [
-          { label: "Download billable usage", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/usage/download?start_time=START&end_time=END", description: "Download billable usage", docs: { summary: "Download billable usage", docUrl: "https://docs.databricks.com/api/azure/account/usage/download" } }
-        ]
-      },
-      {
-        name: "Account SCIM Users",
-        endpoints: [
-          { label: "List account SCIM users", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users?startIndex=1&count=100", description: "List account SCIM users", docs: { summary: "List SCIM users", docUrl: "https://docs.databricks.com/api/azure/account/scim/users/list" } },
-          { label: "List account SCIM users (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users?startIndex=NEXT_INDEX&count=100", description: "Get next page of account SCIM users", docs: { summary: "List SCIM users with pagination", docUrl: "https://docs.databricks.com/api/azure/account/scim/users/list" } },
-          { label: "Get account SCIM user", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users/USER_ID", description: "Get SCIM user", docs: { summary: "Get SCIM user", docUrl: "https://docs.databricks.com/api/azure/account/scim/users/get" } },
-          { label: "Create account SCIM user", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users", description: "Create SCIM user", body: { userName: "user@example.com", displayName: "User Name" }, docs: { summary: "Create SCIM user", docUrl: "https://docs.databricks.com/api/azure/account/scim/users/create" } },
-          { label: "Update account SCIM user", method: "PUT", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users/USER_ID", description: "Update SCIM user", body: { displayName: "Updated" }, docs: { summary: "Update SCIM user", docUrl: "https://docs.databricks.com/api/azure/account/scim/users/update" } },
-          { label: "Patch account SCIM user", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users/USER_ID", description: "Patch SCIM user", body: { Operations: [{ op: "replace", path: "active", value: false }] }, docs: { summary: "Patch SCIM user", docUrl: "https://docs.databricks.com/api/azure/account/scim/users/patch" } },
-          { label: "Delete account SCIM user", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Users/USER_ID", description: "Delete SCIM user", body: {}, docs: { summary: "Delete SCIM user", docUrl: "https://docs.databricks.com/api/azure/account/scim/users/delete" } }
-        ]
-      },
-      {
-        name: "Account SCIM Groups",
-        endpoints: [
-          { label: "List account SCIM groups", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Groups?startIndex=1&count=100", description: "List SCIM groups", docs: { summary: "List SCIM groups", docUrl: "https://docs.databricks.com/api/azure/account/scim/groups/list" } },
-          { label: "List account SCIM groups (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Groups?startIndex=NEXT_INDEX&count=100", description: "Get next page of account SCIM groups", docs: { summary: "List SCIM groups with pagination", docUrl: "https://docs.databricks.com/api/azure/account/scim/groups/list" } },
-          { label: "Get account SCIM group", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Groups/GROUP_ID", description: "Get SCIM group", docs: { summary: "Get SCIM group", docUrl: "https://docs.databricks.com/api/azure/account/scim/groups/get" } },
-          { label: "Create account SCIM group", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Groups", description: "Create SCIM group", body: { displayName: "account-group" }, docs: { summary: "Create SCIM group", docUrl: "https://docs.databricks.com/api/azure/account/scim/groups/create" } },
-          { label: "Patch account SCIM group", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Groups/GROUP_ID", description: "Patch SCIM group", body: { Operations: [{ op: "add", path: "members", value: [{ value: "USER_ID" }] }] }, docs: { summary: "Patch SCIM group", docUrl: "https://docs.databricks.com/api/azure/account/scim/groups/patch" } },
-          { label: "Delete account SCIM group", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/Groups/GROUP_ID", description: "Delete SCIM group", body: {}, docs: { summary: "Delete SCIM group", docUrl: "https://docs.databricks.com/api/azure/account/scim/groups/delete" } }
-        ]
-      },
-      {
-        name: "Account Service Principals",
-        endpoints: [
-          { label: "List account SCIM service principals", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/ServicePrincipals?startIndex=1&count=100", description: "List SCIM service principals", docs: { summary: "List SCIM service principals", docUrl: "https://docs.databricks.com/api/azure/account/scim/serviceprincipals/list" } },
-          { label: "List account SCIM service principals (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/ServicePrincipals?startIndex=NEXT_INDEX&count=100", description: "Get next page of account SCIM service principals", docs: { summary: "List SCIM service principals with pagination", docUrl: "https://docs.databricks.com/api/azure/account/scim/serviceprincipals/list" } },
-          { label: "Get account SCIM service principal", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/ServicePrincipals/SP_ID", description: "Get SCIM service principal", docs: { summary: "Get SCIM service principal", docUrl: "https://docs.databricks.com/api/azure/account/scim/serviceprincipals/get" } },
-          { label: "Create account SCIM service principal", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/ServicePrincipals", description: "Create SCIM service principal", body: { displayName: "account-sp" }, docs: { summary: "Create SCIM service principal", docUrl: "https://docs.databricks.com/api/azure/account/scim/serviceprincipals/create" } },
-          { label: "Patch account SCIM service principal", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/ServicePrincipals/SP_ID", description: "Patch SCIM service principal", body: { Operations: [{ op: "replace", path: "active", value: true }] }, docs: { summary: "Patch SCIM service principal", docUrl: "https://docs.databricks.com/api/azure/account/scim/serviceprincipals/patch" } },
-          { label: "Delete account SCIM service principal", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/scim/v2/ServicePrincipals/SP_ID", description: "Delete SCIM service principal", body: {}, docs: { summary: "Delete SCIM service principal", docUrl: "https://docs.databricks.com/api/azure/account/scim/serviceprincipals/delete" } }
+          { label: "List log delivery configs", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery", description: "List log delivery configs", docs: { summary: "List log delivery", docUrl: "https://docs.databricks.com/api/azure/account/logdelivery/list" } },
+          { label: "List log delivery configs (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery?page_token=NEXT_PAGE_TOKEN&limit=100", description: "Get next page of log delivery configs", docs: { summary: "List log delivery with pagination", docUrl: "https://docs.databricks.com/api/azure/account/logdelivery/list" } },
+          { label: "Get log delivery config", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery/LOG_DELIVERY_ID", description: "Get log delivery config", docs: { summary: "Get log delivery", docUrl: "https://docs.databricks.com/api/azure/account/logdelivery/get" } },
+          { label: "Create log delivery config", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery", description: "Create log delivery config", body: { config_name: "my-logs", output_format: "json", credentials_id: "CREDENTIAL_ID", storage_configuration_id: "STORAGE_CONFIG_ID" }, docs: { summary: "Create log delivery", docUrl: "https://docs.databricks.com/api/azure/account/logdelivery/create" } },
+          { label: "Update log delivery config", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery/LOG_DELIVERY_ID", description: "Update log delivery config", body: { config_name: "updated-logs" }, docs: { summary: "Update log delivery", docUrl: "https://docs.databricks.com/api/azure/account/logdelivery/update" } },
+          { label: "Delete log delivery config", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery/LOG_DELIVERY_ID", description: "Delete log delivery config", body: {}, docs: { summary: "Delete log delivery", docUrl: "https://docs.databricks.com/api/azure/account/logdelivery/delete" } }
         ]
       }
     ]
   },
   {
     name: "Vector Search",
-    icon: "🔍",
-    endpoints: [
-      { label: "Create index", method: "POST", path: "/api/2.0/vector-search/indexes", description: "Create vector index", body: { name: "my-index", endpoint_name: "ENDPOINT_NAME", primary_key: "id", index_type: "DELTA_SYNC" }, docs: { summary: "Create vector search index", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/createindex" } },
-      { label: "List indexes", method: "GET", path: "/api/2.0/vector-search/indexes", description: "List indexes", docs: { summary: "List vector indexes", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/listindexes" } },
-      { label: "List indexes (paginated)", method: "GET", path: "/api/2.0/vector-search/indexes?max_results=100&page_token=NEXT_PAGE_TOKEN", description: "Get next page of indexes", docs: { summary: "List vector indexes with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/listindexes" } },
-      { label: "Query index", method: "POST", path: "/api/2.0/vector-search/indexes/INDEX_NAME/query", description: "Vector search", body: { query_vector: [0.1, 0.2, 0.3], k: 10 }, docs: { summary: "Query vector index", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/queryindex" } },
-      { label: "Get vector index", method: "GET", path: "/api/2.0/vector-search/indexes/INDEX_NAME", description: "Get vector index details", docs: { summary: "Get vector index", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/getindex" } },
-      { label: "Delete vector index", method: "DELETE", path: "/api/2.0/vector-search/indexes/INDEX_NAME", description: "Delete vector index", body: {}, docs: { summary: "Delete vector index", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/deleteindex" } },
-      { label: "Update vector index", method: "PATCH", path: "/api/2.0/vector-search/indexes/INDEX_NAME", description: "Update vector index", body: { primary_key: "id", delta_sync_index_spec: { source_table: "table_name" } }, docs: { summary: "Update vector index", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/updateindex" } }
+    icon: "Search",
+    subcategories: [
+      {
+        name: "Endpoints",
+        endpoints: [
+          { label: "List vector search endpoints", method: "GET", path: "/api/2.0/vector-search/endpoints", description: "List all vector search endpoints", docs: { summary: "List vector search endpoints", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchendpoints/listendpoints" } },
+          { label: "Create vector search endpoint", method: "POST", path: "/api/2.0/vector-search/endpoints", description: "Create a vector search endpoint", body: { name: "my-endpoint", endpoint_type: "STANDARD" }, docs: { summary: "Create vector search endpoint", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchendpoints/createendpoint" } },
+          { label: "Get vector search endpoint", method: "GET", path: "/api/2.0/vector-search/endpoints/ENDPOINT_NAME", description: "Get endpoint details", docs: { summary: "Get vector search endpoint", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchendpoints/getendpoint" } },
+          { label: "Delete vector search endpoint", method: "DELETE", path: "/api/2.0/vector-search/endpoints/ENDPOINT_NAME", description: "Delete a vector search endpoint", body: {}, docs: { summary: "Delete vector search endpoint", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchendpoints/deleteendpoint" } }
+        ]
+      },
+      {
+        name: "Indexes",
+        endpoints: [
+          { label: "List indexes", method: "GET", path: "/api/2.0/vector-search/indexes?endpoint_name=ENDPOINT_NAME", description: "List indexes", docs: { summary: "List vector indexes", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/listindexes" } },
+          { label: "List indexes (paginated)", method: "GET", path: "/api/2.0/vector-search/indexes?endpoint_name=ENDPOINT_NAME&page_token=NEXT_PAGE_TOKEN", description: "Get next page of indexes", docs: { summary: "List vector indexes with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/listindexes" } },
+          { label: "Create index", method: "POST", path: "/api/2.0/vector-search/indexes", description: "Create vector index", body: { name: "my-index", endpoint_name: "ENDPOINT_NAME", primary_key: "id", index_type: "DELTA_SYNC", delta_sync_index_spec: { source_table: "CATALOG.SCHEMA.TABLE", embedding_source_columns: [{ name: "text", model_endpoint_name: "e5-small-v2" }], pipeline_type: "TRIGGERED" } }, docs: { summary: "Create vector search index", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/createindex" } },
+          { label: "Get vector index", method: "GET", path: "/api/2.0/vector-search/indexes/INDEX_NAME", description: "Get vector index details", docs: { summary: "Get vector index", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/getindex" } },
+          { label: "Delete vector index", method: "DELETE", path: "/api/2.0/vector-search/indexes/INDEX_NAME", description: "Delete vector index", body: {}, docs: { summary: "Delete vector index", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/deleteindex" } },
+          { label: "Sync index", method: "POST", path: "/api/2.0/vector-search/indexes/INDEX_NAME/sync", description: "Trigger sync for delta sync index", body: {}, docs: { summary: "Sync vector index", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/syncindex" } },
+          { label: "Query index", method: "POST", path: "/api/2.0/vector-search/indexes/INDEX_NAME/query", description: "Query vector search index", body: { query_vector: [0.1, 0.2, 0.3], columns: ["id", "text"], num_results: 10 }, docs: { summary: "Query vector index", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/queryindex" } },
+          { label: "Scan index", method: "POST", path: "/api/2.0/vector-search/indexes/INDEX_NAME/scan", description: "Scan vector search index data", body: { num_results: 10 }, docs: { summary: "Scan vector index data", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/scanindex" } },
+          { label: "Upsert data", method: "POST", path: "/api/2.0/vector-search/indexes/INDEX_NAME/upsert-data", description: "Upsert data into direct access index", body: { inputs_json: "[{\"id\": 1, \"text\": \"hello\"}]" }, docs: { summary: "Upsert data into index", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/upsertdatapoints" } },
+          { label: "Delete data", method: "POST", path: "/api/2.0/vector-search/indexes/INDEX_NAME/delete-data", description: "Delete data from direct access index", body: { primary_keys: ["1", "2"] }, docs: { summary: "Delete data from index", docUrl: "https://docs.databricks.com/api/azure/workspace/vectorsearchindexes/deletedatapoints" } }
+        ]
+      }
     ]
   },
   {
     name: "Delta Sharing",
-    icon: "🤝",
+    icon: "Share2",
     subcategories: [
       {
         name: "Shares",
@@ -1029,18 +1227,62 @@ export const API_CATALOG: ApiCategory[] = [
   },
   {
     name: "AI/BI",
-    icon: "🤖",
-    endpoints: [
-      { label: "List Genie spaces", method: "GET", path: "/api/2.0/genie/spaces", description: "List Genie spaces", docs: { summary: "List Genie spaces", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/listspaces" } },
-      { label: "Create Genie space", method: "POST", path: "/api/2.0/genie/spaces", description: "Create Genie space", body: { display_name: "My Genie Space" }, docs: { summary: "Create Genie space", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/createspace" } },
-      { label: "Get Genie space", method: "GET", path: "/api/2.0/genie/spaces/SPACE_ID", description: "Get Genie space details", docs: { summary: "Get Genie space", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/getspace" } },
-      { label: "Update Genie space", method: "PATCH", path: "/api/2.0/genie/spaces/SPACE_ID", description: "Update Genie space", body: { display_name: "Updated Space" }, docs: { summary: "Update Genie space", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/updatespace" } },
-      { label: "Delete Genie space", method: "DELETE", path: "/api/2.0/genie/spaces/SPACE_ID", description: "Delete Genie space", body: {}, docs: { summary: "Delete Genie space", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/deletespace" } }
+    icon: "Sparkles",
+    subcategories: [
+      {
+        name: "Lakeview Dashboards",
+        endpoints: [
+          { label: "List dashboards", method: "GET", path: "/api/2.0/lakeview/dashboards?page_size=100", description: "List Lakeview dashboards", docs: { summary: "List AI/BI dashboards", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/list" } },
+          { label: "List dashboards (paginated)", method: "GET", path: "/api/2.0/lakeview/dashboards?page_size=100&page_token=NEXT_PAGE_TOKEN", description: "Get next page of dashboards", docs: { summary: "List dashboards with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/list" } },
+          { label: "Create dashboard", method: "POST", path: "/api/2.0/lakeview/dashboards", description: "Create Lakeview dashboard", body: { display_name: "My Dashboard", warehouse_id: "WAREHOUSE_ID", serialized_dashboard: "{}" }, docs: { summary: "Create AI/BI dashboard", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/create" } },
+          { label: "Get dashboard", method: "GET", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID", description: "Get dashboard details", docs: { summary: "Get AI/BI dashboard", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/get" } },
+          { label: "Update dashboard", method: "PATCH", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID", description: "Update dashboard", body: { display_name: "Updated Dashboard" }, docs: { summary: "Update AI/BI dashboard", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/update" } },
+          { label: "Trash dashboard", method: "DELETE", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID", description: "Move dashboard to trash", body: {}, docs: { summary: "Trash AI/BI dashboard", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/trash" } },
+          { label: "Publish dashboard", method: "POST", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID/published", description: "Publish dashboard", body: { warehouse_id: "WAREHOUSE_ID", embed_credentials: true }, docs: { summary: "Publish AI/BI dashboard", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/publish" } },
+          { label: "Get published dashboard", method: "GET", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID/published", description: "Get published dashboard", docs: { summary: "Get published AI/BI dashboard", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/getpublished" } },
+          { label: "Unpublish dashboard", method: "DELETE", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID/published", description: "Unpublish dashboard", body: {}, docs: { summary: "Unpublish AI/BI dashboard", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/unpublish" } },
+          { label: "Migrate dashboard", method: "POST", path: "/api/2.0/lakeview/dashboards/migrate", description: "Migrate legacy dashboard to Lakeview", body: { source_dashboard_id: "LEGACY_DASHBOARD_ID" }, docs: { summary: "Migrate legacy dashboard", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/migrate" } }
+        ]
+      },
+      {
+        name: "Lakeview Schedules",
+        endpoints: [
+          { label: "List schedules", method: "GET", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID/schedules", description: "List dashboard schedules", docs: { summary: "List Lakeview dashboard schedules", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/listschedules" } },
+          { label: "Create schedule", method: "POST", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID/schedules", description: "Create a schedule for dashboard", body: { cron_schedule: { quartz_cron_expression: "0 0 8 * * ?", timezone_id: "America/Los_Angeles" } }, docs: { summary: "Create Lakeview dashboard schedule", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/createschedule" } },
+          { label: "Get schedule", method: "GET", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID/schedules/SCHEDULE_ID", description: "Get schedule details", docs: { summary: "Get Lakeview dashboard schedule", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/getschedule" } },
+          { label: "Update schedule", method: "PUT", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID/schedules/SCHEDULE_ID", description: "Update a schedule", body: { cron_schedule: { quartz_cron_expression: "0 0 9 * * ?" } }, docs: { summary: "Update Lakeview dashboard schedule", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/updateschedule" } },
+          { label: "Delete schedule", method: "DELETE", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID/schedules/SCHEDULE_ID", description: "Delete a schedule", body: {}, docs: { summary: "Delete Lakeview dashboard schedule", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/deleteschedule" } }
+        ]
+      },
+      {
+        name: "Lakeview Subscriptions",
+        endpoints: [
+          { label: "List subscriptions", method: "GET", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID/schedules/SCHEDULE_ID/subscriptions", description: "List schedule subscriptions", docs: { summary: "List Lakeview dashboard subscriptions", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/listsubscriptions" } },
+          { label: "Create subscription", method: "POST", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID/schedules/SCHEDULE_ID/subscriptions", description: "Subscribe to schedule", body: { subscriber: { destination_subscriber: { destination_id: "DESTINATION_ID" } } }, docs: { summary: "Create Lakeview subscription", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/createsubscription" } },
+          { label: "Get subscription", method: "GET", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID/schedules/SCHEDULE_ID/subscriptions/SUBSCRIPTION_ID", description: "Get subscription details", docs: { summary: "Get Lakeview subscription", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/getsubscription" } },
+          { label: "Delete subscription", method: "DELETE", path: "/api/2.0/lakeview/dashboards/DASHBOARD_ID/schedules/SCHEDULE_ID/subscriptions/SUBSCRIPTION_ID", description: "Delete a subscription", body: {}, docs: { summary: "Delete Lakeview subscription", docUrl: "https://docs.databricks.com/api/azure/workspace/lakeview/deletesubscription" } }
+        ]
+      },
+      {
+        name: "Genie",
+        endpoints: [
+          { label: "List Genie spaces", method: "GET", path: "/api/2.0/genie/spaces", description: "List Genie spaces", docs: { summary: "List Genie spaces", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/listspaces" } },
+          { label: "Create Genie space", method: "POST", path: "/api/2.0/genie/spaces", description: "Create Genie space", body: { display_name: "My Genie Space" }, docs: { summary: "Create Genie space", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/createspace" } },
+          { label: "Get Genie space", method: "GET", path: "/api/2.0/genie/spaces/SPACE_ID", description: "Get Genie space details", docs: { summary: "Get Genie space", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/getspace" } },
+          { label: "Update Genie space", method: "PATCH", path: "/api/2.0/genie/spaces/SPACE_ID", description: "Update Genie space", body: { display_name: "Updated Space" }, docs: { summary: "Update Genie space", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/updatespace" } },
+          { label: "Delete Genie space", method: "DELETE", path: "/api/2.0/genie/spaces/SPACE_ID", description: "Delete Genie space", body: {}, docs: { summary: "Delete Genie space", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/deletespace" } },
+          { label: "Start conversation", method: "POST", path: "/api/2.0/genie/spaces/SPACE_ID/start-conversation", description: "Start a Genie conversation", body: { content: "Show me top 10 customers" }, docs: { summary: "Start Genie conversation", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/startconversation" } },
+          { label: "Create message", method: "POST", path: "/api/2.0/genie/spaces/SPACE_ID/conversations/CONVERSATION_ID/messages", description: "Send a message in a conversation", body: { content: "Filter by last 30 days" }, docs: { summary: "Create Genie message", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/createmessage" } },
+          { label: "Get message", method: "GET", path: "/api/2.0/genie/spaces/SPACE_ID/conversations/CONVERSATION_ID/messages/MESSAGE_ID", description: "Get Genie message details", docs: { summary: "Get Genie message", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/getmessage" } },
+          { label: "Get message query result", method: "GET", path: "/api/2.0/genie/spaces/SPACE_ID/conversations/CONVERSATION_ID/messages/MESSAGE_ID/query-result", description: "Get message SQL query result", docs: { summary: "Get Genie message query result", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/getmessagequeryresult" } },
+          { label: "Execute message query", method: "POST", path: "/api/2.0/genie/spaces/SPACE_ID/conversations/CONVERSATION_ID/messages/MESSAGE_ID/execute-query", description: "Execute the generated query", body: {}, docs: { summary: "Execute Genie message query", docUrl: "https://docs.databricks.com/api/azure/workspace/genie/executemessagequery" } }
+        ]
+      }
     ]
   },
   {
     name: "OAuth",
-    icon: "🔐",
+    icon: "KeyRound",
     audience: "account",
     endpoints: [
       { label: "List custom apps", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations", description: "List OAuth apps", docs: { summary: "List custom OAuth apps", docUrl: "https://docs.databricks.com/api/azure/account/oauth2/list" } },
@@ -1053,7 +1295,7 @@ export const API_CATALOG: ApiCategory[] = [
   },
   {
     name: "Marketplace",
-    icon: "🛒",
+    icon: "Store",
     endpoints: [
       { label: "List listings", method: "GET", path: "/api/2.0/marketplace-consumer/listings", description: "List marketplace listings", docs: { summary: "List marketplace listings", docUrl: "https://docs.databricks.com/api/azure/workspace/marketplaceconsumer/listlistings" } },
       { label: "List listings (paginated)", method: "GET", path: "/api/2.0/marketplace-consumer/listings?max_results=100&page_token=NEXT_PAGE_TOKEN", description: "Get next page of listings", docs: { summary: "List listings with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/marketplaceconsumer/listlistings" } },
@@ -1066,7 +1308,7 @@ export const API_CATALOG: ApiCategory[] = [
   },
   {
     name: "Clean Rooms",
-    icon: "🏠",
+    icon: "Lock",
     endpoints: [
       { label: "List clean rooms", method: "GET", path: "/api/2.1/unity-catalog/clean-rooms", description: "List clean rooms", docs: { summary: "List clean rooms", docUrl: "https://docs.databricks.com/api/azure/workspace/cleanrooms/list" } },
       { label: "Get clean room", method: "GET", path: "/api/2.1/unity-catalog/clean-rooms/CLEAN_ROOM_NAME", description: "Get clean room details", docs: { summary: "Get clean room", docUrl: "https://docs.databricks.com/api/azure/workspace/cleanrooms/get" } },
@@ -1076,40 +1318,35 @@ export const API_CATALOG: ApiCategory[] = [
     ]
   },
   {
-    name: "Quality Monitor",
-    icon: "📉",
-    endpoints: [
-      { label: "List monitors", method: "GET", path: "/api/2.1/unity-catalog/quality-monitors", description: "List quality monitors", docs: { summary: "List Lakehouse monitors", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/listmonitors" } },
-      { label: "List monitors (paginated)", method: "GET", path: "/api/2.1/unity-catalog/quality-monitors?max_results=100&page_token=NEXT_PAGE_TOKEN", description: "Get next page of monitors", docs: { summary: "List quality monitors with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/listmonitors" } },
-      { label: "Get monitor", method: "GET", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME", description: "Get monitor details", docs: { summary: "Get quality monitor", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/getmonitor" } },
-      { label: "Create monitor", method: "POST", path: "/api/2.1/unity-catalog/quality-monitors", description: "Create quality monitor", body: { table_name: "catalog.schema.table", assets_dir: "/monitor/assets", output_schema_name: "catalog.schema" }, docs: { summary: "Create quality monitor", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/createmonitor" } },
-      { label: "Update monitor", method: "PUT", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME", description: "Update monitor", body: { assets_dir: "/new/assets" }, docs: { summary: "Update quality monitor", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/updatemonitor" } },
-      { label: "Delete monitor", method: "DELETE", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME", description: "Delete monitor", body: {}, docs: { summary: "Delete quality monitor", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/deletemonitor" } },
-      { label: "Run monitor refresh", method: "POST", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME/refresh", description: "Run monitor refresh", body: {}, docs: { summary: "Refresh quality monitor", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/runrefresh" } }
-    ]
-  },
-  {
-    name: "Data Quality Monitoring",
-    icon: "📊",
-    endpoints: [
-      { label: "Get refresh", method: "GET", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME/refresh/REFRESH_ID", description: "Get refresh details", docs: { summary: "Get monitor refresh status", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/getrefresh" } },
-      { label: "List refreshes", method: "GET", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME/refreshes", description: "List monitor refreshes", docs: { summary: "List monitor refreshes", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/listrefreshes" } },
-      { label: "List refreshes (paginated)", method: "GET", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME/refreshes?max_results=100&page_token=NEXT_PAGE_TOKEN", description: "Get next page of refreshes", docs: { summary: "List monitor refreshes with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/listrefreshes" } },
-      { label: "Cancel refresh", method: "POST", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME/refresh/REFRESH_ID/cancel", description: "Cancel refresh", body: {}, docs: { summary: "Cancel monitor refresh", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/cancelrefresh" } }
-    ]
-  },
-  {
-    name: "Database Instances",
-    icon: "HardDrive",
-    endpoints: [
-      { label: "List database instances", method: "GET", path: "/api/2.0/serving-endpoints/DATABASE_INSTANCE_ID", description: "List database instances", docs: { summary: "List serverless database instances", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/list" } },
-      { label: "Get database instance", method: "GET", path: "/api/2.0/serving-endpoints/DATABASE_INSTANCE_ID/DATABASE_NAME", description: "Get database instance", docs: { summary: "Get database instance details", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/get" } },
-      { label: "Create database instance", method: "POST", path: "/api/2.0/serving-endpoints/DATABASE_INSTANCE_ID", description: "Create database instance", body: { name: "my-database", connection_string: "..." }, docs: { summary: "Create database instance", docUrl: "https://docs.databricks.com/api/azure/workspace/servingendpoints/create" } }
+    name: "Lakehouse Monitors",
+    icon: "Activity",
+    subcategories: [
+      {
+        name: "Monitors",
+        endpoints: [
+          { label: "List monitors", method: "GET", path: "/api/2.1/unity-catalog/quality-monitors", description: "List quality monitors", docs: { summary: "List Lakehouse monitors", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/listmonitors" } },
+          { label: "List monitors (paginated)", method: "GET", path: "/api/2.1/unity-catalog/quality-monitors?max_results=100&page_token=NEXT_PAGE_TOKEN", description: "Get next page of monitors", docs: { summary: "List quality monitors with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/listmonitors" } },
+          { label: "Get monitor", method: "GET", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME", description: "Get monitor details", docs: { summary: "Get quality monitor", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/getmonitor" } },
+          { label: "Create monitor", method: "POST", path: "/api/2.1/unity-catalog/quality-monitors", description: "Create quality monitor", body: { table_name: "catalog.schema.table", assets_dir: "/monitor/assets", output_schema_name: "catalog.schema" }, docs: { summary: "Create quality monitor", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/createmonitor" } },
+          { label: "Update monitor", method: "PUT", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME", description: "Update monitor", body: { assets_dir: "/new/assets" }, docs: { summary: "Update quality monitor", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/updatemonitor" } },
+          { label: "Delete monitor", method: "DELETE", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME", description: "Delete monitor", body: {}, docs: { summary: "Delete quality monitor", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/deletemonitor" } }
+        ]
+      },
+      {
+        name: "Refreshes",
+        endpoints: [
+          { label: "Run monitor refresh", method: "POST", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME/refresh", description: "Run monitor refresh", body: {}, docs: { summary: "Refresh quality monitor", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/runrefresh" } },
+          { label: "Get refresh", method: "GET", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME/refresh/REFRESH_ID", description: "Get refresh details", docs: { summary: "Get monitor refresh status", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/getrefresh" } },
+          { label: "List refreshes", method: "GET", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME/refreshes", description: "List monitor refreshes", docs: { summary: "List monitor refreshes", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/listrefreshes" } },
+          { label: "List refreshes (paginated)", method: "GET", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME/refreshes?max_results=100&page_token=NEXT_PAGE_TOKEN", description: "Get next page of refreshes", docs: { summary: "List monitor refreshes with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/listrefreshes" } },
+          { label: "Cancel refresh", method: "POST", path: "/api/2.1/unity-catalog/quality-monitors/TABLE_NAME/refresh/REFRESH_ID/cancel", description: "Cancel refresh", body: {}, docs: { summary: "Cancel monitor refresh", docUrl: "https://docs.databricks.com/api/azure/workspace/lakehousemonitors/cancelrefresh" } }
+        ]
+      }
     ]
   },
   {
     name: "Tags",
-    icon: "🏷️",
+    icon: "Tag",
     subcategories: [
       {
         name: "Tag Policies",
@@ -1131,6 +1368,18 @@ export const API_CATALOG: ApiCategory[] = [
           { label: "Delete tag assignment", method: "DELETE", path: "/api/2.1/tag-assignments/ASSIGNMENT_ID", description: "Delete a tag assignment for an entity", body: {}, docs: { summary: "Delete tag assignment", docUrl: "https://docs.databricks.com/api/azure/workspace/tagassignments" } }
         ]
       }
+    ]
+  },
+  {
+    name: "Budget Policies",
+    icon: "Wallet",
+    endpoints: [
+      { label: "List budget policies", method: "GET", path: "/api/2.0/budget-policies", description: "List budget policies", docs: { summary: "List budget policies", docUrl: "https://docs.databricks.com/api/azure/workspace/budgetpolicies/list" } },
+      { label: "List budget policies (paginated)", method: "GET", path: "/api/2.0/budget-policies?page_token=NEXT_PAGE_TOKEN", description: "Get next page of budget policies", docs: { summary: "List budget policies with pagination", docUrl: "https://docs.databricks.com/api/azure/workspace/budgetpolicies/list" } },
+      { label: "Create budget policy", method: "POST", path: "/api/2.0/budget-policies", description: "Create budget policy", body: { policy_name: "my-budget-policy", custom: { budget_policy_id: "policy-1" } }, docs: { summary: "Create budget policy", docUrl: "https://docs.databricks.com/api/azure/workspace/budgetpolicies/create" } },
+      { label: "Get budget policy", method: "GET", path: "/api/2.0/budget-policies/POLICY_ID", description: "Get budget policy details", docs: { summary: "Get budget policy", docUrl: "https://docs.databricks.com/api/azure/workspace/budgetpolicies/get" } },
+      { label: "Update budget policy", method: "PATCH", path: "/api/2.0/budget-policies/POLICY_ID", description: "Update budget policy", body: { policy_name: "updated-policy" }, docs: { summary: "Update budget policy", docUrl: "https://docs.databricks.com/api/azure/workspace/budgetpolicies/update" } },
+      { label: "Delete budget policy", method: "DELETE", path: "/api/2.0/budget-policies/POLICY_ID", description: "Delete budget policy", body: {}, docs: { summary: "Delete budget policy", docUrl: "https://docs.databricks.com/api/azure/workspace/budgetpolicies/delete" } }
     ]
   }
 ];
