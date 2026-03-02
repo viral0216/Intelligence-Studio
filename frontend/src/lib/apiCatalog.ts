@@ -973,6 +973,22 @@ export const API_CATALOG: ApiCategory[] = [
           { label: "Create SP secret", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/servicePrincipals/SP_ID/credentials/secrets", description: "Create a new service principal secret", body: {}, docs: { summary: "Create service principal OAuth secret", docUrl: "https://docs.databricks.com/api/azure/account/serviceprincipalsecrets/create" } },
           { label: "Delete SP secret", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/servicePrincipals/SP_ID/credentials/secrets/SECRET_ID", description: "Delete a service principal secret", body: {}, docs: { summary: "Delete service principal OAuth secret", docUrl: "https://docs.databricks.com/api/azure/account/serviceprincipalsecrets/delete" } }
         ]
+      },
+      {
+        name: "Access Control",
+        endpoints: [
+          { label: "Get assignable roles", method: "GET", path: "/api/2.0/preview/accounts/ACCOUNT_ID/access-control/assignable-roles?resource=accounts/ACCOUNT_ID", description: "Get assignable roles for a resource", docs: { summary: "Get assignable roles for a resource", docUrl: "https://docs.databricks.com/api/azure/account/accountaccesscontrol/getassignableroles" } },
+          { label: "Get rule set", method: "GET", path: "/api/2.0/preview/accounts/ACCOUNT_ID/access-control/rule-sets?name=accounts/ACCOUNT_ID/ruleSets/default&etag=ETAG", description: "Get an access control rule set", docs: { summary: "Get a rule set", docUrl: "https://docs.databricks.com/api/azure/account/accountaccesscontrol/getruleset" } },
+          { label: "Update rule set", method: "PUT", path: "/api/2.0/preview/accounts/ACCOUNT_ID/access-control/rule-sets", description: "Update access control rule set", body: { name: "accounts/ACCOUNT_ID/ruleSets/default", rule_set: { name: "accounts/ACCOUNT_ID/ruleSets/default", grant_rules: [{ role: "roles/servicePrincipal.user", principals: ["users/user@example.com"] }] } }, docs: { summary: "Update a rule set", docUrl: "https://docs.databricks.com/api/azure/account/accountaccesscontrol/updateruleset" } }
+        ]
+      },
+      {
+        name: "Workspace Assignment",
+        endpoints: [
+          { label: "List workspace assignments", method: "GET", path: "/api/2.0/preview/accounts/ACCOUNT_ID/workspaces/WORKSPACE_ID/permissionassignments", description: "List permission assignments for a workspace", docs: { summary: "List workspace permission assignments", docUrl: "https://docs.databricks.com/api/azure/account/workspaceassignment/list" } },
+          { label: "Assign principal to workspace", method: "PUT", path: "/api/2.0/preview/accounts/ACCOUNT_ID/workspaces/WORKSPACE_ID/permissionassignments/principals/PRINCIPAL_ID", description: "Create or update workspace permission for a principal", body: { permissions: ["USER"] }, docs: { summary: "Create or update workspace assignment", docUrl: "https://docs.databricks.com/api/azure/account/workspaceassignment/update" } },
+          { label: "Remove principal from workspace", method: "DELETE", path: "/api/2.0/preview/accounts/ACCOUNT_ID/workspaces/WORKSPACE_ID/permissionassignments/principals/PRINCIPAL_ID", description: "Remove a principal's workspace permission", body: {}, docs: { summary: "Delete workspace assignment", docUrl: "https://docs.databricks.com/api/azure/account/workspaceassignment/delete" } }
+        ]
       }
     ]
   },
@@ -1026,6 +1042,16 @@ export const API_CATALOG: ApiCategory[] = [
           { label: "Update metastore assignment", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/workspaces/WORKSPACE_ID/metastores/METASTORE_ID", description: "Update metastore assignment", body: { default_catalog_name: "hive_metastore" }, docs: { summary: "Update metastore assignment", docUrl: "https://docs.databricks.com/api/azure/account/accountmetastoreassignments/update" } },
           { label: "Remove metastore assignment", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/workspaces/WORKSPACE_ID/metastores/METASTORE_ID", description: "Remove metastore from workspace", body: {}, docs: { summary: "Delete metastore assignment", docUrl: "https://docs.databricks.com/api/azure/account/accountmetastoreassignments/delete" } }
         ]
+      },
+      {
+        name: "Storage Credentials",
+        endpoints: [
+          { label: "List storage credentials", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/metastores/METASTORE_ID/storage-credentials", description: "List storage credentials for a metastore", docs: { summary: "List account storage credentials", docUrl: "https://docs.databricks.com/api/azure/account/accountstoragecredentials/list" } },
+          { label: "Get storage credential", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/metastores/METASTORE_ID/storage-credentials/CREDENTIAL_NAME", description: "Get storage credential by name", docs: { summary: "Get account storage credential", docUrl: "https://docs.databricks.com/api/azure/account/accountstoragecredentials/get" } },
+          { label: "Create storage credential", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/metastores/METASTORE_ID/storage-credentials", description: "Create a storage credential", body: { name: "my-credential", comment: "Storage credential for ADLS Gen2" }, docs: { summary: "Create account storage credential", docUrl: "https://docs.databricks.com/api/azure/account/accountstoragecredentials/create" } },
+          { label: "Update storage credential", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/metastores/METASTORE_ID/storage-credentials/CREDENTIAL_NAME", description: "Update a storage credential", body: { comment: "Updated credential" }, docs: { summary: "Update account storage credential", docUrl: "https://docs.databricks.com/api/azure/account/accountstoragecredentials/update" } },
+          { label: "Delete storage credential", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/metastores/METASTORE_ID/storage-credentials/CREDENTIAL_NAME", description: "Delete a storage credential", body: {}, docs: { summary: "Delete account storage credential", docUrl: "https://docs.databricks.com/api/azure/account/accountstoragecredentials/delete" } }
+        ]
       }
     ]
   },
@@ -1077,6 +1103,24 @@ export const API_CATALOG: ApiCategory[] = [
           { label: "Create network connectivity config", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/network-connectivity-configs", description: "Create NCC config", body: { name: "my-ncc", region: "eastus" }, docs: { summary: "Create NCC config", docUrl: "https://docs.databricks.com/api/azure/account/networkconnectivity/createnetworkconnectivityconfiguration" } },
           { label: "Delete network connectivity config", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/network-connectivity-configs/CONFIG_ID", description: "Delete NCC config", body: {}, docs: { summary: "Delete NCC config", docUrl: "https://docs.databricks.com/api/azure/account/networkconnectivity/deletenetworkconnectivityconfiguration" } }
         ]
+      },
+      {
+        name: "Network Policies",
+        endpoints: [
+          { label: "List network policies", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/network-policies", description: "List account network policies", docs: { summary: "List network policies", docUrl: "https://docs.databricks.com/api/azure/account/networkpolicies/list" } },
+          { label: "List network policies (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/network-policies?page_token=NEXT_PAGE_TOKEN", description: "Get next page of network policies", docs: { summary: "List network policies with pagination", docUrl: "https://docs.databricks.com/api/azure/account/networkpolicies/list" } },
+          { label: "Get network policy", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/network-policies/POLICY_ID", description: "Get network policy details", docs: { summary: "Get network policy", docUrl: "https://docs.databricks.com/api/azure/account/networkpolicies/get" } },
+          { label: "Create network policy", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/network-policies", description: "Create a network policy", body: { name: "my-network-policy", egress: { network_access: { restriction_mode: "RESTRICTED", allowed_internet_destinations: [{ destination: "example.com", type: "FQDN" }] } } }, docs: { summary: "Create network policy", docUrl: "https://docs.databricks.com/api/azure/account/networkpolicies/create" } },
+          { label: "Update network policy", method: "PUT", path: "/api/2.0/accounts/ACCOUNT_ID/network-policies/POLICY_ID", description: "Update a network policy", body: { name: "updated-policy" }, docs: { summary: "Update network policy", docUrl: "https://docs.databricks.com/api/azure/account/networkpolicies/update" } },
+          { label: "Delete network policy", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/network-policies/POLICY_ID", description: "Delete a network policy", body: {}, docs: { summary: "Delete network policy", docUrl: "https://docs.databricks.com/api/azure/account/networkpolicies/delete" } }
+        ]
+      },
+      {
+        name: "Workspace Network Config",
+        endpoints: [
+          { label: "Get workspace network config", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/workspace-network-option/WORKSPACE_ID", description: "Get network policy binding for a workspace", docs: { summary: "Get workspace network configuration", docUrl: "https://docs.databricks.com/api/azure/account/workspacenetworkconfiguration/get" } },
+          { label: "Update workspace network config", method: "PUT", path: "/api/2.0/accounts/ACCOUNT_ID/workspace-network-option/WORKSPACE_ID", description: "Set network policy binding for a workspace", body: { workspace_id: 123456789, network_policy_id: "my-network-policy" }, docs: { summary: "Update workspace network configuration", docUrl: "https://docs.databricks.com/api/azure/account/workspacenetworkconfiguration/update" } }
+        ]
       }
     ]
   },
@@ -1127,6 +1171,18 @@ export const API_CATALOG: ApiCategory[] = [
           { label: "Update account IP access list", method: "PUT", path: "/api/2.0/accounts/ACCOUNT_ID/ip-access-lists/LIST_ID", description: "Update account IP access list", body: { label: "updated-ips", ip_addresses: ["1.2.3.0/24"] }, docs: { summary: "Update account IP access list", docUrl: "https://docs.databricks.com/api/azure/account/accountipaccesslists/replace" } },
           { label: "Delete account IP access list", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/ip-access-lists/LIST_ID", description: "Delete account IP access list", body: {}, docs: { summary: "Delete account IP access list", docUrl: "https://docs.databricks.com/api/azure/account/accountipaccesslists/delete" } }
         ]
+      },
+      {
+        name: "Account Settings",
+        endpoints: [
+          { label: "Get CSP enablement", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/settings/types/shield_csp_enablement_ac/names/default", description: "Get compliance security profile setting", docs: { summary: "Get CSP enablement setting", docUrl: "https://docs.databricks.com/api/azure/account/settings/getcsp" } },
+          { label: "Update CSP enablement", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/settings/types/shield_csp_enablement_ac/names/default", description: "Update compliance security profile", body: { setting: { namespace: "default", setting_name: "default", csp_enablement_account: { is_enforced: true }, etag: "ETAG" }, allow_missing: true, field_mask: "csp_enablement_account.is_enforced" }, docs: { summary: "Update CSP enablement setting", docUrl: "https://docs.databricks.com/api/azure/account/settings/updatecsp" } },
+          { label: "Get ESM enablement", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/settings/types/shield_esm_enablement_ac/names/default", description: "Get enhanced security monitoring setting", docs: { summary: "Get ESM enablement setting", docUrl: "https://docs.databricks.com/api/azure/account/settings/getesm" } },
+          { label: "Update ESM enablement", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/settings/types/shield_esm_enablement_ac/names/default", description: "Update enhanced security monitoring", body: { setting: { namespace: "default", setting_name: "default", esm_enablement_account: { is_enforced: true }, etag: "ETAG" }, allow_missing: true, field_mask: "esm_enablement_account.is_enforced" }, docs: { summary: "Update ESM enablement setting", docUrl: "https://docs.databricks.com/api/azure/account/settings/updateesm" } },
+          { label: "Get disable legacy features", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/settings/types/disable_legacy_features/names/default", description: "Get disable legacy features setting", docs: { summary: "Get disable legacy features setting", docUrl: "https://docs.databricks.com/api/azure/account/settings/getdisablelegacyfeatures" } },
+          { label: "Update disable legacy features", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/settings/types/disable_legacy_features/names/default", description: "Update disable legacy features", body: { setting: { namespace: "default", setting_name: "default", disable_legacy_features: { is_enabled: true }, etag: "ETAG" }, allow_missing: true, field_mask: "disable_legacy_features.is_enabled" }, docs: { summary: "Update disable legacy features setting", docUrl: "https://docs.databricks.com/api/azure/account/settings/updatedisablelegacyfeatures" } },
+          { label: "Delete disable legacy features", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/settings/types/disable_legacy_features/names/default", description: "Reset disable legacy features setting", body: {}, docs: { summary: "Delete disable legacy features setting", docUrl: "https://docs.databricks.com/api/azure/account/settings/deletedisablelegacyfeatures" } }
+        ]
       }
     ]
   },
@@ -1151,6 +1207,28 @@ export const API_CATALOG: ApiCategory[] = [
           { label: "Create log delivery config", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery", description: "Create log delivery config", body: { config_name: "my-logs", output_format: "json", credentials_id: "CREDENTIAL_ID", storage_configuration_id: "STORAGE_CONFIG_ID" }, docs: { summary: "Create log delivery", docUrl: "https://docs.databricks.com/api/azure/account/logdelivery/create" } },
           { label: "Update log delivery config", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery/LOG_DELIVERY_ID", description: "Update log delivery config", body: { config_name: "updated-logs" }, docs: { summary: "Update log delivery", docUrl: "https://docs.databricks.com/api/azure/account/logdelivery/update" } },
           { label: "Delete log delivery config", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/log-delivery/LOG_DELIVERY_ID", description: "Delete log delivery config", body: {}, docs: { summary: "Delete log delivery", docUrl: "https://docs.databricks.com/api/azure/account/logdelivery/delete" } }
+        ]
+      },
+      {
+        name: "Budget Configurations",
+        endpoints: [
+          { label: "List budgets", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/budget-configurations", description: "List account budget configurations", docs: { summary: "List budget configurations", docUrl: "https://docs.databricks.com/api/azure/account/budgets/list" } },
+          { label: "List budgets (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/budget-configurations?page_token=NEXT_PAGE_TOKEN", description: "Get next page of budget configurations", docs: { summary: "List budget configurations with pagination", docUrl: "https://docs.databricks.com/api/azure/account/budgets/list" } },
+          { label: "Get budget", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/budget-configurations/BUDGET_ID", description: "Get budget configuration details", docs: { summary: "Get budget configuration", docUrl: "https://docs.databricks.com/api/azure/account/budgets/get" } },
+          { label: "Create budget", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/budget-configurations", description: "Create a budget configuration", body: { budget_configuration: { display_name: "Monthly Budget", period: "MONTHLY", start_date: "2024-01-01", target_amount: "10000", alert_configurations: [{ time_period: "MONTH", trigger_type: "CUMULATIVE_SPENDING_EXCEEDED", quantity_type: "LIST_PRICE_DOLLARS_USD", quantity_threshold: "8000", action_configurations: [{ action_type: "EMAIL_NOTIFICATION", target: "admin@example.com" }] }] } }, docs: { summary: "Create budget configuration", docUrl: "https://docs.databricks.com/api/azure/account/budgets/create" } },
+          { label: "Update budget", method: "PUT", path: "/api/2.0/accounts/ACCOUNT_ID/budget-configurations/BUDGET_ID", description: "Update a budget configuration", body: { budget_configuration: { display_name: "Updated Budget", target_amount: "15000" } }, docs: { summary: "Update budget configuration", docUrl: "https://docs.databricks.com/api/azure/account/budgets/update" } },
+          { label: "Delete budget", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/budget-configurations/BUDGET_ID", description: "Delete a budget configuration", body: {}, docs: { summary: "Delete budget configuration", docUrl: "https://docs.databricks.com/api/azure/account/budgets/delete" } }
+        ]
+      },
+      {
+        name: "Budget Policies",
+        endpoints: [
+          { label: "List account budget policies", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/budget-policies", description: "List account-level budget policies", docs: { summary: "List account budget policies", docUrl: "https://docs.databricks.com/api/azure/account/budgetpolicy/list" } },
+          { label: "List account budget policies (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/budget-policies?page_token=NEXT_PAGE_TOKEN", description: "Get next page of account budget policies", docs: { summary: "List account budget policies with pagination", docUrl: "https://docs.databricks.com/api/azure/account/budgetpolicy/list" } },
+          { label: "Get account budget policy", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/budget-policies/POLICY_ID", description: "Get account budget policy details", docs: { summary: "Get account budget policy", docUrl: "https://docs.databricks.com/api/azure/account/budgetpolicy/get" } },
+          { label: "Create account budget policy", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/budget-policies", description: "Create an account-level budget policy", body: { policy_name: "Serverless Compute Budget" }, docs: { summary: "Create account budget policy", docUrl: "https://docs.databricks.com/api/azure/account/budgetpolicy/create" } },
+          { label: "Update account budget policy", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/budget-policies/POLICY_ID", description: "Update an account budget policy", body: { policy_name: "Updated Policy" }, docs: { summary: "Update account budget policy", docUrl: "https://docs.databricks.com/api/azure/account/budgetpolicy/update" } },
+          { label: "Delete account budget policy", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/budget-policies/POLICY_ID", description: "Delete an account budget policy", body: {}, docs: { summary: "Delete account budget policy", docUrl: "https://docs.databricks.com/api/azure/account/budgetpolicy/delete" } }
         ]
       }
     ]
@@ -1281,16 +1359,61 @@ export const API_CATALOG: ApiCategory[] = [
     ]
   },
   {
-    name: "OAuth",
+    name: "OAuth & Federation",
     icon: "KeyRound",
     audience: "account",
-    endpoints: [
-      { label: "List custom apps", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations", description: "List OAuth apps", docs: { summary: "List custom OAuth apps", docUrl: "https://docs.databricks.com/api/azure/account/oauth2/list" } },
-      { label: "Create custom app", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations", description: "Create OAuth app", body: { name: "My App", redirect_urls: ["https://app.example.com/callback"], confidential: true }, docs: { summary: "Create custom OAuth app", docUrl: "https://docs.databricks.com/api/azure/account/oauth2/create" } },
-      { label: "Get custom app", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations/INTEGRATION_ID", description: "Get OAuth app details", docs: { summary: "Get custom OAuth app", docUrl: "https://docs.databricks.com/api/azure/account/oauth2/get" } },
-      { label: "Update custom app", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations/INTEGRATION_ID", description: "Update OAuth app", body: { name: "Updated App" }, docs: { summary: "Update custom OAuth app", docUrl: "https://docs.databricks.com/api/azure/account/oauth2/update" } },
-      { label: "Delete custom app", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations/INTEGRATION_ID", description: "Delete OAuth app", body: {}, docs: { summary: "Delete custom OAuth app", docUrl: "https://docs.databricks.com/api/azure/account/oauth2/delete" } },
-      { label: "Get custom app secret", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations/INTEGRATION_ID/secret", description: "Get custom OAuth app secret", body: {}, docs: { summary: "Get custom app secret", docUrl: "https://docs.databricks.com/api/azure/account/oauth2/getappsecret" } }
+    rateLimitNote: "Account-level APIs use the account console URL (e.g., https://accounts.azuredatabricks.net).",
+    subcategories: [
+      {
+        name: "Custom App Integrations",
+        endpoints: [
+          { label: "List custom apps", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations", description: "List OAuth apps", docs: { summary: "List custom OAuth apps", docUrl: "https://docs.databricks.com/api/azure/account/customappintegration/list" } },
+          { label: "Create custom app", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations", description: "Create OAuth app", body: { name: "My App", redirect_urls: ["https://app.example.com/callback"], confidential: true }, docs: { summary: "Create custom OAuth app", docUrl: "https://docs.databricks.com/api/azure/account/customappintegration/create" } },
+          { label: "Get custom app", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations/INTEGRATION_ID", description: "Get OAuth app details", docs: { summary: "Get custom OAuth app", docUrl: "https://docs.databricks.com/api/azure/account/customappintegration/get" } },
+          { label: "Update custom app", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations/INTEGRATION_ID", description: "Update OAuth app", body: { name: "Updated App" }, docs: { summary: "Update custom OAuth app", docUrl: "https://docs.databricks.com/api/azure/account/customappintegration/update" } },
+          { label: "Delete custom app", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations/INTEGRATION_ID", description: "Delete OAuth app", body: {}, docs: { summary: "Delete custom OAuth app", docUrl: "https://docs.databricks.com/api/azure/account/customappintegration/delete" } },
+          { label: "Get custom app secret", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/custom-app-integrations/INTEGRATION_ID/secret", description: "Get custom OAuth app secret", body: {}, docs: { summary: "Get custom app secret", docUrl: "https://docs.databricks.com/api/azure/account/customappintegration/getappsecret" } }
+        ]
+      },
+      {
+        name: "Published App Integrations",
+        endpoints: [
+          { label: "List published app integrations", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/published-app-integrations", description: "List published app integrations", docs: { summary: "List published OAuth app integrations", docUrl: "https://docs.databricks.com/api/azure/account/publishedappintegration/list" } },
+          { label: "Get published app integration", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/published-app-integrations/INTEGRATION_ID", description: "Get published app integration details", docs: { summary: "Get published app integration", docUrl: "https://docs.databricks.com/api/azure/account/publishedappintegration/get" } },
+          { label: "Enable published app", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/published-app-integrations", description: "Enable a published app integration", body: { app_id: "APP_ID", token_access_policy: { access_token_ttl_in_minutes: 60, refresh_token_ttl_in_minutes: 86400 } }, docs: { summary: "Create published app integration", docUrl: "https://docs.databricks.com/api/azure/account/publishedappintegration/create" } },
+          { label: "Update published app integration", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/published-app-integrations/INTEGRATION_ID", description: "Update published app integration", body: { token_access_policy: { access_token_ttl_in_minutes: 120 } }, docs: { summary: "Update published app integration", docUrl: "https://docs.databricks.com/api/azure/account/publishedappintegration/update" } },
+          { label: "Disable published app", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/published-app-integrations/INTEGRATION_ID", description: "Disable a published app integration", body: {}, docs: { summary: "Delete published app integration", docUrl: "https://docs.databricks.com/api/azure/account/publishedappintegration/delete" } }
+        ]
+      },
+      {
+        name: "OAuth Published Apps",
+        endpoints: [
+          { label: "List published OAuth apps", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/published-apps", description: "List all available published OAuth apps", docs: { summary: "List published OAuth applications (dbt Core, Power BI, Tableau, etc.)", docUrl: "https://docs.databricks.com/api/azure/account/oauthpublishedapps/list" } },
+          { label: "List published OAuth apps (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/oauth2/published-apps?page_size=100&page_token=NEXT_PAGE_TOKEN", description: "Get next page of published OAuth apps", docs: { summary: "List published OAuth apps with pagination", docUrl: "https://docs.databricks.com/api/azure/account/oauthpublishedapps/list" } }
+        ]
+      },
+      {
+        name: "Account Federation Policies",
+        endpoints: [
+          { label: "List federation policies", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/federationPolicies", description: "List account federation policies", docs: { summary: "List account federation policies", docUrl: "https://docs.databricks.com/api/azure/account/federationpolicy/list" } },
+          { label: "List federation policies (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/federationPolicies?page_size=100&page_token=NEXT_PAGE_TOKEN", description: "Get next page of federation policies", docs: { summary: "List federation policies with pagination", docUrl: "https://docs.databricks.com/api/azure/account/federationpolicy/list" } },
+          { label: "Get federation policy", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/federationPolicies/POLICY_ID", description: "Get federation policy details", docs: { summary: "Get federation policy", docUrl: "https://docs.databricks.com/api/azure/account/federationpolicy/get" } },
+          { label: "Create federation policy", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/federationPolicies", description: "Create account federation policy", body: { oidc_policy: { issuer: "https://idp.example.com/oidc", audiences: ["databricks"], subject_claim: "sub" } }, docs: { summary: "Create federation policy", docUrl: "https://docs.databricks.com/api/azure/account/federationpolicy/create" } },
+          { label: "Update federation policy", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/federationPolicies/POLICY_ID", description: "Update federation policy", body: { oidc_policy: { audiences: ["databricks-updated"] } }, docs: { summary: "Update federation policy", docUrl: "https://docs.databricks.com/api/azure/account/federationpolicy/update" } },
+          { label: "Delete federation policy", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/federationPolicies/POLICY_ID", description: "Delete federation policy", body: {}, docs: { summary: "Delete federation policy", docUrl: "https://docs.databricks.com/api/azure/account/federationpolicy/delete" } }
+        ]
+      },
+      {
+        name: "SP Federation Policies",
+        endpoints: [
+          { label: "List SP federation policies", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/servicePrincipals/SP_ID/federationPolicies", description: "List federation policies for a service principal", docs: { summary: "List service principal federation policies", docUrl: "https://docs.databricks.com/api/azure/account/serviceprincipalfederationpolicy/list" } },
+          { label: "List SP federation policies (paginated)", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/servicePrincipals/SP_ID/federationPolicies?page_size=100&page_token=NEXT_PAGE_TOKEN", description: "Get next page of SP federation policies", docs: { summary: "List SP federation policies with pagination", docUrl: "https://docs.databricks.com/api/azure/account/serviceprincipalfederationpolicy/list" } },
+          { label: "Get SP federation policy", method: "GET", path: "/api/2.0/accounts/ACCOUNT_ID/servicePrincipals/SP_ID/federationPolicies/POLICY_ID", description: "Get SP federation policy details", docs: { summary: "Get service principal federation policy", docUrl: "https://docs.databricks.com/api/azure/account/serviceprincipalfederationpolicy/get" } },
+          { label: "Create SP federation policy", method: "POST", path: "/api/2.0/accounts/ACCOUNT_ID/servicePrincipals/SP_ID/federationPolicies", description: "Create federation policy for service principal", body: { oidc_policy: { issuer: "https://token.actions.githubusercontent.com", audiences: ["https://github.com/my-org"], subject: "repo:my-org/my-repo:environment:prod" } }, docs: { summary: "Create SP federation policy", docUrl: "https://docs.databricks.com/api/azure/account/serviceprincipalfederationpolicy/create" } },
+          { label: "Update SP federation policy", method: "PATCH", path: "/api/2.0/accounts/ACCOUNT_ID/servicePrincipals/SP_ID/federationPolicies/POLICY_ID", description: "Update SP federation policy", body: { oidc_policy: { audiences: ["updated-audience"] } }, docs: { summary: "Update SP federation policy", docUrl: "https://docs.databricks.com/api/azure/account/serviceprincipalfederationpolicy/update" } },
+          { label: "Delete SP federation policy", method: "DELETE", path: "/api/2.0/accounts/ACCOUNT_ID/servicePrincipals/SP_ID/federationPolicies/POLICY_ID", description: "Delete SP federation policy", body: {}, docs: { summary: "Delete SP federation policy", docUrl: "https://docs.databricks.com/api/azure/account/serviceprincipalfederationpolicy/delete" } }
+        ]
+      }
     ]
   },
   {

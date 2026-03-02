@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import {
   Download,
   FileJson,
@@ -11,8 +11,10 @@ import {
   FileType,
   Loader2,
   Check,
+  Library,
 } from 'lucide-react'
 import { useRequestStore } from '@/stores/requestStore'
+import { exportCatalogToPostman, exportCatalogToOpenAPI, exportCatalogToInsomnia, getCatalogEndpointCount } from '@/lib/catalogExport'
 import ExportModal from './ExportModal'
 
 type ExportFormat =
@@ -342,6 +344,9 @@ export default function IntegrationExportPanel() {
             </div>
           </div>
         ))}
+
+        {/* Full Catalog Export */}
+        <FullCatalogExport />
       </div>
 
       {/* Export Modal */}
@@ -351,6 +356,101 @@ export default function IntegrationExportPanel() {
           onClose={() => setModalFormat(null)}
         />
       )}
+    </div>
+  )
+}
+
+type CatalogExportFormat = 'catalog-postman' | 'catalog-postman-workspace' | 'catalog-postman-account' | 'catalog-openapi' | 'catalog-openapi-workspace' | 'catalog-openapi-account' | 'catalog-insomnia' | 'catalog-insomnia-workspace' | 'catalog-insomnia-account'
+
+type CatalogFilter = 'workspace' | 'account' | undefined
+
+const CATALOG_EXPORT_OPTIONS: { format: CatalogExportFormat; label: string; icon: React.ReactNode; group: string; filter: CatalogFilter }[] = [
+  { format: 'catalog-postman', label: 'Postman — All APIs', icon: <Globe className="w-4 h-4" />, group: 'Postman Collection', filter: undefined },
+  { format: 'catalog-postman-workspace', label: 'Postman — Workspace APIs', icon: <Globe className="w-4 h-4" />, group: 'Postman Collection', filter: 'workspace' },
+  { format: 'catalog-postman-account', label: 'Postman — Account APIs', icon: <Globe className="w-4 h-4" />, group: 'Postman Collection', filter: 'account' },
+  { format: 'catalog-openapi', label: 'OpenAPI 3.0 — All APIs', icon: <FileCode className="w-4 h-4" />, group: 'OpenAPI Spec', filter: undefined },
+  { format: 'catalog-openapi-workspace', label: 'OpenAPI 3.0 — Workspace', icon: <FileCode className="w-4 h-4" />, group: 'OpenAPI Spec', filter: 'workspace' },
+  { format: 'catalog-openapi-account', label: 'OpenAPI 3.0 — Account', icon: <FileCode className="w-4 h-4" />, group: 'OpenAPI Spec', filter: 'account' },
+  { format: 'catalog-insomnia', label: 'Insomnia — All APIs', icon: <Globe className="w-4 h-4" />, group: 'Insomnia', filter: undefined },
+  { format: 'catalog-insomnia-workspace', label: 'Insomnia — Workspace', icon: <Globe className="w-4 h-4" />, group: 'Insomnia', filter: 'workspace' },
+  { format: 'catalog-insomnia-account', label: 'Insomnia — Account', icon: <Globe className="w-4 h-4" />, group: 'Insomnia', filter: 'account' },
+]
+
+function useCountsByFilter() {
+  return useMemo(() => ({
+    all: getCatalogEndpointCount(),
+    workspace: getCatalogEndpointCount('workspace'),
+    account: getCatalogEndpointCount('account'),
+  }), [])
+}
+
+function FullCatalogExport() {
+  const [exporting, setExporting] = useState<CatalogExportFormat | null>(null)
+  const [exported, setExported] = useState<CatalogExportFormat | null>(null)
+  const counts = useCountsByFilter()
+
+  const handleCatalogExport = (format: CatalogExportFormat) => {
+    setExporting(format)
+    try {
+      switch (format) {
+        case 'catalog-postman': exportCatalogToPostman(); break
+        case 'catalog-postman-workspace': exportCatalogToPostman('workspace'); break
+        case 'catalog-postman-account': exportCatalogToPostman('account'); break
+        case 'catalog-openapi': exportCatalogToOpenAPI(); break
+        case 'catalog-openapi-workspace': exportCatalogToOpenAPI('workspace'); break
+        case 'catalog-openapi-account': exportCatalogToOpenAPI('account'); break
+        case 'catalog-insomnia': exportCatalogToInsomnia(); break
+        case 'catalog-insomnia-workspace': exportCatalogToInsomnia('workspace'); break
+        case 'catalog-insomnia-account': exportCatalogToInsomnia('account'); break
+      }
+      setExported(format)
+      setTimeout(() => setExported(null), 2000)
+    } catch {
+      // silently fail
+    } finally {
+      setExporting(null)
+    }
+  }
+
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-2">
+        <Library className="w-3.5 h-3.5" style={{ color: 'var(--accent-secondary)' }} />
+        <h3 className="section-header" style={{ margin: 0 }}>Full API Catalog</h3>
+      </div>
+      <p className="text-[10px] mb-3" style={{ color: 'var(--text-muted)', paddingLeft: '2px' }}>
+        Export all preset endpoints with folders, request bodies, and docs
+      </p>
+      <div className="space-y-1">
+        {CATALOG_EXPORT_OPTIONS.map((option) => {
+          const count = option.filter === 'workspace' ? counts.workspace : option.filter === 'account' ? counts.account : counts.all
+          return (
+            <button
+              key={option.format}
+              onClick={() => handleCatalogExport(option.format)}
+              disabled={exporting === option.format}
+              className="endpoint-item w-full"
+              style={{ padding: '8px 12px' }}
+            >
+              <span style={{ color: 'var(--accent-secondary)' }}>{option.icon}</span>
+              <span className="flex-1 text-left text-xs" style={{ color: 'var(--text-primary)' }}>{option.label}</span>
+              <span
+                className="text-[10px] px-1.5 py-0.5 rounded-full"
+                style={{ background: 'var(--bg-tertiary)', color: 'var(--text-muted)', fontWeight: 600, minWidth: '28px', textAlign: 'center' }}
+              >
+                {count}
+              </span>
+              {exporting === option.format ? (
+                <Loader2 className="w-3 h-3 spin" style={{ color: 'var(--accent-secondary)' }} />
+              ) : exported === option.format ? (
+                <Check className="w-3 h-3" style={{ color: 'var(--accent-success)' }} />
+              ) : (
+                <Download className="w-3 h-3" style={{ color: 'var(--text-dim)' }} />
+              )}
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }

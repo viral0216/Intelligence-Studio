@@ -28,7 +28,7 @@ Intelligence Studio is a full-stack platform for exploring, testing, and analyzi
 
 Intelligence Studio enables:
 
-- **API Exploration** — Browse 500+ Databricks REST API endpoints organized by category
+- **API Exploration** — Browse 640+ Databricks REST API endpoints organized by category (Workspace + Account APIs)
 - **Request Playground** — Build, test, and debug HTTP requests with auto-generated bodies
 - **SQL Query Editor** — Execute SQL against Databricks SQL Warehouses with a catalog browser
 - **AI Assistant** — Data Q&A, error analysis, code generation, workflow building, and more
@@ -36,6 +36,7 @@ Intelligence Studio enables:
 - **Data Visualization** — Auto-detect chart types and render interactive graphs
 - **Code Generation** — Export requests as Python, cURL, JavaScript, TypeScript, Go, PowerShell
 - **Integration Export** — Export to Postman, Insomnia, GitHub Actions, OpenAPI
+- **Full Catalog Export** — Export entire API catalog (640+ endpoints) as Postman Collection, OpenAPI 3.0, or Insomnia with folder structure
 - **Azure Login** — OAuth-based Azure authentication with workspace selection
 - **Desktop App** — Electron-based native application for macOS and Windows
 
@@ -47,7 +48,7 @@ Intelligence Studio enables:
 
 | Benefit | How |
 |---------|-----|
-| **Faster API Discovery** | Browse 500+ Databricks endpoints in a searchable catalog instead of digging through docs. Find the right API in seconds with natural language search. |
+| **Faster API Discovery** | Browse 640+ Databricks endpoints in a searchable catalog instead of digging through docs. Find the right API in seconds with natural language search. |
 | **Instant Testing Without Code** | Test any Databricks REST API directly from the browser — no Postman setup, no curl commands, no scripts needed. |
 | **Reduced Onboarding Time** | New team members can explore workspace resources, run queries, and understand APIs through the built-in documentation and AI explanations. |
 | **Centralized Workspace Management** | Monitor clusters, warehouses, jobs, users, and Unity Catalog objects from a single interface across multiple workspaces. |
@@ -68,7 +69,7 @@ Intelligence Studio enables:
 | Benefit | How |
 |---------|-----|
 | **Code Generation in 6 Languages** | Export any API request as production-ready Python, cURL, JavaScript, TypeScript, Go, or PowerShell code with one click. |
-| **CI/CD Integration Export** | Generate GitHub Actions workflows, Postman collections, Insomnia workspaces, and OpenAPI specs directly from tested requests. |
+| **CI/CD Integration Export** | Generate GitHub Actions workflows, Postman collections, Insomnia workspaces, and OpenAPI specs directly from tested requests. Export the full 640+ endpoint catalog as Postman/OpenAPI/Insomnia with one click. |
 | **AI Script Automation** | Describe an automation task in plain English, get a Python script generated, review it, and execute it in a sandboxed environment. |
 | **Multi-Step Workflow Builder** | Chain API calls together where outputs from one step feed into the next — test complex orchestration without writing code. |
 | **Request History & Favorites** | Never lose a working API call. All requests are saved with replay capability and can be favorited for quick access. |
@@ -98,15 +99,16 @@ Intelligence Studio enables:
 
 | Metric | Value |
 |--------|-------|
-| API endpoints cataloged | 500+ |
+| API endpoints cataloged | 640+ |
 | AI assistant features | 13 |
 | Code generation languages | 6 |
 | Export formats | 10+ (JSON, CSV, Excel, PDF, Word, Markdown, Postman, Insomnia, GitHub Actions, OpenAPI) |
+| Full catalog export | Postman, OpenAPI 3.0, Insomnia (All / Workspace / Account) |
 | Backend API endpoints | 48 |
 | Feature flags | 14 |
 | Customizable prompts | 14 |
 | Chart types supported | 12 |
-| Account API categories | 6 |
+| Account API categories | 7+ |
 | Workspace API categories | 12+ |
 
 ---
@@ -301,7 +303,7 @@ Intelligence-Studio/
 │   │   │   │   └── WarehouseSettings.tsx   # SQL warehouse config
 │   │   │   ├── export/               # Data export
 │   │   │   │   ├── ExportModal.tsx         # Format selection modal
-│   │   │   │   └── IntegrationExportPanel.tsx  # Tool export panel
+│   │   │   │   └── IntegrationExportPanel.tsx  # Single-request + full catalog export
 │   │   │   ├── history/              # Request history
 │   │   │   │   └── HistoryPanel.tsx        # History with favorites
 │   │   │   ├── scripting/            # Script automation
@@ -311,7 +313,7 @@ Intelligence-Studio/
 │   │   │       ├── JsonEditor.tsx          # JSON editor with validation
 │   │   │       └── NaturalLanguageInput.tsx # NL-to-API input
 │   │   ├── stores/                   # Zustand state management
-│   │   │   ├── authStore.ts          # Host, token, Azure session
+│   │   │   ├── authStore.ts          # Host, token, accountHost, accountId, Azure session
 │   │   │   ├── requestStore.ts       # HTTP request state
 │   │   │   ├── queryStore.ts         # SQL query state
 │   │   │   ├── aiStore.ts            # AI assistant state
@@ -324,12 +326,13 @@ Intelligence-Studio/
 │   │   │   └── useDependencyGraph.ts # Dependency graph state
 │   │   ├── lib/                      # Utility libraries
 │   │   │   ├── api.ts                # Backend API client (50+ functions)
-│   │   │   ├── apiCatalog.ts         # 500+ endpoint definitions
+│   │   │   ├── apiCatalog.ts         # 640+ endpoint definitions
 │   │   │   ├── azureApi.ts           # Azure API re-exports
 │   │   │   ├── codeGenerator.ts      # Multi-language code generation
 │   │   │   ├── dataVisualization.ts  # Chart data processing
 │   │   │   ├── exportFormats.ts      # JSON/CSV/Markdown export
-│   │   │   ├── integrationExport.ts  # Postman/Insomnia/GH Actions
+│   │   │   ├── integrationExport.ts  # Single-request export (Postman/Insomnia/GH Actions)
+│   │   │   ├── catalogExport.ts     # Full catalog export (Postman/OpenAPI/Insomnia)
 │   │   │   ├── intelligentSearch.ts  # Fuzzy endpoint search
 │   │   │   ├── paginationManager.ts  # Pagination token management
 │   │   │   └── categoryIcons.tsx     # Lucide icon mapping
@@ -372,9 +375,6 @@ Intelligence-Studio/
 | `DATABRICKS_TOKEN`     | Personal Access Token (`dapi...`)    | Yes |
 | `PORT`                 | Backend port (default: `8000`)       | No  |
 | `HOST`                 | Backend bind address (default: `0.0.0.0`) | No  |
-| `AZURE_CLIENT_ID`      | Azure AD app client ID               | For Azure Login |
-| `AZURE_TENANT_ID`      | Azure AD tenant (default: `common`)  | For Azure Login |
-| `AZURE_REDIRECT_URI`   | OAuth callback URL                   | For Azure Login |
 
 ### Feature Flags
 
@@ -442,12 +442,52 @@ Browse 500+ Databricks REST API endpoints organized into categories:
 - Conversation history support
 
 ### 6. Integrations & Export
-- **Postman** — Export as Postman collection
-- **Insomnia** — Export as Insomnia workspace
+
+#### Single-Request Export
+Export the current request from the Request Composer:
+- **Postman** — Export as Postman collection (single request)
+- **Insomnia** — Export as Insomnia workspace (single request)
 - **GitHub Actions** — Generate CI/CD workflow YAML
-- **OpenAPI** — Generate OpenAPI 3.1.0 spec
+- **OpenAPI** — Generate OpenAPI 3.0 spec (single request)
+- **cURL** — Export as shell script
 - **Documents** — PDF, Word, Markdown export
 - **Data** — Excel, CSV, JSON export
+
+#### Full API Catalog Export
+Export the **entire API catalog** (640+ endpoints) with proper folder structure, request bodies, and documentation links. Available in the Export panel under **"Full API Catalog"**:
+
+| Format | Description | File |
+|--------|-------------|------|
+| **Postman Collection** | Postman v2.1 JSON with nested folders (categories → subcategories → endpoints), `{{host}}` and `{{token}}` variables, and example request bodies | `.postman_collection.json` |
+| **OpenAPI 3.0 Spec** | OpenAPI 3.0.3 JSON with all paths, methods, query/path parameters, example bodies, Bearer auth, and external doc links | `.openapi.json` |
+| **Insomnia** | Insomnia v4 export with workspace, environment variables, nested request groups, and request bodies | `.insomnia.json` |
+
+Each format supports three scopes:
+- **All APIs** — Workspace + Account endpoints combined
+- **Workspace APIs** — Only workspace-level endpoints
+- **Account APIs** — Only account-level endpoints (routed to accounts console)
+
+##### How to Import
+
+**Postman:**
+1. Open Postman → Click **Import** (top-left)
+2. Drag the `.postman_collection.json` file or click **Upload Files**
+3. The collection appears with folders for each API category
+4. Go to collection **Variables** tab → set `host` to your Databricks URL and `token` to your PAT
+
+**Insomnia:**
+1. Open Insomnia → Click **Import** (top-left) or go to **Application → Preferences → Data → Import Data**
+2. Select the `.insomnia.json` file
+3. Open the **Databricks** environment and set `host` and `token` values
+
+**OpenAPI (Swagger UI / Stoplight / others):**
+1. Open [Swagger Editor](https://editor.swagger.io) or any OpenAPI-compatible tool
+2. File → Import JSON → select the `.openapi.json` file
+3. All endpoints appear organized by tags with Try-It-Out support
+
+**OpenAPI → Postman (alternative):**
+1. Open Postman → **Import** → select the `.openapi.json` file
+2. Postman auto-converts OpenAPI specs into a collection with folders per tag
 
 ### 7. Azure Authentication
 - OAuth login with Azure AD
