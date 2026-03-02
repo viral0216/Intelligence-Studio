@@ -1,5 +1,6 @@
-import { BookOpen, ExternalLink, Link2, FileText, Tag } from 'lucide-react'
+import { ExternalLink, Link2, FileText, Tag } from 'lucide-react'
 import { useCatalogStore } from '@/stores/catalogStore'
+import appIcon from '@/assets/icon.svg'
 
 const METHOD_COLORS: Record<string, string> = {
   GET: 'var(--method-get)',
@@ -19,7 +20,7 @@ export default function ApiDocPanel() {
         style={{ color: 'var(--text-muted)' }}
       >
         <div className="text-center">
-          <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30" />
+          <img src={appIcon} alt="" className="mx-auto mb-3 opacity-30" style={{ width: 48, height: 48 }} />
           <p className="text-sm">No endpoint selected</p>
           <p className="text-xs mt-1">
             Select an endpoint from the API Catalog to view its documentation

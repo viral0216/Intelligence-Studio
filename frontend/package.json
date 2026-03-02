@@ -1,7 +1,8 @@
 {
-  "name": "intelligence-studio-frontend",
+  "name": "intelligence-studio",
   "private": true,
   "version": "1.0.0",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",

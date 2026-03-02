@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { X, RefreshCw, Loader2, Eye, EyeOff, ChevronDown, ChevronRight, RotateCcw, Shield, Link2, Trash2, Save } from 'lucide-react'
+import appIcon from '@/assets/icon.svg'
 import { useSettingsStore, type PromptKey } from '@/stores/settingsStore'
 import { useAuthStore } from '@/stores/authStore'
 import { checkHealth, listModels, listWarehouses, azureLogin, azureLogout, azureLoginTenant, listAzureTenants, listAzureSubscriptions, listAzureWorkspaces, databricksWorkspaceAccess } from '@/lib/api'
@@ -46,9 +47,10 @@ export default function SettingsModal() {
       const result = await checkHealth(auth.host, auth.token)
       auth.setConnected(result.ok)
       setConnectionMsg(result.ok ? 'Connected successfully!' : result.message || 'Connection failed.')
-    } catch {
+    } catch (err: unknown) {
       auth.setConnected(false)
-      setConnectionMsg('Connection failed.')
+      const msg = err instanceof Error ? err.message : 'Connection failed.'
+      setConnectionMsg(msg)
     } finally {
       setTesting(false)
     }
@@ -99,6 +101,7 @@ export default function SettingsModal() {
             className="flex items-center gap-2 text-base font-semibold"
             style={{ color: 'var(--text-primary)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
           >
+            <img src={appIcon} alt="" style={{ width: 22, height: 22 }} />
             Configuration
             {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
           </button>

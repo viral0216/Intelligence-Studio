@@ -99,7 +99,7 @@ export default function PresetDrawer() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search 300+ endpoints..."
+              placeholder="Search 500+ endpoints..."
               className="input"
               style={{ paddingLeft: '36px', fontSize: '13px' }}
             />
