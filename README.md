@@ -47,7 +47,23 @@ No more switching between documentation, curl commands, and Postman.
 
 ---
 
-## Getting Started
+## Download
+
+Pre-built binaries are available on the [Releases](https://github.com/viral0216/Intelligence-Studio/releases) page.
+
+| Platform | File | How to run |
+|----------|------|------------|
+| **macOS** (Apple Silicon) | `Intelligence-Studio-1.0.0-arm64-mac.zip` | Unzip and move to Applications |
+| **Windows** (Installer) | `Intelligence-Studio-Setup-1.0.0.exe` | Run the installer |
+| **Windows** (Portable) | `Intelligence-Studio-1.0.0.exe` | Double-click to run — no install needed |
+| **Web** | — | Clone the repo and run `make dev` |
+| **CLI** | — | Clone the repo and run `make cli-install` |
+
+> After launching, open **Settings** and enter your Databricks host URL and personal access token.
+
+---
+
+## Getting Started (from source)
 
 ### Prerequisites
 
@@ -74,14 +90,14 @@ This starts:
 
 Open [http://localhost:5173](http://localhost:5173) and configure your Databricks host and token in Settings.
 
-### Desktop App
+### Build Desktop App
 
 ```bash
-make build-mac    # macOS (.app)
-make build-win    # Windows (.exe)
+make build-mac    # macOS (.app + .zip)
+make build-win    # Windows (.exe installer + portable)
 ```
 
-### CLI
+### Install CLI
 
 ```bash
 make cli-install
