@@ -1,6 +1,30 @@
 import { API_CATALOG, type ApiCategory, type ApiEndpoint } from './apiCatalog'
 import { downloadFile } from './exportFormats'
 
+// ── Counts ──
+
+function countEndpoints(categories: ApiCategory[]): number {
+  let total = 0
+  for (const cat of categories) {
+    if (cat.subcategories) {
+      for (const sub of cat.subcategories) {
+        total += sub.endpoints.length
+      }
+    }
+    if (cat.endpoints) {
+      total += cat.endpoints.length
+    }
+  }
+  return total
+}
+
+export function getCatalogEndpointCount(filter?: 'workspace' | 'account'): number {
+  const categories = filter
+    ? API_CATALOG.filter((c) => (c.audience || 'workspace') === filter)
+    : API_CATALOG
+  return countEndpoints(categories)
+}
+
 // ── Helpers ──
 
 function endpointToPostmanItem(ep: ApiEndpoint) {

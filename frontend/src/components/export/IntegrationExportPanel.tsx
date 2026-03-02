@@ -14,7 +14,7 @@ import {
   Library,
 } from 'lucide-react'
 import { useRequestStore } from '@/stores/requestStore'
-import { exportCatalogToPostman, exportCatalogToOpenAPI, exportCatalogToInsomnia } from '@/lib/catalogExport'
+import { exportCatalogToPostman, exportCatalogToOpenAPI, exportCatalogToInsomnia, getCatalogEndpointCount } from '@/lib/catalogExport'
 import ExportModal from './ExportModal'
 
 type ExportFormat =
@@ -362,16 +362,18 @@ export default function IntegrationExportPanel() {
 
 type CatalogExportFormat = 'catalog-postman' | 'catalog-postman-workspace' | 'catalog-postman-account' | 'catalog-openapi' | 'catalog-openapi-workspace' | 'catalog-openapi-account' | 'catalog-insomnia' | 'catalog-insomnia-workspace' | 'catalog-insomnia-account'
 
-const CATALOG_EXPORT_OPTIONS: { format: CatalogExportFormat; label: string; icon: React.ReactNode; group: string }[] = [
-  { format: 'catalog-postman', label: 'Postman — All APIs', icon: <Globe className="w-4 h-4" />, group: 'Postman Collection' },
-  { format: 'catalog-postman-workspace', label: 'Postman — Workspace APIs', icon: <Globe className="w-4 h-4" />, group: 'Postman Collection' },
-  { format: 'catalog-postman-account', label: 'Postman — Account APIs', icon: <Globe className="w-4 h-4" />, group: 'Postman Collection' },
-  { format: 'catalog-openapi', label: 'OpenAPI 3.0 — All APIs', icon: <FileCode className="w-4 h-4" />, group: 'OpenAPI Spec' },
-  { format: 'catalog-openapi-workspace', label: 'OpenAPI 3.0 — Workspace', icon: <FileCode className="w-4 h-4" />, group: 'OpenAPI Spec' },
-  { format: 'catalog-openapi-account', label: 'OpenAPI 3.0 — Account', icon: <FileCode className="w-4 h-4" />, group: 'OpenAPI Spec' },
-  { format: 'catalog-insomnia', label: 'Insomnia — All APIs', icon: <Globe className="w-4 h-4" />, group: 'Insomnia' },
-  { format: 'catalog-insomnia-workspace', label: 'Insomnia — Workspace', icon: <Globe className="w-4 h-4" />, group: 'Insomnia' },
-  { format: 'catalog-insomnia-account', label: 'Insomnia — Account', icon: <Globe className="w-4 h-4" />, group: 'Insomnia' },
+type CatalogFilter = 'workspace' | 'account' | undefined
+
+const CATALOG_EXPORT_OPTIONS: { format: CatalogExportFormat; label: string; icon: React.ReactNode; group: string; filter: CatalogFilter }[] = [
+  { format: 'catalog-postman', label: 'Postman — All APIs', icon: <Globe className="w-4 h-4" />, group: 'Postman Collection', filter: undefined },
+  { format: 'catalog-postman-workspace', label: 'Postman — Workspace APIs', icon: <Globe className="w-4 h-4" />, group: 'Postman Collection', filter: 'workspace' },
+  { format: 'catalog-postman-account', label: 'Postman — Account APIs', icon: <Globe className="w-4 h-4" />, group: 'Postman Collection', filter: 'account' },
+  { format: 'catalog-openapi', label: 'OpenAPI 3.0 — All APIs', icon: <FileCode className="w-4 h-4" />, group: 'OpenAPI Spec', filter: undefined },
+  { format: 'catalog-openapi-workspace', label: 'OpenAPI 3.0 — Workspace', icon: <FileCode className="w-4 h-4" />, group: 'OpenAPI Spec', filter: 'workspace' },
+  { format: 'catalog-openapi-account', label: 'OpenAPI 3.0 — Account', icon: <FileCode className="w-4 h-4" />, group: 'OpenAPI Spec', filter: 'account' },
+  { format: 'catalog-insomnia', label: 'Insomnia — All APIs', icon: <Globe className="w-4 h-4" />, group: 'Insomnia', filter: undefined },
+  { format: 'catalog-insomnia-workspace', label: 'Insomnia — Workspace', icon: <Globe className="w-4 h-4" />, group: 'Insomnia', filter: 'workspace' },
+  { format: 'catalog-insomnia-account', label: 'Insomnia — Account', icon: <Globe className="w-4 h-4" />, group: 'Insomnia', filter: 'account' },
 ]
 
 function FullCatalogExport() {
@@ -411,25 +413,34 @@ function FullCatalogExport() {
         Export all preset endpoints with folders, request bodies, and docs
       </p>
       <div className="space-y-1">
-        {CATALOG_EXPORT_OPTIONS.map((option) => (
-          <button
-            key={option.format}
-            onClick={() => handleCatalogExport(option.format)}
-            disabled={exporting === option.format}
-            className="endpoint-item w-full"
-            style={{ padding: '8px 12px' }}
-          >
-            <span style={{ color: 'var(--accent-secondary)' }}>{option.icon}</span>
-            <span className="flex-1 text-left text-xs" style={{ color: 'var(--text-primary)' }}>{option.label}</span>
-            {exporting === option.format ? (
-              <Loader2 className="w-3 h-3 spin" style={{ color: 'var(--accent-secondary)' }} />
-            ) : exported === option.format ? (
-              <Check className="w-3 h-3" style={{ color: 'var(--accent-success)' }} />
-            ) : (
-              <Download className="w-3 h-3" style={{ color: 'var(--text-dim)' }} />
-            )}
-          </button>
-        ))}
+        {CATALOG_EXPORT_OPTIONS.map((option) => {
+          const count = getCatalogEndpointCount(option.filter)
+          return (
+            <button
+              key={option.format}
+              onClick={() => handleCatalogExport(option.format)}
+              disabled={exporting === option.format}
+              className="endpoint-item w-full"
+              style={{ padding: '8px 12px' }}
+            >
+              <span style={{ color: 'var(--accent-secondary)' }}>{option.icon}</span>
+              <span className="flex-1 text-left text-xs" style={{ color: 'var(--text-primary)' }}>{option.label}</span>
+              <span
+                className="text-[10px] px-1.5 py-0.5 rounded-full"
+                style={{ background: 'var(--bg-tertiary)', color: 'var(--text-muted)', fontWeight: 600, minWidth: '28px', textAlign: 'center' }}
+              >
+                {count}
+              </span>
+              {exporting === option.format ? (
+                <Loader2 className="w-3 h-3 spin" style={{ color: 'var(--accent-secondary)' }} />
+              ) : exported === option.format ? (
+                <Check className="w-3 h-3" style={{ color: 'var(--accent-success)' }} />
+              ) : (
+                <Download className="w-3 h-3" style={{ color: 'var(--text-dim)' }} />
+              )}
+            </button>
+          )
+        })}
       </div>
     </div>
   )

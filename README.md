@@ -18,12 +18,13 @@ No more switching between documentation, curl commands, and Postman.
 
 ### Key Features
 
-- **500+ API Endpoints** — Complete Databricks REST API catalog organized by service (Compute, Unity Catalog, Jobs, SQL, ML, and more)
+- **640+ API Endpoints** — Complete Databricks REST API catalog organized by service (Compute, Unity Catalog, Jobs, SQL, ML, Account APIs, and more)
 - **13 AI Assistant Features** — Data QA, endpoint discovery, response analysis, error diagnosis, code generation, workflow builder, agent chat, and more
 - **SQL Query Editor** — Built-in editor with Unity Catalog browser, syntax highlighting, and auto-visualization
 - **Data Visualization** — 12 chart types with auto-detection, dashboards, schema visualizer, and dependency graphs
 - **Code Generation** — Export working code in Python, cURL, JavaScript, TypeScript, Go, and PowerShell
 - **Azure Multi-Workspace Login** — OAuth-based authentication with multi-tenant, multi-subscription support
+- **Full Catalog Export** — Export all 640+ endpoints as Postman Collection, OpenAPI 3.0, or Insomnia with folder structure and request bodies
 - **Export Everywhere** — Postman, Insomnia, OpenAPI, GitHub Actions, PDF, Word, Excel, CSV, JSON
 - **Request History** — Full replay capability with favorites
 - **Cross-Platform** — Web app, macOS desktop, Windows desktop, and Python CLI
@@ -114,11 +115,17 @@ Intelligence-Studio/
 
 ---
 
+## Documentation
+
+For detailed documentation — full feature walkthrough, architecture, environment variables, export guides, and more — see **[docs/README.md](docs/README.md)**.
+
+---
+
 ## By the Numbers
 
 | Metric | Value |
 |--------|-------|
-| API endpoints cataloged | 500+ |
+| API endpoints cataloged | 640+ |
 | AI assistant features | 13 |
 | Code generation languages | 6 |
 | Export formats | 10+ |
