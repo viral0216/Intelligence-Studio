@@ -144,6 +144,25 @@ Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for se
 
 This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md).
 
+### Areas Where Help Is Welcome
+
+- Adding new API endpoint presets to the catalog
+- Improving AI prompt templates
+- Adding new chart types and visualizations
+- Writing tests (frontend and backend)
+- Documentation improvements
+- Accessibility enhancements
+- Performance optimizations
+- Multi-cloud authentication (AWS, GCP)
+
+### Contributors
+
+Thanks to everyone who contributes to Intelligence Studio!
+
+<a href="https://github.com/viral0216/Intelligence-Studio/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=viral0216/Intelligence-Studio" />
+</a>
+
 ---
 
 ## License
