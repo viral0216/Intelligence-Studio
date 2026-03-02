@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Sun, Moon, Settings, History, Bot, Download, Zap, RefreshCw } from 'lucide-react'
+import { Sun, Moon, Settings, History, Bot, Download, RefreshCw } from 'lucide-react'
 import { useSettingsStore } from '@/stores/settingsStore'
 import { useAuthStore } from '@/stores/authStore'
 import { checkHealth } from '@/lib/api'
+import appIcon from '@/assets/icon.svg'
 
 export default function HeaderBar() {
   const { theme, toggleTheme, toggleAiAssistant, toggleHistory, toggleIntegrationExport, setSettingsOpen, showAiAssistant, showHistory, showIntegrationExport, uiComponents } = useSettingsStore()
@@ -28,7 +29,7 @@ export default function HeaderBar() {
       <div className="app-header-content">
         <div className="app-header-brand">
           <div className="app-header-logo-wrap">
-            <Zap className="app-header-logo" />
+            <img src={appIcon} alt="Intelligence Studio" className="app-header-logo" style={{ width: 32, height: 32 }} />
           </div>
           <span className="app-header-title">Intelligence Studio</span>
         </div>

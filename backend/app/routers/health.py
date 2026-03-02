@@ -17,6 +17,12 @@ async def health():
     return {"ok": True, "message": "Server is running", "durationMs": 0}
 
 
+@router.get("/health/ping")
+async def ping():
+    """Quick ping endpoint — no auth needed. Used by frontend to check if backend is running."""
+    return {"ok": True}
+
+
 @router.post("/health/check")
 async def health_check(req: HealthCheckRequest):
     """Test Databricks workspace connectivity. Token sent in body, not URL."""

@@ -1,7 +1,28 @@
 {
-  "name": "intelligence-studio-frontend",
-  "private": true,
+  "name": "intelligence-studio",
   "version": "1.0.0",
+  "description": "AI-powered API explorer for Databricks — browse, test, and analyze 500+ REST APIs",
+  "license": "MIT",
+  "author": "Viral Patel",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/viral0216/Intelligence-Studio.git",
+    "directory": "frontend"
+  },
+  "homepage": "https://github.com/viral0216/Intelligence-Studio",
+  "bugs": {
+    "url": "https://github.com/viral0216/Intelligence-Studio/issues"
+  },
+  "keywords": [
+    "databricks",
+    "api-explorer",
+    "ai-assistant",
+    "sql-editor",
+    "data-visualization",
+    "azure",
+    "rest-api",
+    "developer-tools"
+  ],
   "type": "module",
   "scripts": {
     "dev": "vite",

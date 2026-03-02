@@ -7,10 +7,9 @@
     "start": "electron .",
     "build": "electron-builder"
   },
-  "dependencies": {
-    "electron": "^28.0.0"
-  },
+  "author": "Intelligence Studio",
   "devDependencies": {
+    "electron": "^28.0.0",
     "electron-builder": "^24.9.0"
   },
   "build": {
@@ -22,7 +21,8 @@
     "files": [
       "main.js",
       "preload.js",
-      "package.json"
+      "package.json",
+      "build/icon.png"
     ],
     "extraResources": [
       {
@@ -31,13 +31,16 @@
       }
     ],
     "mac": {
+      "icon": "build/icon.icns",
       "target": [
-        { "target": "dmg", "arch": ["x64", "arm64"] },
-        { "target": "zip", "arch": ["x64", "arm64"] }
+        { "target": "zip", "arch": ["arm64"] },
+        { "target": "dir", "arch": ["arm64"] }
       ],
-      "category": "public.app-category.developer-tools"
+      "category": "public.app-category.developer-tools",
+      "identity": null
     },
     "win": {
+      "icon": "build/icon.ico",
       "target": [
         { "target": "nsis" },
         { "target": "portable" }

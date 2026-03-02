@@ -1,4 +1,4 @@
-.PHONY: dev dev-frontend dev-backend install install-frontend install-backend test build clean
+.PHONY: dev dev-frontend dev-backend install install-frontend install-backend test build-all build-mac build-win clean setup
 
 # Development
 dev:
@@ -30,25 +30,43 @@ test-frontend:
 test-backend:
 	cd backend && pytest
 
-# Build
-build: build-frontend
-
-build-frontend:
-	cd frontend && npm run build
-
 # Desktop
 desktop-dev:
 	cd desktop && npm start
-
-desktop-build:
-	cd desktop && npm run build
 
 # CLI
 cli-install:
 	cd cli && pip install -e .
 
+# Full Setup (prerequisites check + install all)
+setup:
+	./scripts/install.sh
+
+setup-dev:
+	./scripts/install.sh --dev
+
+# Full Build (desktop + CLI)
+build-all:
+	./scripts/build-all.sh
+
+build-all-clean:
+	./scripts/build-all.sh --clean
+
+build-all-skip-tests:
+	./scripts/build-all.sh --skip-tests
+
+build-mac:
+	./scripts/build-all.sh --desktop-mac --skip-tests
+
+build-win:
+	./scripts/build-all.sh --desktop-win --skip-tests
+
+build-cli:
+	./scripts/build-all.sh --cli --skip-tests
+
 # Clean
 clean:
+	rm -rf dist
 	rm -rf frontend/dist frontend/node_modules
 	rm -rf backend/__pycache__ backend/.pytest_cache
 	rm -rf desktop/dist desktop/node_modules

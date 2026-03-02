@@ -1,10 +1,66 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import type { HttpMethod, PlaygroundResponse, ModelCallMetadata } from '@/types/api'
 
+const isElectron = window.location.protocol === 'file:'
+const apiBaseURL = isElectron ? 'http://127.0.0.1:8000/api' : '/api'
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: apiBaseURL,
   timeout: 60000,
 })
+
+// Track backend availability globally
+let _backendAvailable: boolean | null = null
+export function isBackendAvailable() { return _backendAvailable }
+export function setBackendAvailable(v: boolean) { _backendAvailable = v }
+
+// Intercept errors to give clear messages when backend is down
+api.interceptors.response.use(
+  (response) => {
+    _backendAvailable = true
+    return response
+  },
+  (error: AxiosError) => {
+    if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
+      _backendAvailable = false
+      const betterError = new Error(
+        'Cannot connect to backend server. Please ensure the backend is running on port 8000.\n' +
+        'Start it with: cd backend && uvicorn app.main:app --port 8000'
+      )
+      betterError.name = 'BackendUnavailable'
+      return Promise.reject(betterError)
+    }
+    if (error.code === 'ECONNABORTED') {
+      return Promise.reject(new Error('Request timed out. The backend may be overloaded or unresponsive.'))
+    }
+    _backendAvailable = true // backend is reachable, just returned an error
+    return Promise.reject(error)
+  }
+)
+
+// Quick ping to check if backend is up (doesn't need auth)
+export async function pingBackend(): Promise<boolean> {
+  try {
+    await api.get('/health/ping', { timeout: 3000 })
+    _backendAvailable = true
+    return true
+  } catch {
+    // Try root endpoint as fallback
+    try {
+      await api.get('/', { timeout: 3000 })
+      _backendAvailable = true
+      return true
+    } catch (e) {
+      if (e instanceof Error && e.name === 'BackendUnavailable') {
+        _backendAvailable = false
+        return false
+      }
+      // Backend returned an error but is reachable
+      _backendAvailable = true
+      return true
+    }
+  }
+}
 
 // ===== Proxy =====
 
