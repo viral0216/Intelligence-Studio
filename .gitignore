@@ -8,6 +8,7 @@ env/
 
 # Build outputs
 dist/
+*.tsbuildinfo
 frontend/dist/
 backend/dist/
 desktop/dist/

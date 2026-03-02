@@ -586,7 +586,7 @@ dist/desktop/win/
 | `-SkipTests` | Skip tests before building |
 | `-Clean` | Remove previous build artifacts first |
 
-> **Note:** The frontend is automatically built and bundled into the desktop app via Electron's `extraResources`. There is no separate frontend or backend in `dist/` — the desktop app is self-contained.
+> **Note:** The frontend is automatically built and bundled into the desktop app via Electron's `extraResources`. However, the packaged desktop app does **not** start its own backend; it still requires a backend server running on `127.0.0.1:8000`. Ensure the backend is running locally before using the desktop app.
 
 ### Build Output Structure
 
