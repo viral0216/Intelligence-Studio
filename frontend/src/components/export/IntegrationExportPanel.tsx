@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import {
   Download,
   FileJson,
@@ -376,9 +376,18 @@ const CATALOG_EXPORT_OPTIONS: { format: CatalogExportFormat; label: string; icon
   { format: 'catalog-insomnia-account', label: 'Insomnia — Account', icon: <Globe className="w-4 h-4" />, group: 'Insomnia', filter: 'account' },
 ]
 
+function useCountsByFilter() {
+  return useMemo(() => ({
+    all: getCatalogEndpointCount(),
+    workspace: getCatalogEndpointCount('workspace'),
+    account: getCatalogEndpointCount('account'),
+  }), [])
+}
+
 function FullCatalogExport() {
   const [exporting, setExporting] = useState<CatalogExportFormat | null>(null)
   const [exported, setExported] = useState<CatalogExportFormat | null>(null)
+  const counts = useCountsByFilter()
 
   const handleCatalogExport = (format: CatalogExportFormat) => {
     setExporting(format)
@@ -414,7 +423,7 @@ function FullCatalogExport() {
       </p>
       <div className="space-y-1">
         {CATALOG_EXPORT_OPTIONS.map((option) => {
-          const count = getCatalogEndpointCount(option.filter)
+          const count = option.filter === 'workspace' ? counts.workspace : option.filter === 'account' ? counts.account : counts.all
           return (
             <button
               key={option.format}

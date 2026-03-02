@@ -127,8 +127,16 @@ export function exportCatalogToOpenAPI(filter?: 'workspace' | 'account') {
   const paths: Record<string, Record<string, unknown>> = {}
 
   const addEndpoint = (ep: ApiEndpoint, tag: string) => {
-    const [pathPart, queryString] = ep.path.split('?')
+    const [rawPath, queryString] = ep.path.split('?')
     const method = ep.method.toLowerCase()
+
+    // Convert UPPER_CASE placeholders to OpenAPI-style {UPPER_CASE} path templates
+    const pathParams = [...new Set(rawPath.match(/[A-Z_]{2,}/g) || [])]
+    let pathPart = rawPath
+    for (const param of pathParams) {
+      pathPart = pathPart.split(param).join(`{${param}}`)
+    }
+
     if (!paths[pathPart]) paths[pathPart] = {}
 
     const parameters: unknown[] = []
@@ -144,8 +152,6 @@ export function exportCatalogToOpenAPI(filter?: 'workspace' | 'account') {
       })
     }
 
-    // Extract path parameters like {ACCOUNT_ID}, {WORKSPACE_ID} etc.
-    const pathParams = pathPart.match(/[A-Z_]{2,}/g) || []
     pathParams.forEach((param) => {
       parameters.push({
         name: param,

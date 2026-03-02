@@ -313,7 +313,7 @@ Intelligence-Studio/
 │   │   │       ├── JsonEditor.tsx          # JSON editor with validation
 │   │   │       └── NaturalLanguageInput.tsx # NL-to-API input
 │   │   ├── stores/                   # Zustand state management
-│   │   │   ├── authStore.ts          # Host, token, Azure session
+│   │   │   ├── authStore.ts          # Host, token, accountHost, accountId, Azure session
 │   │   │   ├── requestStore.ts       # HTTP request state
 │   │   │   ├── queryStore.ts         # SQL query state
 │   │   │   ├── aiStore.ts            # AI assistant state
@@ -326,7 +326,7 @@ Intelligence-Studio/
 │   │   │   └── useDependencyGraph.ts # Dependency graph state
 │   │   ├── lib/                      # Utility libraries
 │   │   │   ├── api.ts                # Backend API client (50+ functions)
-│   │   │   ├── apiCatalog.ts         # 500+ endpoint definitions
+│   │   │   ├── apiCatalog.ts         # 640+ endpoint definitions
 │   │   │   ├── azureApi.ts           # Azure API re-exports
 │   │   │   ├── codeGenerator.ts      # Multi-language code generation
 │   │   │   ├── dataVisualization.ts  # Chart data processing
