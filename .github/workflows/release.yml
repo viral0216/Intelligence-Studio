@@ -73,8 +73,35 @@ jobs:
           path: |
             desktop/dist/*.exe
 
+  exports:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Generate catalog exports
+        run: npx tsx --tsconfig frontend/tsconfig.json scripts/generate-catalog-exports.ts dist/exports
+
+      - name: Upload export artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-exports
+          path: dist/exports/*.json
+
   release:
-    needs: build
+    needs: [build, exports]
     runs-on: ubuntu-latest
 
     steps:

@@ -27,6 +27,12 @@ export function getCatalogEndpointCount(filter?: 'workspace' | 'account'): numbe
 
 // ── Helpers ──
 
+function filterCategories(filter?: 'workspace' | 'account') {
+  return filter
+    ? API_CATALOG.filter((c) => (c.audience || 'workspace') === filter)
+    : API_CATALOG
+}
+
 function endpointToPostmanItem(ep: ApiEndpoint) {
   const [pathPart, queryString] = ep.path.split('?')
   const queryParams = queryString
@@ -83,14 +89,12 @@ function categoryToPostmanFolder(cat: ApiCategory) {
   }
 }
 
-// ── Postman Collection v2.1 ──
+// ── Postman Collection v2.1 — builder ──
 
-export function exportCatalogToPostman(filter?: 'workspace' | 'account') {
-  const categories = filter
-    ? API_CATALOG.filter((c) => (c.audience || 'workspace') === filter)
-    : API_CATALOG
+export function buildPostmanCollection(filter?: 'workspace' | 'account') {
+  const categories = filterCategories(filter)
 
-  const collection = {
+  return {
     info: {
       name: filter
         ? `Databricks ${filter === 'account' ? 'Account' : 'Workspace'} APIs`
@@ -108,22 +112,21 @@ export function exportCatalogToPostman(filter?: 'workspace' | 'account') {
       bearer: [{ key: 'token', value: '{{token}}', type: 'string' }],
     },
   }
+}
 
+export function exportCatalogToPostman(filter?: 'workspace' | 'account') {
   const suffix = filter ? `-${filter}` : ''
   downloadFile(
-    JSON.stringify(collection, null, 2),
+    JSON.stringify(buildPostmanCollection(filter), null, 2),
     `databricks-api${suffix}.postman_collection.json`,
     'application/json'
   )
 }
 
-// ── OpenAPI 3.0 ──
+// ── OpenAPI 3.0 — builder ──
 
-export function exportCatalogToOpenAPI(filter?: 'workspace' | 'account') {
-  const categories = filter
-    ? API_CATALOG.filter((c) => (c.audience || 'workspace') === filter)
-    : API_CATALOG
-
+export function buildOpenAPISpec(filter?: 'workspace' | 'account') {
+  const categories = filterCategories(filter)
   const paths: Record<string, Record<string, unknown>> = {}
 
   const addEndpoint = (ep: ApiEndpoint, tag: string) => {
@@ -199,7 +202,7 @@ export function exportCatalogToOpenAPI(filter?: 'workspace' | 'account') {
     }
   }
 
-  const spec = {
+  return {
     openapi: '3.0.3',
     info: {
       title: filter
@@ -224,21 +227,21 @@ export function exportCatalogToOpenAPI(filter?: 'workspace' | 'account') {
       },
     },
   }
+}
 
+export function exportCatalogToOpenAPI(filter?: 'workspace' | 'account') {
   const suffix = filter ? `-${filter}` : ''
   downloadFile(
-    JSON.stringify(spec, null, 2),
+    JSON.stringify(buildOpenAPISpec(filter), null, 2),
     `databricks-api${suffix}.openapi.json`,
     'application/json'
   )
 }
 
-// ── Insomnia v4 ──
+// ── Insomnia v4 — builder ──
 
-export function exportCatalogToInsomnia(filter?: 'workspace' | 'account') {
-  const categories = filter
-    ? API_CATALOG.filter((c) => (c.audience || 'workspace') === filter)
-    : API_CATALOG
+export function buildInsomniaExport(filter?: 'workspace' | 'account') {
+  const categories = filterCategories(filter)
 
   let idCounter = 1
   const nextId = (prefix: string) => `${prefix}_${idCounter++}`
@@ -313,17 +316,19 @@ export function exportCatalogToInsomnia(filter?: 'workspace' | 'account') {
     }
   }
 
-  const insomniaExport = {
+  return {
     _type: 'export',
     __export_format: 4,
     __export_date: new Date().toISOString(),
     __export_source: 'intelligence-studio',
     resources,
   }
+}
 
+export function exportCatalogToInsomnia(filter?: 'workspace' | 'account') {
   const suffix = filter ? `-${filter}` : ''
   downloadFile(
-    JSON.stringify(insomniaExport, null, 2),
+    JSON.stringify(buildInsomniaExport(filter), null, 2),
     `databricks-api${suffix}.insomnia.json`,
     'application/json'
   )
