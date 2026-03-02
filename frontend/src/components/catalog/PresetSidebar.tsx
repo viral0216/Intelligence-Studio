@@ -2,6 +2,7 @@ import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import { ChevronDown, ChevronRight, ChevronLeft, Compass, BookOpen } from 'lucide-react'
 import { useCatalogStore } from '@/stores/catalogStore'
 import { useRequestStore } from '@/stores/requestStore'
+import { useAuthStore } from '@/stores/authStore'
 import { API_CATALOG } from '@/lib/apiCatalog'
 import { CategoryIcon } from '@/lib/categoryIcons'
 import type { ApiEndpoint } from '@/types/catalog'
@@ -16,6 +17,7 @@ export default function PresetSidebar() {
     setSelectedEndpoint,
   } = useCatalogStore()
   const { setMethod, setPath, setBodyInput } = useRequestStore()
+  const { accountId } = useAuthStore()
   const [collapsed, setCollapsed] = useState(false)
   const [audienceFilter, setAudienceFilter] = useState<AudienceFilter>('workspace')
   const [width, setWidth] = useState(260)
@@ -69,7 +71,12 @@ export default function PresetSidebar() {
 
   const handleEndpointClick = (endpoint: ApiEndpoint) => {
     setMethod(endpoint.method as HttpMethod)
-    setPath(endpoint.path)
+    // Replace ACCOUNT_ID placeholder with configured account ID
+    let resolvedPath = endpoint.path
+    if (accountId?.trim()) {
+      resolvedPath = resolvedPath.replace(/ACCOUNT_ID/g, accountId.trim())
+    }
+    setPath(resolvedPath)
     if (endpoint.body) {
       setBodyInput(JSON.stringify(endpoint.body, null, 2))
     } else {

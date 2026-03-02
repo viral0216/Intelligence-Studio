@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { X, Search, ChevronDown, ChevronRight } from 'lucide-react'
 import { useCatalogStore } from '@/stores/catalogStore'
 import { useRequestStore } from '@/stores/requestStore'
+import { useAuthStore } from '@/stores/authStore'
 import { API_CATALOG } from '@/lib/apiCatalog'
 import { CategoryIcon } from '@/lib/categoryIcons'
 import type { ApiEndpoint } from '@/types/catalog'
@@ -18,6 +19,7 @@ export default function PresetDrawer() {
     setSelectedEndpoint,
   } = useCatalogStore()
   const { setMethod, setPath, setBodyInput } = useRequestStore()
+  const { accountId } = useAuthStore()
 
   const filteredCatalog = useMemo(() => {
     if (!searchQuery.trim()) return API_CATALOG
@@ -60,7 +62,12 @@ export default function PresetDrawer() {
 
   const handleEndpointClick = (endpoint: ApiEndpoint) => {
     setMethod(endpoint.method as HttpMethod)
-    setPath(endpoint.path)
+    // Replace ACCOUNT_ID placeholder with configured account ID
+    let resolvedPath = endpoint.path
+    if (accountId?.trim()) {
+      resolvedPath = resolvedPath.replace(/ACCOUNT_ID/g, accountId.trim())
+    }
+    setPath(resolvedPath)
     if (endpoint.body) {
       setBodyInput(JSON.stringify(endpoint.body, null, 2))
     } else {

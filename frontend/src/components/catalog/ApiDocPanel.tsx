@@ -1,4 +1,4 @@
-import { ExternalLink, Link2, FileText, Tag } from 'lucide-react'
+import { ExternalLink, Link2, FileText, Tag, BookOpen } from 'lucide-react'
 import { useCatalogStore } from '@/stores/catalogStore'
 import appIcon from '@/assets/icon.svg'
 

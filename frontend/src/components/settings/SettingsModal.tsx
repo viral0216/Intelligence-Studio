@@ -674,6 +674,37 @@ function ConnectionTab({ testing, connectionMsg, showToken, setShowToken, onTest
         </>
       )}
 
+      {/* Account Console URL (for account-level APIs) */}
+      <Section title="Account Console URL (Optional)">
+        <input
+          type="text"
+          value={auth.accountHost}
+          onChange={(e) => auth.setAccountHost(e.target.value)}
+          placeholder={auth.host?.includes('azuredatabricks') ? 'https://accounts.azuredatabricks.net' : 'https://accounts.cloud.databricks.com'}
+          className="w-full px-3 py-2 rounded-lg text-sm outline-none"
+          style={inputStyle}
+        />
+        <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+          Required for Account-level APIs (SCIM, workspaces, billing). Auto-detected from workspace host if empty.
+        </p>
+      </Section>
+
+      {/* Account ID */}
+      <Section title="Account ID (Optional)">
+        <input
+          type="text"
+          value={auth.accountId}
+          onChange={(e) => auth.setAccountId(e.target.value)}
+          placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+          className="w-full px-3 py-2 rounded-lg text-sm outline-none font-mono"
+          style={inputStyle}
+        />
+        <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
+          Your Databricks Account ID. When set, <code style={{ fontSize: '10px', padding: '1px 4px', borderRadius: 3, backgroundColor: 'var(--bg-tertiary)' }}>ACCOUNT_ID</code> in API paths is replaced automatically.
+          Find it in your account console URL or Azure portal.
+        </p>
+      </Section>
+
       {/* Azure Login Mode */}
       {settings.authMethod === 'azure-workspace' && (
         <div className="space-y-4">

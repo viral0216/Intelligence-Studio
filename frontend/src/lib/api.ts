@@ -64,6 +64,35 @@ export async function pingBackend(): Promise<boolean> {
 
 // ===== Proxy =====
 
+/**
+ * Detect if a path is an account-level API (contains /accounts/ACCOUNT_ID/).
+ */
+export function isAccountLevelPath(path: string): boolean {
+  return /\/accounts\/[^/]+\//.test(path)
+}
+
+/**
+ * Infer the account console URL from the workspace host.
+ * Azure: accounts.azuredatabricks.net
+ * AWS/GCP: accounts.cloud.databricks.com
+ */
+export function inferAccountHost(workspaceHost: string): string {
+  if (workspaceHost.includes('azuredatabricks')) {
+    return 'https://accounts.azuredatabricks.net'
+  }
+  return 'https://accounts.cloud.databricks.com'
+}
+
+/**
+ * Resolve the correct host for a request.
+ * Account-level paths use the accountHost (or inferred from workspace host).
+ */
+export function resolveHost(path: string, workspaceHost: string, accountHost?: string): string {
+  if (!isAccountLevelPath(path)) return workspaceHost
+  if (accountHost?.trim()) return accountHost
+  return inferAccountHost(workspaceHost)
+}
+
 export async function sendRequest(
   method: HttpMethod,
   path: string,

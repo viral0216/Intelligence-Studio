@@ -4,7 +4,7 @@ import { useRequestStore } from '@/stores/requestStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useHistoryStore } from '@/stores/historyStore'
 import { useSettingsStore } from '@/stores/settingsStore'
-import { sendRequest, aiSuggestParameters } from '@/lib/api'
+import { sendRequest, aiSuggestParameters, resolveHost, isAccountLevelPath } from '@/lib/api'
 import type { HttpMethod } from '@/types/api'
 import JsonEditor from '@/components/common/JsonEditor'
 
@@ -12,7 +12,7 @@ const METHODS: HttpMethod[] = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 
 export default function RequestComposer() {
   const { method, path, bodyInput, isLoading, setMethod, setPath, setBodyInput, setLoading, setResponse, setError } = useRequestStore()
-  const { host, token } = useAuthStore()
+  const { host, token, accountHost } = useAuthStore()
   const { addItem } = useHistoryStore()
   const { defaultModel } = useSettingsStore()
 
@@ -41,7 +41,8 @@ export default function RequestComposer() {
         }
       }
 
-      const result = await sendRequest(method, path, parsedBody, host, token)
+      const effectiveHost = resolveHost(path, host, accountHost)
+      const result = await sendRequest(method, path, parsedBody, effectiveHost, token)
       setResponse(result)
       addItem(method, path, parsedBody)
     } catch (err: unknown) {
@@ -50,7 +51,7 @@ export default function RequestComposer() {
     } finally {
       setLoading(false)
     }
-  }, [method, path, bodyInput, host, token, setLoading, setResponse, setError, addItem])
+  }, [method, path, bodyInput, host, token, accountHost, setLoading, setResponse, setError, addItem])
 
   const handleAiSuggest = async () => {
     if (!host || !token || !path) return
@@ -119,6 +120,20 @@ export default function RequestComposer() {
           />
         </div>
       </div>
+
+      {/* Account-level endpoint indicator */}
+      {isAccountLevelPath(path) && (
+        <div
+          className="flex items-center gap-2 px-3 py-2 mb-4 rounded-lg text-xs"
+          style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', color: 'var(--text-secondary)' }}
+        >
+          <span style={{ fontWeight: 600, color: 'rgb(245, 158, 11)' }}>ACCOUNT API</span>
+          <span>Routing to: <strong>{resolveHost(path, host, accountHost)}</strong></span>
+          {!accountHost?.trim() && (
+            <span style={{ color: 'var(--text-muted)' }}>(auto-detected — configure in Settings &gt; Connection)</span>
+          )}
+        </div>
+      )}
 
       {/* Query Parameters / Body */}
       <div className="mb-4">
