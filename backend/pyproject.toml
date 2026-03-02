@@ -3,10 +3,18 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "intelligence-studio-backend"
+name = "intelligence-studio"
 version = "1.0.0"
-description = "Intelligence Studio - Databricks Intelligence Platform Backend"
+description = "AI-powered API explorer for Databricks — browse, test, and analyze 500+ REST APIs"
+license = {text = "MIT"}
+authors = [{name = "Viral Patel"}]
+keywords = ["databricks", "api-explorer", "ai-assistant", "fastapi", "rest-api"]
 requires-python = ">=3.11"
+
+[project.urls]
+Homepage = "https://github.com/viral0216/Intelligence-Studio"
+Repository = "https://github.com/viral0216/Intelligence-Studio"
+Issues = "https://github.com/viral0216/Intelligence-Studio/issues"
 dependencies = [
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.30.0",
