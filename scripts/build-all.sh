@@ -210,6 +210,16 @@ if ! $SKIP_TESTS; then
 fi
 
 # ── Desktop Build ────────────────────────────────────────────────────────────
+#
+#  macOS Code Signing & Notarization
+#  By default, the app is built unsigned (safe for local development).
+#  For distribution, provide Apple credentials:
+#    export APPLE_ID="your-email@example.com"
+#    export APPLE_ID_PASSWORD="app-specific-password"
+#    export APPLE_TEAM_ID="XXXXXXXXXX"
+#
+#  See: docs/SIGNING.md for setup instructions
+#
 
 if $BUILD_DESKTOP || $BUILD_DESKTOP_MAC || $BUILD_DESKTOP_WIN; then
   print_header "Building Desktop App"

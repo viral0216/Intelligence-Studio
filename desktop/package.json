@@ -28,22 +28,35 @@
       {
         "from": "../frontend/dist",
         "to": "frontend"
+      },
+      {
+        "from": "../backend/dist/backend-server",
+        "to": "backend-server"
       }
     ],
     "mac": {
       "icon": "build/icon.icns",
       "target": [
-        { "target": "zip", "arch": ["arm64"] },
-        { "target": "dir", "arch": ["arm64"] }
+        {
+          "target": "dir",
+          "arch": [
+            "arm64"
+          ]
+        }
       ],
       "category": "public.app-category.developer-tools",
-      "identity": null
+      "identity": null,
+      "notarize": false
     },
     "win": {
       "icon": "build/icon.ico",
       "target": [
-        { "target": "nsis" },
-        { "target": "portable" }
+        {
+          "target": "nsis"
+        },
+        {
+          "target": "portable"
+        }
       ]
     }
   }

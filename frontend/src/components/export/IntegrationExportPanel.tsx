@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
 import {
   Download,
   FileJson,
@@ -12,9 +12,13 @@ import {
   Loader2,
   Check,
   Library,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react'
 import { useRequestStore } from '@/stores/requestStore'
+import { useSettingsStore } from '@/stores/settingsStore'
 import { exportCatalogToPostman, exportCatalogToOpenAPI, exportCatalogToInsomnia, getCatalogEndpointCount } from '@/lib/catalogExport'
+import { downloadFile } from '@/lib/exportFormats'
 import ExportModal from './ExportModal'
 
 type ExportFormat =
@@ -186,9 +190,51 @@ function generateOpenApiSpec(method: string, path: string, body: string): string
 
 export default function IntegrationExportPanel() {
   const { method, path, bodyInput, response } = useRequestStore()
+  const { showIntegrationExport, toggleIntegrationExport } = useSettingsStore()
   const [exportingFormat, setExportingFormat] = useState<ExportFormat | null>(null)
   const [exportedFormat, setExportedFormat] = useState<ExportFormat | null>(null)
   const [modalFormat, setModalFormat] = useState<ExportFormat | null>(null)
+  const [width, setWidth] = useState(320)
+  const isResizing = useRef(false)
+  const startX = useRef(0)
+  const startWidth = useRef(320)
+
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    isResizing.current = true
+    startX.current = e.clientX
+    startWidth.current = width
+    document.body.style.cursor = 'col-resize'
+    document.body.style.userSelect = 'none'
+  }, [width])
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing.current) return
+      // dragging left increases width, right decreases
+      const newWidth = startWidth.current - (e.clientX - startX.current)
+      setWidth(Math.max(240, Math.min(600, newWidth)))
+    }
+    const handleMouseUp = () => {
+      if (!isResizing.current) return
+      isResizing.current = false
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [])
+
+  if (!showIntegrationExport) {
+    return (
+      <div className="export-panel collapsed" onClick={toggleIntegrationExport} title="Expand Export Panel">
+        <ChevronLeft className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
+      </div>
+    )
+  }
 
   const handleExport = (format: ExportFormat) => {
     setExportingFormat(format)
@@ -287,7 +333,9 @@ export default function IntegrationExportPanel() {
   ]
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="export-panel animate-slide-in-right" style={{ width }}>
+      {/* Resize handle */}
+      <div className="export-panel-resize-handle" onMouseDown={handleMouseDown} />
       {/* Header */}
       <div className="drawer-header">
         <div className="flex items-center gap-2">
@@ -296,6 +344,9 @@ export default function IntegrationExportPanel() {
             Export & Integrations
           </span>
         </div>
+        <button onClick={toggleIntegrationExport} className="toolbar-btn" style={{ padding: '4px' }} title="Collapse">
+          <ChevronRight className="w-4 h-4" />
+        </button>
       </div>
 
       {/* Current request info */}
@@ -467,14 +518,3 @@ function extractArrayData(data: unknown): unknown[] {
   return []
 }
 
-function downloadFile(content: string, filename: string, mimeType: string) {
-  const blob = new Blob([content], { type: mimeType })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = filename
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-  URL.revokeObjectURL(url)
-}

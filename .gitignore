@@ -11,6 +11,8 @@ dist/
 *.tsbuildinfo
 frontend/dist/
 backend/dist/
+backend/build/
+backend/*.spec
 desktop/dist/
 *.egg-info/
 

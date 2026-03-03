@@ -1,0 +1,244 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            platform: mac
+          - os: windows-latest
+            platform: win
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            frontend/package-lock.json
+            desktop/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build backend binary (macOS)
+        if: matrix.platform == 'mac'
+        run: |
+          pip install pyinstaller
+          pip install -e ./backend
+          cd backend
+          pyinstaller --onedir --name backend-server \
+            --collect-all uvicorn \
+            --collect-all fastapi \
+            --collect-all starlette \
+            --collect-all httpx \
+            --collect-all pydantic \
+            --collect-all pydantic_settings \
+            --collect-all azure \
+            --collect-all tenacity \
+            --hidden-import=uvicorn.logging \
+            --hidden-import=uvicorn.loops \
+            --hidden-import=uvicorn.loops.auto \
+            --hidden-import=uvicorn.protocols.http.auto \
+            --hidden-import=uvicorn.protocols.websockets.auto \
+            --hidden-import=uvicorn.lifespan.on \
+            --hidden-import=app.main \
+            --hidden-import=app.routers.health \
+            --hidden-import=app.routers.proxy \
+            --hidden-import=app.routers.azure_auth \
+            --hidden-import=app.routers.azure_resources \
+            --hidden-import=app.routers.ai \
+            --hidden-import=app.routers.agent \
+            --hidden-import=app.routers.custom_agents \
+            --hidden-import=app.routers.notebooks \
+            --hidden-import=app.routers.query \
+            --hidden-import=app.routers.tools \
+            --noconfirm \
+            server.py
+
+      - name: Build backend binary (Windows)
+        if: matrix.platform == 'win'
+        run: |
+          pip install pyinstaller
+          pip install -e ./backend
+          cd backend
+          pyinstaller --onedir --name backend-server `
+            --collect-all uvicorn `
+            --collect-all fastapi `
+            --collect-all starlette `
+            --collect-all httpx `
+            --collect-all pydantic `
+            --collect-all pydantic_settings `
+            --collect-all azure `
+            --collect-all tenacity `
+            --hidden-import=uvicorn.logging `
+            --hidden-import=uvicorn.loops `
+            --hidden-import=uvicorn.loops.auto `
+            --hidden-import=uvicorn.protocols.http.auto `
+            --hidden-import=uvicorn.protocols.websockets.auto `
+            --hidden-import=uvicorn.lifespan.on `
+            --hidden-import=app.main `
+            --hidden-import=app.routers.health `
+            --hidden-import=app.routers.proxy `
+            --hidden-import=app.routers.azure_auth `
+            --hidden-import=app.routers.azure_resources `
+            --hidden-import=app.routers.ai `
+            --hidden-import=app.routers.agent `
+            --hidden-import=app.routers.custom_agents `
+            --hidden-import=app.routers.notebooks `
+            --hidden-import=app.routers.query `
+            --hidden-import=app.routers.tools `
+            --noconfirm `
+            server.py
+        shell: pwsh
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+        working-directory: frontend
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: frontend
+
+      - name: Install desktop dependencies
+        run: npm ci
+        working-directory: desktop
+
+      - name: Build desktop app (macOS)
+        if: matrix.platform == 'mac'
+        run: npx electron-builder --mac
+        working-directory: desktop
+
+      - name: Ad-hoc sign macOS app
+        if: matrix.platform == 'mac'
+        run: codesign -s - --force --deep "desktop/dist/mac-arm64/Intelligence Studio.app"
+
+      - name: Package macOS app
+        if: matrix.platform == 'mac'
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent "desktop/dist/mac-arm64/Intelligence Studio.app" "desktop/dist/Intelligence-Studio-mac-arm64.zip"
+
+      - name: Build desktop app (Windows)
+        if: matrix.platform == 'win'
+        run: npx electron-builder --win
+        working-directory: desktop
+
+      - name: Upload macOS artifacts
+        if: matrix.platform == 'mac'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-mac
+          path: desktop/dist/Intelligence-Studio-mac-arm64.zip
+
+      - name: Upload Windows artifacts
+        if: matrix.platform == 'win'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-win
+          path: |
+            desktop/dist/*.exe
+
+  exports:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Generate catalog exports
+        run: npx tsx --tsconfig frontend/tsconfig.json scripts/generate-catalog-exports.ts dist/exports
+
+      - name: Upload export artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-exports
+          path: dist/exports/*.json
+
+  release:
+    needs: [build, exports]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: List artifacts
+        run: find artifacts -type f | head -20
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          body: |
+            ## Installation
+
+            ### macOS (Apple Silicon)
+            1. Download `Intelligence-Studio-mac-arm64.zip` and extract it
+            2. **Right-click** `Intelligence Studio.app` → **Open**
+            3. Click **Open** in the security dialog that appears
+            4. The app opens — subsequent launches work normally by double-clicking
+
+            > macOS blocks unnotarized apps by default. The right-click → Open method is a one-time bypass.
+            >
+            > Alternatively, run this in Terminal after extracting:
+            > ```
+            > xattr -d com.apple.quarantine ~/Downloads/"Intelligence Studio.app"
+            > ```
+
+            ### Windows
+            Download and run the `.exe` installer.
+
+            ---
+
+            ## ⚙️ Required Setup (after installation)
+
+            Open the app and go to **Settings** to complete the following before use:
+
+            ### 1. Sign In
+            - Enter your **Databricks workspace URL** (e.g. `https://<workspace>.azuredatabricks.net`)
+            - Enter your **Personal Access Token** (PAT)
+            - Click **Connect**
+
+            ### 2. Set Up SQL Warehouse
+            - In Settings, select your **SQL Warehouse** from the dropdown
+            - This is required for running queries and data exploration
+
+            ### 3. Configure DBX Foundation Model
+            - In Settings, select a **Databricks Foundation Model** endpoint
+            - This powers the AI Assistant, Data QA, and analysis features
+            - Requires a model serving endpoint enabled in your Databricks workspace
+          files: artifacts/*

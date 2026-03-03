@@ -6,6 +6,29 @@ const { spawn, execSync } = require('child_process')
 let mainWindow
 let backendProcess
 
+/**
+ * On macOS, strip the quarantine flag from the entire .app bundle recursively.
+ * macOS 15 removed `xattr -r`, so we use `find` to walk every file/dir.
+ * Runs once on first launch (after the user clicks through the Gatekeeper dialog).
+ * All subsequent launches are fully silent — no dialogs.
+ */
+function removeQuarantine() {
+  if (process.platform !== 'darwin' || !app.isPackaged) return
+
+  // .app bundle root → e.g. /Applications/Intelligence Studio.app
+  const appBundle = path.resolve(process.resourcesPath, '..', '..')
+
+  try {
+    // `-r` was removed in macOS 15 — use `find` to recurse every file and dir
+    execSync(
+      `find "${appBundle}" -exec xattr -d com.apple.quarantine {} \\; 2>/dev/null; true`,
+      { stdio: 'ignore' }
+    )
+  } catch (_) {
+    // Attribute not present or already clean — safe to ignore
+  }
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1400,
@@ -75,46 +98,46 @@ function findPython() {
 }
 
 function startBackend() {
-  const pythonPath = findPython()
+  if (app.isPackaged) {
+    // --- Packaged app: run the bundled PyInstaller binary (no Python needed) ---
+    const exeName = process.platform === 'win32' ? 'backend-server.exe' : 'backend-server'
+    const backendExe = path.join(process.resourcesPath, 'backend-server', exeName)
 
-  if (!pythonPath) {
-    console.warn('Python not found — backend will not start automatically.')
-    console.warn('The app will try to connect to http://127.0.0.1:8000')
-    console.warn('Start the backend manually: cd backend && uvicorn app.main:app --port 8000')
-    return
+    if (!fs.existsSync(backendExe)) {
+      console.error(`Bundled backend binary not found at: ${backendExe}`)
+      return
+    }
+
+    // Ensure the binary is executable on macOS/Linux
+    if (process.platform !== 'win32') {
+      try { fs.chmodSync(backendExe, 0o755) } catch (_) {}
+    }
+
+    console.log(`Starting bundled backend: ${backendExe}`)
+    backendProcess = spawn(backendExe, [], {
+      env: { ...process.env, PORT: '8000' },
+    })
+  } else {
+    // --- Dev mode: spawn Python + uvicorn ---
+    const pythonPath = findPython()
+    if (!pythonPath) {
+      console.warn('Python not found — start backend manually: cd backend && uvicorn app.main:app --port 8000')
+      return
+    }
+    const backendDir = path.join(__dirname, '..', 'backend')
+    console.log(`Starting dev backend: ${pythonPath} in ${backendDir}`)
+    backendProcess = spawn(pythonPath, ['-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', '8000'], {
+      cwd: backendDir,
+      env: { ...process.env, PORT: '8000' },
+    })
   }
 
-  // In dev: backend is at ../backend relative to desktop/
-  // In production (packaged): backend should be started externally
-  const backendDir = app.isPackaged
-    ? null
-    : path.join(__dirname, '..', 'backend')
-
-  if (!backendDir) {
-    console.log('Packaged app — backend should be started externally or is already running.')
-    return
-  }
-
-  console.log(`Starting backend with: ${pythonPath} in ${backendDir}`)
-
-  backendProcess = spawn(pythonPath, ['-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', '8000'], {
-    cwd: backendDir,
-    env: { ...process.env, PORT: '8000' },
-  })
-
-  backendProcess.stdout.on('data', (data) => {
-    console.log(`Backend: ${data}`)
-  })
-
-  backendProcess.stderr.on('data', (data) => {
-    console.error(`Backend: ${data}`)
-  })
-
+  backendProcess.stdout?.on('data', (data) => console.log(`Backend: ${data}`))
+  backendProcess.stderr?.on('data', (data) => console.error(`Backend: ${data}`))
   backendProcess.on('error', (err) => {
-    console.error(`Failed to start backend: ${err.message}`)
+    console.error(`Backend launch error: ${err.message}`)
     backendProcess = null
   })
-
   backendProcess.on('close', (code) => {
     console.log(`Backend exited with code ${code}`)
     backendProcess = null
@@ -122,10 +145,14 @@ function startBackend() {
 }
 
 app.whenReady().then(() => {
-  startBackend()
+  // Strip macOS quarantine flag from the app bundle + backend binary on first run
+  removeQuarantine()
 
-  // Wait a bit for backend to start, then show window
-  setTimeout(createWindow, 1500)
+  // Show window immediately — frontend has a "Retry" button while backend starts
+  createWindow()
+
+  // Start backend
+  startBackend()
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
