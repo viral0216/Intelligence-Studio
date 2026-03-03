@@ -6,6 +6,32 @@ const { spawn, execSync } = require('child_process')
 let mainWindow
 let backendProcess
 
+/**
+ * On macOS, strip the quarantine flag from the entire .app bundle and the
+ * bundled backend binary. This runs once on first launch (after the user
+ * has already right-clicked → Open). Subsequent launches are fully silent.
+ */
+function removeQuarantine() {
+  if (process.platform !== 'darwin' || !app.isPackaged) return
+
+  // .app bundle root  →  e.g. /Applications/Intelligence Studio.app
+  const appBundle = path.resolve(process.resourcesPath, '..', '..')
+
+  // Paths to clean
+  const targets = [
+    appBundle,
+    path.join(process.resourcesPath, 'backend-server', 'backend-server'),
+  ]
+
+  for (const target of targets) {
+    try {
+      execSync(`xattr -d com.apple.quarantine "${target}"`, { stdio: 'ignore' })
+    } catch (_) {
+      // Already clean or attribute not present — safe to ignore
+    }
+  }
+}
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1400,
@@ -122,10 +148,13 @@ function startBackend() {
 }
 
 app.whenReady().then(() => {
+  // Strip macOS quarantine flag from the app bundle + backend binary on first run
+  removeQuarantine()
+
   // Show window immediately — frontend has a "Retry" button while backend starts
   createWindow()
 
-  // Start backend (may take a moment on first launch while pip installs deps)
+  // Start backend
   startBackend()
 
   app.on('activate', () => {
