@@ -76,9 +76,10 @@ Open the app and go to **Settings** to complete the following before use:
 - In **Settings**, select your **SQL Warehouse** from the dropdown
 - Required for running queries and data exploration
 
-### 3. DBX Foundation Model
-- In **Settings**, select your **Foundation Model** endpoint
-- Powers the AI Assistant, Data QA, and intelligent analysis features
+### 3. Configure DBX Foundation Model
+- In **Settings**, select a **Databricks Foundation Model** endpoint
+- Powers the AI Assistant, Data QA, and analysis features
+- Requires a model serving endpoint enabled in your Databricks workspace
 
 ---
 
@@ -107,7 +108,27 @@ This starts:
 - **Frontend** on http://localhost:5173
 - **Backend** on http://localhost:8000
 
-Open [http://localhost:5173](http://localhost:5173) and configure your Databricks host and token in Settings.
+Open [http://localhost:5173](http://localhost:5173) and follow the Post Installation steps below.
+
+### Post Installation
+
+After the app is running, open **Settings** to complete the following before use:
+
+#### 1. Sign In
+- Enter your **Databricks workspace URL** (e.g. `https://<workspace>.azuredatabricks.net`)
+- Enter your **Personal Access Token** (PAT)
+- Click **Connect**
+
+#### 2. Set Up SQL Warehouse
+- In **Settings**, select your **SQL Warehouse** from the dropdown
+- Required for running queries and data exploration
+
+#### 3. Configure DBX Foundation Model
+- In **Settings**, select a **Databricks Foundation Model** endpoint
+- Powers the AI Assistant, Data QA, and analysis features
+- Requires a model serving endpoint enabled in your Databricks workspace
+
+---
 
 ### Build Desktop App
 

@@ -10,7 +10,7 @@ import IntegrationExportPanel from '@/components/export/IntegrationExportPanel'
 import ApiDocPanel from '@/components/catalog/ApiDocPanel'
 
 export default function MainLayout() {
-  const { showHistory, showAiAssistant, showIntegrationExport, uiComponents } = useSettingsStore()
+  const { showHistory, showAiAssistant, uiComponents } = useSettingsStore()
   const { selectedEndpoint } = useCatalogStore()
 
   return (
@@ -33,7 +33,7 @@ export default function MainLayout() {
           </div>
 
           {/* Right side panels */}
-          {selectedEndpoint && !showHistory && !showIntegrationExport && (
+          {selectedEndpoint && !showHistory && (
             <div className="side-panel animate-slide-in-right" style={{ width: '340px' }}>
               <ApiDocPanel />
             </div>
@@ -45,11 +45,7 @@ export default function MainLayout() {
             </div>
           )}
 
-          {showIntegrationExport && (
-            <div className="side-panel animate-slide-in-right" style={{ width: '320px' }}>
-              <IntegrationExportPanel />
-            </div>
-          )}
+          {uiComponents.export && <IntegrationExportPanel />}
         </>
       )}
     </div>

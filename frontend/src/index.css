@@ -1300,6 +1300,50 @@ a { color: var(--link-color); }
   flex-direction: column;
 }
 
+/* ===== Export Panel (right, collapsible) ===== */
+.export-panel {
+  width: 320px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--card-border);
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  position: relative;
+}
+
+.export-panel.collapsed {
+  width: 36px;
+  min-width: 36px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.export-panel.collapsed:hover {
+  background: var(--bg-hover);
+}
+
+.export-panel-resize-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 10;
+  transition: background 0.15s;
+}
+
+.export-panel-resize-handle:hover,
+.export-panel-resize-handle:active {
+  background: var(--accent-primary);
+}
+
 /* ===== Preset Sidebar ===== */
 .preset-sidebar {
   width: 260px;
