@@ -140,7 +140,7 @@ jobs:
             >
             > Alternatively, run this in Terminal after extracting:
             > ```
-            > xattr -dr com.apple.quarantine ~/Downloads/"Intelligence Studio.app"
+            > xattr -d com.apple.quarantine ~/Downloads/"Intelligence Studio.app"
             > ```
 
             ### Windows
