@@ -75,62 +75,49 @@ function findPython() {
 }
 
 function startBackend() {
-  const pythonPath = findPython()
+  if (app.isPackaged) {
+    // --- Packaged app: run the bundled PyInstaller binary (no Python needed) ---
+    const exeName = process.platform === 'win32' ? 'backend-server.exe' : 'backend-server'
+    const backendExe = path.join(process.resourcesPath, 'backend-server', exeName)
 
-  if (!pythonPath) {
-    console.warn('Python not found — backend will not start automatically.')
-    console.warn('The app will try to connect to http://127.0.0.1:8000')
-    console.warn('Start the backend manually: cd backend && uvicorn app.main:app --port 8000')
-    return
-  }
+    if (!fs.existsSync(backendExe)) {
+      console.error(`Bundled backend binary not found at: ${backendExe}`)
+      return
+    }
 
-  // In dev: backend is at ../backend relative to desktop/
-  // In production (packaged): backend is bundled at process.resourcesPath/backend
-  const backendDir = app.isPackaged
-    ? path.join(process.resourcesPath, 'backend')
-    : path.join(__dirname, '..', 'backend')
+    // Ensure the binary is executable on macOS/Linux
+    if (process.platform !== 'win32') {
+      try { fs.chmodSync(backendExe, 0o755) } catch (_) {}
+    }
 
-  if (!fs.existsSync(backendDir)) {
-    console.warn(`Backend directory not found at: ${backendDir}`)
-    return
-  }
-
-  // Run pip install async so the UI thread isn't blocked, then launch uvicorn
-  const pipInstall = spawn(pythonPath, ['-m', 'pip', 'install', '-e', '.', '-q', '--disable-pip-version-check'], {
-    cwd: backendDir,
-    stdio: 'ignore',
-  })
-
-  const launchUvicorn = () => {
-    console.log(`Starting backend with: ${pythonPath} in ${backendDir}`)
+    console.log(`Starting bundled backend: ${backendExe}`)
+    backendProcess = spawn(backendExe, [], {
+      env: { ...process.env, PORT: '8000' },
+    })
+  } else {
+    // --- Dev mode: spawn Python + uvicorn ---
+    const pythonPath = findPython()
+    if (!pythonPath) {
+      console.warn('Python not found — start backend manually: cd backend && uvicorn app.main:app --port 8000')
+      return
+    }
+    const backendDir = path.join(__dirname, '..', 'backend')
+    console.log(`Starting dev backend: ${pythonPath} in ${backendDir}`)
     backendProcess = spawn(pythonPath, ['-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', '8000'], {
       cwd: backendDir,
       env: { ...process.env, PORT: '8000' },
     })
-
-    backendProcess.stdout.on('data', (data) => {
-      console.log(`Backend: ${data}`)
-    })
-
-    backendProcess.stderr.on('data', (data) => {
-      console.error(`Backend: ${data}`)
-    })
-
-    backendProcess.on('error', (err) => {
-      console.error(`Failed to start backend: ${err.message}`)
-      backendProcess = null
-    })
-
-    backendProcess.on('close', (code) => {
-      console.log(`Backend exited with code ${code}`)
-      backendProcess = null
-    })
   }
 
-  pipInstall.on('close', () => launchUvicorn())
-  pipInstall.on('error', (err) => {
-    console.warn(`pip install failed (${err.message}) — attempting to start backend anyway`)
-    launchUvicorn()
+  backendProcess.stdout?.on('data', (data) => console.log(`Backend: ${data}`))
+  backendProcess.stderr?.on('data', (data) => console.error(`Backend: ${data}`))
+  backendProcess.on('error', (err) => {
+    console.error(`Backend launch error: ${err.message}`)
+    backendProcess = null
+  })
+  backendProcess.on('close', (code) => {
+    console.log(`Backend exited with code ${code}`)
+    backendProcess = null
   })
 }
 

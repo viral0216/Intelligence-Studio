@@ -30,9 +30,8 @@
         "to": "frontend"
       },
       {
-        "from": "../backend",
-        "to": "backend",
-        "filter": ["**/*", "!**/__pycache__/**", "!**/*.pyc", "!**/.egg-info/**", "!**/tests/**"]
+        "from": "../backend/dist/backend-server",
+        "to": "backend-server"
       }
     ],
     "mac": {

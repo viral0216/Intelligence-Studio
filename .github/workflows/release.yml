@@ -32,6 +32,82 @@ jobs:
             frontend/package-lock.json
             desktop/package-lock.json
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build backend binary (macOS)
+        if: matrix.platform == 'mac'
+        run: |
+          pip install pyinstaller
+          pip install -e ./backend
+          cd backend
+          pyinstaller --onedir --name backend-server \
+            --collect-all uvicorn \
+            --collect-all fastapi \
+            --collect-all starlette \
+            --collect-all httpx \
+            --collect-all pydantic \
+            --collect-all pydantic_settings \
+            --collect-all azure \
+            --collect-all tenacity \
+            --hidden-import=uvicorn.logging \
+            --hidden-import=uvicorn.loops \
+            --hidden-import=uvicorn.loops.auto \
+            --hidden-import=uvicorn.protocols.http.auto \
+            --hidden-import=uvicorn.protocols.websockets.auto \
+            --hidden-import=uvicorn.lifespan.on \
+            --hidden-import=app.main \
+            --hidden-import=app.routers.health \
+            --hidden-import=app.routers.proxy \
+            --hidden-import=app.routers.azure_auth \
+            --hidden-import=app.routers.azure_resources \
+            --hidden-import=app.routers.ai \
+            --hidden-import=app.routers.agent \
+            --hidden-import=app.routers.custom_agents \
+            --hidden-import=app.routers.notebooks \
+            --hidden-import=app.routers.query \
+            --hidden-import=app.routers.tools \
+            --noconfirm \
+            server.py
+
+      - name: Build backend binary (Windows)
+        if: matrix.platform == 'win'
+        run: |
+          pip install pyinstaller
+          pip install -e ./backend
+          cd backend
+          pyinstaller --onedir --name backend-server `
+            --collect-all uvicorn `
+            --collect-all fastapi `
+            --collect-all starlette `
+            --collect-all httpx `
+            --collect-all pydantic `
+            --collect-all pydantic_settings `
+            --collect-all azure `
+            --collect-all tenacity `
+            --hidden-import=uvicorn.logging `
+            --hidden-import=uvicorn.loops `
+            --hidden-import=uvicorn.loops.auto `
+            --hidden-import=uvicorn.protocols.http.auto `
+            --hidden-import=uvicorn.protocols.websockets.auto `
+            --hidden-import=uvicorn.lifespan.on `
+            --hidden-import=app.main `
+            --hidden-import=app.routers.health `
+            --hidden-import=app.routers.proxy `
+            --hidden-import=app.routers.azure_auth `
+            --hidden-import=app.routers.azure_resources `
+            --hidden-import=app.routers.ai `
+            --hidden-import=app.routers.agent `
+            --hidden-import=app.routers.custom_agents `
+            --hidden-import=app.routers.notebooks `
+            --hidden-import=app.routers.query `
+            --hidden-import=app.routers.tools `
+            --noconfirm `
+            server.py
+        shell: pwsh
+
       - name: Install frontend dependencies
         run: npm ci
         working-directory: frontend
