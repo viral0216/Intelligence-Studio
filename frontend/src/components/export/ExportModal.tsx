@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { X, Download, FileText, FileSpreadsheet, FileType } from 'lucide-react'
 import { useRequestStore } from '@/stores/requestStore'
+import { downloadFile } from '@/lib/exportFormats'
 
 type ExportFormat = string
 
@@ -80,20 +81,67 @@ export default function ExportModal({ format, onClose }: ExportModalProps) {
         const filename = `api-export-${Date.now()}.${ext}`
         downloadFile(content, filename, 'text/plain')
       } else if (format === 'excel') {
-        // Export as TSV (can be opened in Excel)
-        const data = extractArrayData(response?.data)
-        if (data.length > 0) {
-          const cols = Object.keys(data[0] as Record<string, unknown>)
-          const rows = [cols.join('\t')]
-          data.forEach((row) => {
-            const record = row as Record<string, unknown>
-            rows.push(cols.map((c) => String(record[c] ?? '')).join('\t'))
-          })
-          content = rows.join('\n')
-        } else {
-          content = `Method\tPath\tStatus\tDuration\n${method}\t${path}\t${response?.status || ''}\t${response?.durationMs || ''}ms`
+        const ExcelJS = (await import('exceljs')).default
+        const workbook = new ExcelJS.Workbook()
+        workbook.creator = 'Intelligence Studio'
+        workbook.created = new Date()
+
+        if (includeRequest) {
+          const reqSheet = workbook.addWorksheet('Request')
+          reqSheet.columns = [
+            { header: 'Field', key: 'field', width: 20 },
+            { header: 'Value', key: 'value', width: 60 },
+          ]
+          reqSheet.addRow({ field: 'Method', value: method })
+          reqSheet.addRow({ field: 'Path', value: path })
+          if (bodyInput) reqSheet.addRow({ field: 'Body', value: bodyInput })
+          reqSheet.getRow(1).font = { bold: true }
         }
-        downloadFile(content, `api-export-${Date.now()}.tsv`, 'text/tab-separated-values')
+
+        if (includeHeaders && response?.headers) {
+          const headersSheet = workbook.addWorksheet('Headers')
+          headersSheet.columns = [
+            { header: 'Header', key: 'header', width: 30 },
+            { header: 'Value', key: 'value', width: 60 },
+          ]
+          Object.entries(response.headers as Record<string, string>).forEach(([k, v]) => {
+            headersSheet.addRow({ header: k, value: v })
+          })
+          headersSheet.getRow(1).font = { bold: true }
+        }
+
+        if (includeResponse) {
+          const data = extractArrayData(response?.data)
+          const dataSheet = workbook.addWorksheet('Response Data')
+          if (data.length > 0) {
+            const cols = Object.keys(data[0] as Record<string, unknown>)
+            dataSheet.columns = cols.map((k) => ({ header: k, key: k, width: 20 }))
+            data.forEach((row) => {
+              const record = row as Record<string, unknown>
+              dataSheet.addRow(cols.reduce<Record<string, unknown>>((acc, k) => { acc[k] = record[k] ?? ''; return acc }, {}))
+            })
+          } else if (response) {
+            dataSheet.columns = [
+              { header: 'Field', key: 'field', width: 20 },
+              { header: 'Value', key: 'value', width: 60 },
+            ]
+            dataSheet.addRow({ field: 'Status', value: String(response.status) })
+            dataSheet.addRow({ field: 'Duration', value: `${response.durationMs}ms` })
+            dataSheet.addRow({ field: 'Data', value: JSON.stringify(response.data, null, 2) })
+          }
+          dataSheet.getRow(1).font = { bold: true }
+        }
+
+        const buffer = await workbook.xlsx.writeBuffer()
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `api-export-${Date.now()}.xlsx`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
       }
     } finally {
       setIsExporting(false)
@@ -264,14 +312,3 @@ function extractArrayData(data: unknown): unknown[] {
   return []
 }
 
-function downloadFile(content: string, filename: string, mimeType: string) {
-  const blob = new Blob([content], { type: mimeType })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = filename
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-  URL.revokeObjectURL(url)
-}

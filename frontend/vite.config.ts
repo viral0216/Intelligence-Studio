@@ -113,4 +113,10 @@ export default defineConfig({
   build: {
     outDir: 'dist',
   },
+  optimizeDeps: {
+    include: ['exceljs'],
+    esbuildOptions: {
+      define: { global: 'globalThis' },
+    },
+  },
 })
