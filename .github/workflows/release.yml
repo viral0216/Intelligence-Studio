@@ -57,9 +57,20 @@ jobs:
         if: matrix.platform == 'mac'
         run: codesign -s - --force --deep "desktop/dist/mac-arm64/Intelligence Studio.app"
 
-      - name: Zip macOS app
+      - name: Package macOS app with launcher
         if: matrix.platform == 'mac'
-        run: ditto -c -k --sequesterRsrc --keepParent "desktop/dist/mac-arm64/Intelligence Studio.app" "desktop/dist/Intelligence-Studio-mac-arm64.zip"
+        run: |
+          mkdir -p "desktop/dist/pkg"
+          cp -R "desktop/dist/mac-arm64/Intelligence Studio.app" "desktop/dist/pkg/"
+          cat > "desktop/dist/pkg/Open Intelligence Studio.command" << 'EOF'
+          #!/bin/bash
+          DIR="$(cd "$(dirname "$0")" && pwd)"
+          APP="$DIR/Intelligence Studio.app"
+          xattr -dr com.apple.quarantine "$APP" 2>/dev/null
+          open "$APP"
+          EOF
+          chmod +x "desktop/dist/pkg/Open Intelligence Studio.command"
+          ditto -c -k --sequesterRsrc --keepParent "desktop/dist/pkg" "desktop/dist/Intelligence-Studio-mac-arm64.zip"
 
       - name: Build desktop app (Windows)
         if: matrix.platform == 'win'
@@ -126,4 +137,18 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
+          body: |
+            ## Installation
+
+            ### macOS (Apple Silicon)
+            1. Download `Intelligence-Studio-mac-arm64.zip`
+            2. Extract the zip
+            3. **Double-click `Open Intelligence Studio.command`** to launch on first run
+               - This removes the macOS quarantine flag and opens the app automatically
+               - After first launch, you can open the `.app` directly
+
+            > **Note:** macOS may show a security warning on first open because the app is not notarized. The `.command` launcher handles this automatically.
+
+            ### Windows
+            Download and run the `.exe` installer.
           files: artifacts/*
