@@ -85,47 +85,61 @@ function startBackend() {
   }
 
   // In dev: backend is at ../backend relative to desktop/
-  // In production (packaged): backend should be started externally
+  // In production (packaged): backend is bundled at process.resourcesPath/backend
   const backendDir = app.isPackaged
-    ? null
+    ? path.join(process.resourcesPath, 'backend')
     : path.join(__dirname, '..', 'backend')
 
-  if (!backendDir) {
-    console.log('Packaged app — backend should be started externally or is already running.')
+  if (!fs.existsSync(backendDir)) {
+    console.warn(`Backend directory not found at: ${backendDir}`)
     return
   }
 
-  console.log(`Starting backend with: ${pythonPath} in ${backendDir}`)
-
-  backendProcess = spawn(pythonPath, ['-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', '8000'], {
+  // Run pip install async so the UI thread isn't blocked, then launch uvicorn
+  const pipInstall = spawn(pythonPath, ['-m', 'pip', 'install', '-e', '.', '-q', '--disable-pip-version-check'], {
     cwd: backendDir,
-    env: { ...process.env, PORT: '8000' },
+    stdio: 'ignore',
   })
 
-  backendProcess.stdout.on('data', (data) => {
-    console.log(`Backend: ${data}`)
-  })
+  const launchUvicorn = () => {
+    console.log(`Starting backend with: ${pythonPath} in ${backendDir}`)
+    backendProcess = spawn(pythonPath, ['-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', '8000'], {
+      cwd: backendDir,
+      env: { ...process.env, PORT: '8000' },
+    })
 
-  backendProcess.stderr.on('data', (data) => {
-    console.error(`Backend: ${data}`)
-  })
+    backendProcess.stdout.on('data', (data) => {
+      console.log(`Backend: ${data}`)
+    })
 
-  backendProcess.on('error', (err) => {
-    console.error(`Failed to start backend: ${err.message}`)
-    backendProcess = null
-  })
+    backendProcess.stderr.on('data', (data) => {
+      console.error(`Backend: ${data}`)
+    })
 
-  backendProcess.on('close', (code) => {
-    console.log(`Backend exited with code ${code}`)
-    backendProcess = null
+    backendProcess.on('error', (err) => {
+      console.error(`Failed to start backend: ${err.message}`)
+      backendProcess = null
+    })
+
+    backendProcess.on('close', (code) => {
+      console.log(`Backend exited with code ${code}`)
+      backendProcess = null
+    })
+  }
+
+  pipInstall.on('close', () => launchUvicorn())
+  pipInstall.on('error', (err) => {
+    console.warn(`pip install failed (${err.message}) — attempting to start backend anyway`)
+    launchUvicorn()
   })
 }
 
 app.whenReady().then(() => {
-  startBackend()
+  // Show window immediately — frontend has a "Retry" button while backend starts
+  createWindow()
 
-  // Wait a bit for backend to start, then show window
-  setTimeout(createWindow, 1500)
+  // Start backend (may take a moment on first launch while pip installs deps)
+  startBackend()
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
