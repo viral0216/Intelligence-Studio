@@ -38,16 +38,8 @@
         { "target": "dir", "arch": ["arm64"] }
       ],
       "category": "public.app-category.developer-tools",
-      "sign": {
-        "entitlements": "build/entitlements.mac.plist",
-        "entitlementsInherit": "build/entitlements.mac.plist"
-      },
       "identity": null,
-      "signingCerts": null
-    },
-    "afterSign": "./scripts/notarize.js",
-    "notarize": {
-      "teamId": "${APPLE_TEAM_ID}"
+      "notarize": false
     },
     "win": {
       "icon": "build/icon.ico",
