@@ -53,6 +53,14 @@ jobs:
         run: npx electron-builder --mac
         working-directory: desktop
 
+      - name: Ad-hoc sign macOS app
+        if: matrix.platform == 'mac'
+        run: codesign -s - --force --deep "desktop/dist/mac-arm64/Intelligence Studio.app"
+
+      - name: Zip macOS app
+        if: matrix.platform == 'mac'
+        run: ditto -c -k --sequesterRsrc --keepParent "desktop/dist/mac-arm64/Intelligence Studio.app" "desktop/dist/Intelligence-Studio-mac-arm64.zip"
+
       - name: Build desktop app (Windows)
         if: matrix.platform == 'win'
         run: npx electron-builder --win
@@ -63,7 +71,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-mac
-          path: desktop/dist/*.zip
+          path: desktop/dist/Intelligence-Studio-mac-arm64.zip
 
       - name: Upload Windows artifacts
         if: matrix.platform == 'win'
