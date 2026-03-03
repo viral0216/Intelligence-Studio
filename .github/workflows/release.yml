@@ -57,20 +57,10 @@ jobs:
         if: matrix.platform == 'mac'
         run: codesign -s - --force --deep "desktop/dist/mac-arm64/Intelligence Studio.app"
 
-      - name: Package macOS app with launcher
+      - name: Package macOS app
         if: matrix.platform == 'mac'
         run: |
-          mkdir -p "desktop/dist/pkg"
-          cp -R "desktop/dist/mac-arm64/Intelligence Studio.app" "desktop/dist/pkg/"
-          cat > "desktop/dist/pkg/Open Intelligence Studio.command" << 'EOF'
-          #!/bin/bash
-          DIR="$(cd "$(dirname "$0")" && pwd)"
-          APP="$DIR/Intelligence Studio.app"
-          xattr -dr com.apple.quarantine "$APP" 2>/dev/null
-          open "$APP"
-          EOF
-          chmod +x "desktop/dist/pkg/Open Intelligence Studio.command"
-          ditto -c -k --sequesterRsrc --keepParent "desktop/dist/pkg" "desktop/dist/Intelligence-Studio-mac-arm64.zip"
+          ditto -c -k --sequesterRsrc --keepParent "desktop/dist/mac-arm64/Intelligence Studio.app" "desktop/dist/Intelligence-Studio-mac-arm64.zip"
 
       - name: Build desktop app (Windows)
         if: matrix.platform == 'win'
@@ -141,13 +131,17 @@ jobs:
             ## Installation
 
             ### macOS (Apple Silicon)
-            1. Download `Intelligence-Studio-mac-arm64.zip`
-            2. Extract the zip
-            3. **Double-click `Open Intelligence Studio.command`** to launch on first run
-               - This removes the macOS quarantine flag and opens the app automatically
-               - After first launch, you can open the `.app` directly
+            1. Download `Intelligence-Studio-mac-arm64.zip` and extract it
+            2. **Right-click** `Intelligence Studio.app` → **Open**
+            3. Click **Open** in the security dialog that appears
+            4. The app opens — subsequent launches work normally by double-clicking
 
-            > **Note:** macOS may show a security warning on first open because the app is not notarized. The `.command` launcher handles this automatically.
+            > macOS blocks unnotarized apps by default. The right-click → Open method is a one-time bypass.
+            >
+            > Alternatively, run this in Terminal after extracting:
+            > ```
+            > xattr -dr com.apple.quarantine ~/Downloads/"Intelligence Studio.app"
+            > ```
 
             ### Windows
             Download and run the `.exe` installer.
