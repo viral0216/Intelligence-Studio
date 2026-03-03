@@ -145,4 +145,24 @@ jobs:
 
             ### Windows
             Download and run the `.exe` installer.
+
+            ---
+
+            ## ⚙️ Required Setup (after installation)
+
+            Open the app and go to **Settings** to complete the following before use:
+
+            ### 1. Sign In
+            - Enter your **Databricks workspace URL** (e.g. `https://<workspace>.azuredatabricks.net`)
+            - Enter your **Personal Access Token** (PAT)
+            - Click **Connect**
+
+            ### 2. Set Up SQL Warehouse
+            - In Settings, select your **SQL Warehouse** from the dropdown
+            - This is required for running queries and data exploration
+
+            ### 3. Configure DBX Foundation Model
+            - In Settings, select a **Databricks Foundation Model** endpoint
+            - This powers the AI Assistant, Data QA, and analysis features
+            - Requires a model serving endpoint enabled in your Databricks workspace
           files: artifacts/*

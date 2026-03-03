@@ -59,7 +59,26 @@ Pre-built binaries are available on the [Releases](https://github.com/viral0216/
 | **Web** | — | Clone the repo and run `make dev` |
 | **CLI** | — | Clone the repo and run `make cli-install` |
 
-> After launching, open **Settings** and enter your Databricks host URL and personal access token.
+> **macOS only:** Right-click the `.app` → **Open** to bypass Gatekeeper on first launch (or run `xattr -d com.apple.quarantine /path/to/"Intelligence Studio.app"` in Terminal).
+
+---
+
+## ⚙️ Required Setup (after installation)
+
+Open the app and go to **Settings** to complete the following before use:
+
+### 1. Sign In
+- Enter your **Databricks workspace URL** (e.g. `https://<workspace>.azuredatabricks.net`)
+- Enter your **Personal Access Token** (PAT)
+- Click **Connect**
+
+### 2. Set Up SQL Warehouse
+- In **Settings**, select your **SQL Warehouse** from the dropdown
+- Required for running queries and data exploration
+
+### 3. DBX Foundation Model
+- In **Settings**, select your **Foundation Model** endpoint
+- Powers the AI Assistant, Data QA, and intelligent analysis features
 
 ---
 
