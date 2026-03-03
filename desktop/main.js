@@ -7,28 +7,25 @@ let mainWindow
 let backendProcess
 
 /**
- * On macOS, strip the quarantine flag from the entire .app bundle and the
- * bundled backend binary. This runs once on first launch (after the user
- * has already right-clicked → Open). Subsequent launches are fully silent.
+ * On macOS, strip the quarantine flag from the entire .app bundle recursively.
+ * macOS 15 removed `xattr -r`, so we use `find` to walk every file/dir.
+ * Runs once on first launch (after the user clicks through the Gatekeeper dialog).
+ * All subsequent launches are fully silent — no dialogs.
  */
 function removeQuarantine() {
   if (process.platform !== 'darwin' || !app.isPackaged) return
 
-  // .app bundle root  →  e.g. /Applications/Intelligence Studio.app
+  // .app bundle root → e.g. /Applications/Intelligence Studio.app
   const appBundle = path.resolve(process.resourcesPath, '..', '..')
 
-  // Paths to clean
-  const targets = [
-    appBundle,
-    path.join(process.resourcesPath, 'backend-server', 'backend-server'),
-  ]
-
-  for (const target of targets) {
-    try {
-      execSync(`xattr -d com.apple.quarantine "${target}"`, { stdio: 'ignore' })
-    } catch (_) {
-      // Already clean or attribute not present — safe to ignore
-    }
+  try {
+    // `-r` was removed in macOS 15 — use `find` to recurse every file and dir
+    execSync(
+      `find "${appBundle}" -exec xattr -d com.apple.quarantine {} \\; 2>/dev/null; true`,
+      { stdio: 'ignore' }
+    )
+  } catch (_) {
+    // Attribute not present or already clean — safe to ignore
   }
 }
 
