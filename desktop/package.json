@@ -10,7 +10,8 @@
   "author": "Intelligence Studio",
   "devDependencies": {
     "electron": "^28.0.0",
-    "electron-builder": "^24.9.0"
+    "electron-builder": "^24.9.0",
+    "electron-notarize": "^2.2.1"
   },
   "build": {
     "appId": "com.intelligence.studio",
@@ -37,7 +38,16 @@
         { "target": "dir", "arch": ["arm64"] }
       ],
       "category": "public.app-category.developer-tools",
-      "identity": null
+      "sign": {
+        "entitlements": "build/entitlements.mac.plist",
+        "entitlementsInherit": "build/entitlements.mac.plist"
+      },
+      "identity": null,
+      "signingCerts": null
+    },
+    "afterSign": "./scripts/notarize.js",
+    "notarize": {
+      "teamId": "${APPLE_TEAM_ID}"
     },
     "win": {
       "icon": "build/icon.ico",

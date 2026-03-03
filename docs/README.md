@@ -557,6 +557,13 @@ dist/desktop/mac/
 - Must be run on macOS
 - No Apple Developer certificate needed (unsigned build)
 
+**Distribution (Code Signing & Notarization):**
+
+By default, builds are **unsigned for local use**. For distribution, see [Code Signing & Notarization Guide](./SIGNING.md) to:
+- Sign the app with your Apple Developer certificate
+- Notarize it with Apple
+- Make it runnable on other macOS machines without warnings
+
 ### Build Desktop App (Windows)
 
 Produces an NSIS installer (`.exe`) and portable executable.
